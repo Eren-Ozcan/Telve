@@ -31,6 +31,9 @@ namespace Telve.UI
         /// <summary>CurrentCup içindeki indeksler, oyuncunun tıklama (okuma) sırasıyla.</summary>
         public List<int> ReadingOrderCupIndices { get; } = new();
 
+        /// <summary>Mevcut fincan zaten okundu mu — yeni fincan çekilene kadar tekrar gönderilemez.</summary>
+        public bool CurrentCupResolved { get; private set; }
+
         public int Gold => _day.Gold;
         public bool DayLost => _day.DayLost;
         public bool DayComplete => _day.DayComplete;
@@ -60,6 +63,7 @@ namespace Telve.UI
             if (_day.DayLost || _day.DayComplete) return;
 
             ReadingOrderCupIndices.Clear();
+            CurrentCupResolved = false;
             CurrentCup = CupDraw.Draw(_allSymbols, _rng, _activeCharms);
             OnStateChanged?.Invoke();
         }
@@ -67,6 +71,7 @@ namespace Telve.UI
         /// <summary>Fincan sırası tıklandığında: okuma sırasındaysa çıkar, değilse sona ekler.</summary>
         public void ToggleCupSlot(int cupIndex)
         {
+            if (CurrentCupResolved) return;
             if (cupIndex < 0 || cupIndex >= CurrentCup.Count) return;
 
             if (!ReadingOrderCupIndices.Remove(cupIndex))
@@ -82,6 +87,7 @@ namespace Telve.UI
 
         public void SubmitReading()
         {
+            if (CurrentCupResolved) return;
             if (ReadingOrderCupIndices.Count == 0) return;
             if (_day.DayLost || _day.DayComplete) return;
 
@@ -89,6 +95,7 @@ namespace Telve.UI
             var profile = _day.CurrentProfile();
             var result = CustomerEncounter.Resolve(profile, readingOrder, _allCombos, _activeCharms);
             _day.SubmitEncounter(result);
+            CurrentCupResolved = true;
 
             OnEncounterResolved?.Invoke(result);
             OnStateChanged?.Invoke();

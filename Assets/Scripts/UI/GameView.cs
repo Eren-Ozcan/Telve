@@ -92,7 +92,7 @@ namespace Telve.UI
             statusText.text = $"Altın: {controller.Gold}   {dayStatus}";
 
             bool dayOver = controller.DayLost || controller.DayComplete;
-            submitButton.interactable = controller.ReadingOrderCupIndices.Count > 0 && !dayOver;
+            submitButton.interactable = controller.ReadingOrderCupIndices.Count > 0 && !controller.CurrentCupResolved && !dayOver;
             nextCustomerButton.interactable = !dayOver;
         }
 
