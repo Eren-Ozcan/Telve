@@ -61,3 +61,6 @@ Thumbs.db
 
 # Headless Unity batchmode debug logs (unity_*.log at repo root)
 /unity_*.log
+
+# Coplay package's own data (logs, local settings) — per its own .gitignore
+Packages/Coplay/Editor/
