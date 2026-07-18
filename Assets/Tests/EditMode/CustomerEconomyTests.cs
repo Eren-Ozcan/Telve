@@ -1,11 +1,21 @@
+using System.Collections.Generic;
 using NUnit.Framework;
+using Telve.Data;
 using Telve.Gameplay;
+using UnityEngine;
 
 namespace Telve.Tests
 {
     /// <summary>docs/design/04-economy.md müşteri eşik/ödeme tablosunu doğrular.</summary>
     public class CustomerEconomyTests
     {
+        static CharmData MakeCharm(string id)
+        {
+            var charm = ScriptableObject.CreateInstance<CharmData>();
+            charm.charmId = id;
+            return charm;
+        }
+
         [Test]
         public void Regular_FirstCustomer_MatchesDocTable()
         {
@@ -69,6 +79,28 @@ namespace Telve.Tests
 
             Assert.IsFalse(result.ThresholdMet);
             Assert.AreEqual(3, result.Payment);
+        }
+
+        [Test]
+        public void Evaluate_MuhtarWithGozdesiCharm_PaymentIsTimesOnePointFive()
+        {
+            var profile = CustomerProfile.Muhtar(); // threshold 66, base 35
+            var charms = new List<CharmData> { MakeCharm("muhtarin_gozdesi") };
+
+            var result = CustomerEconomy.Evaluate(profile, satisfaction: 66f, charms); // met -> 35 * 1.5
+
+            // MathF.Round uses banker's rounding (ToEven): 52.5 -> 52.
+            Assert.AreEqual(52, result.Payment);
+        }
+
+        [Test]
+        public void Evaluate_MuhtarWithoutGozdesiCharm_PaymentIsUnchanged()
+        {
+            var profile = CustomerProfile.Muhtar(); // threshold 66, base 35
+
+            var result = CustomerEconomy.Evaluate(profile, satisfaction: 66f);
+
+            Assert.AreEqual(35, result.Payment);
         }
     }
 }
