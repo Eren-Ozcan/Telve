@@ -1,0 +1,17 @@
+{
+    "name": "Telve.UI",
+    "rootNamespace": "Telve.UI",
+    "references": [
+        "Telve.Runtime",
+        "UnityEngine.UI"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}
