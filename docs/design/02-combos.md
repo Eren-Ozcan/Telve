@@ -1,6 +1,6 @@
 # Kombo Matrisi v1
 
-35 kombo (31 ikili + 4 üçlü). Komşuluk = okuma sırasında yan yana
+37 kombo (31 ikili + 6 üçlü). Komşuluk = okuma sırasında yan yana
 duran semboller (pozisyon i ve i+1). Üçlü kombolar 3 ardışık pozisyonu
 kapsar.
 
@@ -95,7 +95,7 @@ bkz. 03-scoring.md.
 | Anahtar + Kapı + Köprü | Yeni Hayat Yolu | ×2.8 |
 | Göz + Yıldız + Ay | Gökyüzü Falı | ×2.2 |
 
-Toplam: 29 ikili + 6 üçlü = **35 kombo** (MVP hedefi 30-40 aralığında).
+Toplam: 31 ikili + 6 üçlü = **37 kombo** (MVP hedefi 30-40 aralığında).
 
 ## Tasarım Notları
 
