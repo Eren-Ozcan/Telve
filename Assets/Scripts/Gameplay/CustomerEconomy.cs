@@ -1,3 +1,8 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using Telve.Data;
+
 namespace Telve.Gameplay
 {
     public readonly struct CustomerResult
@@ -24,17 +29,33 @@ namespace Telve.Gameplay
         const float BonusPerExcessPoint = 0.3f;
         const float BelowThresholdPaymentRatio = 0.4f;
 
-        public static CustomerResult Evaluate(CustomerProfile profile, float satisfaction)
+        public static CustomerResult Evaluate(
+            CustomerProfile profile,
+            float satisfaction,
+            IReadOnlyList<CharmData> activeCharms = null)
         {
+            int payment;
+            bool thresholdMet;
+
             if (satisfaction >= profile.Threshold)
             {
                 float excess = satisfaction - profile.Threshold;
-                int payment = profile.BasePayment + (int)System.MathF.Round(excess * BonusPerExcessPoint);
-                return new CustomerResult(thresholdMet: true, payment);
+                payment = profile.BasePayment + (int)MathF.Round(excess * BonusPerExcessPoint);
+                thresholdMet = true;
+            }
+            else
+            {
+                payment = (int)MathF.Round(profile.BasePayment * BelowThresholdPaymentRatio);
+                thresholdMet = false;
             }
 
-            int reducedPayment = (int)System.MathF.Round(profile.BasePayment * BelowThresholdPaymentRatio);
-            return new CustomerResult(thresholdMet: false, reducedPayment);
+            // Muhtarın Gözdesi: "Muhtar müşterisinde ödeme ×1.5".
+            if (profile.IsMuhtar && activeCharms != null && activeCharms.Any(c => c.charmId == "muhtarin_gozdesi"))
+            {
+                payment = (int)MathF.Round(payment * 1.5f);
+            }
+
+            return new CustomerResult(thresholdMet, payment);
         }
     }
 }
