@@ -10,7 +10,7 @@ namespace Telve.Tests
 {
     /// <summary>
     /// docs/design/00-core-loop.md "Bir Müşteri Turu" uçtan uca:
-    /// gerçek Assets/Data/Combos kütüphanesiyle puanlama + ödeme.
+    /// gerçek Assets/Resources/Data/Combos kütüphanesiyle puanlama + ödeme.
     /// </summary>
     public class CustomerEncounterTests
     {
@@ -19,7 +19,7 @@ namespace Telve.Tests
         [SetUp]
         public void LoadComboLibrary()
         {
-            var guids = AssetDatabase.FindAssets("t:ComboData", new[] { "Assets/Data/Combos" });
+            var guids = AssetDatabase.FindAssets("t:ComboData", new[] { "Assets/Resources/Data/Combos" });
             _comboLibrary = guids
                 .Select(guid => AssetDatabase.LoadAssetAtPath<ComboData>(AssetDatabase.GUIDToAssetPath(guid)))
                 .ToList();

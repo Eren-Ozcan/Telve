@@ -11,7 +11,7 @@ namespace Telve.Tests
     /// <summary>
     /// Validates ScoreCalculator against the three worked examples in
     /// docs/design/03-scoring.md, using the real generated ComboData
-    /// library (Assets/Data/Combos) so a mistranscription in
+    /// library (Assets/Resources/Data/Combos) so a mistranscription in
     /// DataAssetGenerator would also fail this suite.
     /// </summary>
     public class ScoreCalculatorTests
@@ -21,7 +21,7 @@ namespace Telve.Tests
         [SetUp]
         public void LoadComboLibrary()
         {
-            var guids = AssetDatabase.FindAssets("t:ComboData", new[] { "Assets/Data/Combos" });
+            var guids = AssetDatabase.FindAssets("t:ComboData", new[] { "Assets/Resources/Data/Combos" });
             _comboLibrary = guids
                 .Select(guid => AssetDatabase.LoadAssetAtPath<ComboData>(AssetDatabase.GUIDToAssetPath(guid)))
                 .ToList();
@@ -45,7 +45,7 @@ namespace Telve.Tests
         [Test]
         public void KesinHaber_NoCharms_MatchesDocExample()
         {
-            Assert.That(_comboLibrary, Is.Not.Empty, "Assets/Data/Combos boş — DataAssetGenerator çalıştırıldı mı?");
+            Assert.That(_comboLibrary, Is.Not.Empty, "Assets/Resources/Data/Combos boş — DataAssetGenerator çalıştırıldı mı?");
 
             var readingOrder = new List<SymbolData> { MakeSymbol("yol", 3), MakeSymbol("kus", 3), MakeSymbol("mektup", 2) };
 

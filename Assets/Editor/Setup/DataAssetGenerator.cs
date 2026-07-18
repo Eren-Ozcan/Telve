@@ -8,15 +8,18 @@ namespace Telve.EditorTools
 {
     /// <summary>
     /// Transcribes docs/design/01-symbols.md, 02-combos.md and 05-charms.md
-    /// into real SymbolData/ComboData/CharmData assets under Assets/Data.
-    /// Run once via -batchmode -executeMethod; safe to re-run (overwrites
-    /// existing assets in place instead of duplicating them).
+    /// into real SymbolData/ComboData/CharmData assets under
+    /// Assets/Resources/Data (Resources so GameController can
+    /// Resources.LoadAll them at runtime in a build, not just via
+    /// AssetDatabase in the Editor). Run once via -batchmode
+    /// -executeMethod; safe to re-run (overwrites existing assets in
+    /// place instead of duplicating them).
     /// </summary>
     public static class DataAssetGenerator
     {
-        const string SymbolsFolder = "Assets/Data/Symbols";
-        const string CombosFolder = "Assets/Data/Combos";
-        const string CharmsFolder = "Assets/Data/Charms";
+        const string SymbolsFolder = "Assets/Resources/Data/Symbols";
+        const string CombosFolder = "Assets/Resources/Data/Combos";
+        const string CharmsFolder = "Assets/Resources/Data/Charms";
 
         struct SymbolRow
         {
