@@ -23,6 +23,9 @@ namespace Telve.Data
         [Tooltip("Multiplier: e.g. 1.5 for ×1.5. Flat: added to the base score before multipliers, e.g. 3 for +3.")]
         public float effectValue;
 
+        [Tooltip("Rare compound-effect combos (ör. 'Zorlu Yolculuk' ×1.2, +2) carry both a multiplier and a flat bonus. 0 for the common single-effect case.")]
+        public float secondaryFlatBonus;
+
         [Tooltip("Negatif kombolar (ör. Kara Gün ×0.6) kasıtlı ceza taşır — bkz. docs/design/02-combos.md tasarım notları.")]
         public bool isNegative;
     }
