@@ -20,8 +20,14 @@ namespace Telve.UI
         [SerializeField] int startingGold = 20;
 
         List<SymbolData> _allSymbols;
+        List<CharmData> _allCharmDefinitions;
         List<ComboData> _allCombos;
-        List<CharmData> _activeCharms; // MVP v0: boş, pazar/tılsım satın alma sonraki iterasyon
+
+        /// <summary>Oyuncunun elindeki deste — fincan bundan çekilir. Başlangıçta Common alt kümesi.</summary>
+        List<SymbolData> _ownedSymbols;
+
+        /// <summary>Satın alınmış, aktif tılsımlar.</summary>
+        List<CharmData> _activeCharms;
 
         System.Random _rng;
         DaySession _day;
@@ -33,6 +39,9 @@ namespace Telve.UI
 
         /// <summary>Mevcut fincan zaten okundu mu — yeni fincan çekilene kadar tekrar gönderilemez.</summary>
         public bool CurrentCupResolved { get; private set; }
+
+        public bool IsMarketOpen { get; private set; }
+        public IReadOnlyList<MarketOffer> CurrentOffers { get; private set; } = Array.Empty<MarketOffer>();
 
         public int Gold => _day.Gold;
         public bool DayLost => _day.DayLost;
@@ -46,7 +55,11 @@ namespace Telve.UI
         void Awake()
         {
             _allSymbols = Resources.LoadAll<SymbolData>("Data/Symbols").ToList();
+            _allCharmDefinitions = Resources.LoadAll<CharmData>("Data/Charms").ToList();
             _allCombos = Resources.LoadAll<ComboData>("Data/Combos").ToList();
+
+            // docs/design/04-economy.md: "Başlangıç destesi: en yaygın Common alt kümesi."
+            _ownedSymbols = _allSymbols.Where(s => s.rarity == SymbolRarity.Common).ToList();
             _activeCharms = new List<CharmData>();
 
             _rng = new System.Random();
@@ -61,10 +74,11 @@ namespace Telve.UI
         public void DrawCup()
         {
             if (_day.DayLost || _day.DayComplete) return;
+            if (IsMarketOpen) return;
 
             ReadingOrderCupIndices.Clear();
             CurrentCupResolved = false;
-            CurrentCup = CupDraw.Draw(_allSymbols, _rng, _activeCharms);
+            CurrentCup = CupDraw.Draw(_ownedSymbols, _rng, _activeCharms);
             OnStateChanged?.Invoke();
         }
 
@@ -99,6 +113,44 @@ namespace Telve.UI
 
             OnEncounterResolved?.Invoke(result);
             OnStateChanged?.Invoke();
+        }
+
+        /// <summary>docs/design/04-economy.md: "Müşteriler arası pazara uğranabilir." Sadece mevcut fincan okunduktan sonra (müşteriler arası) açılabilir.</summary>
+        public void OpenMarket()
+        {
+            if (!CurrentCupResolved) return;
+            if (_day.DayLost || _day.DayComplete) return;
+            if (IsMarketOpen) return;
+
+            CurrentOffers = MarketSystem.GenerateOffers(
+                _allSymbols, _ownedSymbols, _allCharmDefinitions, _activeCharms, _rng, _activeCharms);
+            IsMarketOpen = true;
+            OnStateChanged?.Invoke();
+        }
+
+        public void CloseMarket()
+        {
+            if (!IsMarketOpen) return;
+
+            IsMarketOpen = false;
+            CurrentOffers = Array.Empty<MarketOffer>();
+            OnStateChanged?.Invoke();
+        }
+
+        /// <summary>Teklifi satın alır ve pazarı kapatır (bir ziyarette bir alım — MVP basitliği).</summary>
+        public bool TryBuyOffer(int offerIndex)
+        {
+            if (!IsMarketOpen) return false;
+            if (offerIndex < 0 || offerIndex >= CurrentOffers.Count) return false;
+
+            var offer = CurrentOffers[offerIndex];
+            if (!_day.TrySpendGold(offer.Price)) return false;
+
+            if (offer.IsSymbol) _ownedSymbols.Add(offer.Symbol);
+            else _activeCharms.Add(offer.Charm);
+
+            CloseMarket();
+            return true;
         }
     }
 }
