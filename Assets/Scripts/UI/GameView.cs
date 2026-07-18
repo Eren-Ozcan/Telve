@@ -20,11 +20,18 @@ namespace Telve.UI
         [SerializeField] GameObject[] cupSlotRoots = new GameObject[MaxCupSlots];
         [SerializeField] Text[] cupSlotLabels = new Text[MaxCupSlots];
         [SerializeField] Image[] cupSlotBackgrounds = new Image[MaxCupSlots];
+        public const int MaxMarketOffers = 3;
+
         [SerializeField] Text readingOrderText;
         [SerializeField] Text statusText;
         [SerializeField] Text resultText;
         [SerializeField] Button submitButton;
         [SerializeField] Button nextCustomerButton;
+        [SerializeField] Button marketButton;
+        [SerializeField] GameObject marketPanel;
+        [SerializeField] Button[] marketOfferButtons = new Button[MaxMarketOffers];
+        [SerializeField] Text[] marketOfferLabels = new Text[MaxMarketOffers];
+        [SerializeField] Button closeMarketButton;
 
         static readonly Color UnselectedColor = new(0.85f, 0.85f, 0.85f);
         static readonly Color SelectedColor = new(1f, 0.85f, 0.3f);
@@ -49,6 +56,12 @@ namespace Telve.UI
                 if (button == null) continue;
                 button.SlotIndex = i;
                 button.Controller = controller;
+            }
+
+            for (int i = 0; i < MaxMarketOffers; i++)
+            {
+                int offerIndex = i; // closure capture
+                marketOfferButtons[i].onClick.AddListener(() => controller.TryBuyOffer(offerIndex));
             }
 
             Refresh();
@@ -92,8 +105,25 @@ namespace Telve.UI
             statusText.text = $"Altın: {controller.Gold}   {dayStatus}";
 
             bool dayOver = controller.DayLost || controller.DayComplete;
-            submitButton.interactable = controller.ReadingOrderCupIndices.Count > 0 && !controller.CurrentCupResolved && !dayOver;
-            nextCustomerButton.interactable = !dayOver;
+            submitButton.interactable = controller.ReadingOrderCupIndices.Count > 0 && !controller.CurrentCupResolved && !dayOver && !controller.IsMarketOpen;
+            nextCustomerButton.interactable = !dayOver && !controller.IsMarketOpen;
+            marketButton.interactable = controller.CurrentCupResolved && !dayOver && !controller.IsMarketOpen;
+
+            marketPanel.SetActive(controller.IsMarketOpen);
+            if (controller.IsMarketOpen)
+            {
+                for (int i = 0; i < MaxMarketOffers; i++)
+                {
+                    bool hasOffer = i < controller.CurrentOffers.Count;
+                    marketOfferButtons[i].gameObject.SetActive(hasOffer);
+                    if (!hasOffer) continue;
+
+                    var offer = controller.CurrentOffers[i];
+                    string kind = offer.IsSymbol ? "Sembol" : "Tılsım";
+                    marketOfferLabels[i].text = $"{kind}: {offer.DisplayName}\n{offer.Price} altın";
+                    marketOfferButtons[i].interactable = controller.Gold >= offer.Price;
+                }
+            }
         }
 
         void ShowResult(EncounterResult result)
@@ -105,5 +135,7 @@ namespace Telve.UI
 
         public void OnSubmitButtonPressed() => controller.SubmitReading();
         public void OnNextCustomerButtonPressed() => controller.DrawCup();
+        public void OnMarketButtonPressed() => controller.OpenMarket();
+        public void OnCloseMarketButtonPressed() => controller.CloseMarket();
     }
 }
