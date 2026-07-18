@@ -1,0 +1,21 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 401955000617a2d459a3740119e5b8c8, type: 3}
+  m_Name: Charm_sansli_nazar
+  m_EditorClassIdentifier: 
+  charmId: sansli_nazar
+  displayName: "\u015Eansl\u0131 Nazar"
+  rarity: 0
+  price: 12
+  effectTarget: 3
+  effectValue: 1
+  description: "G\xF6z sembol\xFC i\xE7eren negatif kombolar etkisiz olur"

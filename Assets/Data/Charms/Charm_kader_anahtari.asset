@@ -1,0 +1,21 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 401955000617a2d459a3740119e5b8c8, type: 3}
+  m_Name: Charm_kader_anahtari
+  m_EditorClassIdentifier: 
+  charmId: kader_anahtari
+  displayName: "Kader Anahtar\u0131"
+  rarity: 3
+  price: 65
+  effectTarget: 4
+  effectValue: 1
+  description: "Ta\xE7 sembol\xFC her elde garanti \xE7\u0131kar"
