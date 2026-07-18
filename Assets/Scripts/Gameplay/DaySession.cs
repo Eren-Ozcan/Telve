@@ -52,6 +52,14 @@ namespace Telve.Gameplay
             return encounter.Payment;
         }
 
+        /// <summary>Pazar alışverişi için. Yetersiz altında false döner, hiçbir şey değişmez.</summary>
+        public bool TrySpendGold(int amount)
+        {
+            if (amount < 0 || amount > Gold) return false;
+            Gold -= amount;
+            return true;
+        }
+
         void ThrowIfDayOver()
         {
             if (DayLost || DayComplete)
