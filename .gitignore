@@ -58,3 +58,6 @@ crashlytics-build.properties
 Thumbs.db
 .vs/
 .idea/
+
+# Headless Unity batchmode debug logs (unity_*.log at repo root)
+/unity_*.log
