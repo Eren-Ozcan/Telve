@@ -62,6 +62,18 @@ namespace Telve.EditorTools
             EditorApplication.update += Tick;
         }
 
+        /// <summary>
+        /// Coplay MCP bridge — installed from a git URL rather than the
+        /// registry (it isn't a published UPM package). Unity 2022+
+        /// per https://docs.coplay.dev/getting-started/installation.
+        /// </summary>
+        public static void InstallCoplay()
+        {
+            EditorPrefs.SetString(QueueKey, "https://github.com/CoplayDev/coplay-unity-plugin.git#beta");
+            EditorApplication.update -= Tick;
+            EditorApplication.update += Tick;
+        }
+
         static void Tick()
         {
             if (_current == null)
