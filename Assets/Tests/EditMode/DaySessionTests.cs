@@ -76,5 +76,48 @@ namespace Telve.Tests
             Assert.Throws<System.InvalidOperationException>(
                 () => day.SubmitEncounter(MakeEncounter(thresholdMet: true, payment: 1)));
         }
+
+        [Test]
+        public void NoRngConstructor_AllRegularCustomersAreRegularArchetype()
+        {
+            var day = new DaySession(startingGold: 0); // eski tek parametreli constructor — geriye dönük uyumluluk
+
+            for (int i = 1; i <= CustomerEconomy.RegularCustomerCount; i++)
+            {
+                Assert.AreEqual(CustomerArchetype.Regular, day.CurrentProfile().Archetype);
+                day.SubmitEncounter(MakeEncounter(thresholdMet: true, payment: 1));
+            }
+        }
+
+        [Test]
+        public void RngConstructor_AssignsArchetypesFromPool()
+        {
+            var day = new DaySession(startingGold: 0, new System.Random(12345));
+
+            bool anyNonRegular = false;
+            for (int i = 1; i <= CustomerEconomy.RegularCustomerCount; i++)
+            {
+                if (day.CurrentProfile().Archetype != CustomerArchetype.Regular) anyNonRegular = true;
+                day.SubmitEncounter(MakeEncounter(thresholdMet: true, payment: 1));
+            }
+
+            // Sabit seed ile 8 çekilişin hepsi Regular çıkma olasılığı (1/5)^8 —
+            // pratikte imkansız; en az bir arketip farkı bekleniyor.
+            Assert.IsTrue(anyNonRegular);
+        }
+
+        [Test]
+        public void CurrentProfile_MuhtarTurn_IgnoresArchetypePool()
+        {
+            var day = new DaySession(startingGold: 0, new System.Random(1));
+            for (int i = 1; i <= CustomerEconomy.RegularCustomerCount; i++)
+            {
+                day.SubmitEncounter(MakeEncounter(thresholdMet: true, payment: 1));
+            }
+
+            Assert.IsTrue(day.IsMuhtarTurn);
+            Assert.AreEqual(CustomerArchetype.Regular, day.CurrentProfile().Archetype);
+            Assert.IsTrue(day.CurrentProfile().PunishesNegativeCombos);
+        }
     }
 }

@@ -79,5 +79,29 @@ namespace Telve.Tests
             Assert.AreEqual(15f, result.BaseScore, 0.001f);
             Assert.AreEqual(9f, result.FinalScore, 0.001f);
         }
+
+        [Test]
+        public void KaraGun_NegativeCombo_MuhtarPunishesHarder()
+        {
+            var readingOrder = new List<SymbolData> { MakeSymbol("yilan", 5), MakeSymbol("dag", 8), MakeSymbol("bulut", 2) };
+
+            var result = ScoreCalculator.Calculate(readingOrder, _comboLibrary, activeCharms: null, punishesNegativeCombos: true);
+
+            // ROADMAP.md Faz 2 "kötü fala inanmaz": 1 - (1-0.6)*1.4 = 0.44 -> 15 * 0.44 = 6.6.
+            Assert.AreEqual(15f, result.BaseScore, 0.001f);
+            Assert.AreEqual(6.6f, result.FinalScore, 0.001f);
+        }
+
+        [Test]
+        public void KaraGun_NegativeCombo_MuhtarPunishmentSoftenedByKaraKediTilismi()
+        {
+            var readingOrder = new List<SymbolData> { MakeSymbol("yilan", 5), MakeSymbol("dag", 8), MakeSymbol("bulut", 2) };
+            var charms = new List<CharmData> { MakeCharm("kara_kedi_tilismi") };
+
+            var result = ScoreCalculator.Calculate(readingOrder, _comboLibrary, charms, punishesNegativeCombos: true);
+
+            // Muhtar boost: 1-(1-0.6)*1.4=0.44, sonra Kara Kedi %50 azaltır: 1-(1-0.44)*0.5=0.72 -> 15*0.72=10.8.
+            Assert.AreEqual(10.8f, result.FinalScore, 0.001f);
+        }
     }
 }
