@@ -24,5 +24,8 @@ namespace Telve.Data
 
         [TextArea]
         public string description;
+
+        [Tooltip("ROADMAP.md Faz 2 içerik tamamlama: tılsımın pazar/envanter ikonu.")]
+        public Sprite icon;
     }
 }
