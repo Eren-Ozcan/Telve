@@ -31,6 +31,7 @@ namespace Telve.UI
 
         System.Random _rng;
         DaySession _day;
+        ComboJournal _journal;
 
         public IReadOnlyList<SymbolData> CurrentCup { get; private set; } = Array.Empty<SymbolData>();
 
@@ -49,8 +50,22 @@ namespace Telve.UI
         public bool IsMuhtarTurn => _day.IsMuhtarTurn;
         public int CustomerIndex => _day.CurrentCustomerIndex;
 
+        /// <summary>Mevcut sıradaki müşterinin arketipi (gün/koşu bitmişse Regular döner).</summary>
+        public CustomerArchetype CurrentArchetype =>
+            (_day.DayLost || _day.DayComplete) ? CustomerArchetype.Regular : _day.CurrentProfile().Archetype;
+
+        public IReadOnlyList<ComboData> AllCombos => _allCombos;
+        public IReadOnlyCollection<string> DiscoveredComboIds => _journal.DiscoveredComboIds;
+
         public event Action OnStateChanged;
         public event Action<EncounterResult> OnEncounterResolved;
+        public event Action<IReadOnlyList<string>> OnNewCombosDiscovered;
+
+        /// <summary>ROADMAP.md Faz 2 sunum katmanı: yeni fincan çekildiğinde (animasyon/ses tetikleyicisi).</summary>
+        public event Action OnCupDrawn;
+
+        /// <summary>ROADMAP.md Faz 2 sunum katmanı: pazardan satın alma başarılı olduğunda (ses tetikleyicisi).</summary>
+        public event Action<MarketOffer> OnOfferPurchased;
 
         void Awake()
         {
@@ -61,9 +76,10 @@ namespace Telve.UI
             // docs/design/04-economy.md: "Başlangıç destesi: en yaygın Common alt kümesi."
             _ownedSymbols = _allSymbols.Where(s => s.rarity == SymbolRarity.Common).ToList();
             _activeCharms = new List<CharmData>();
+            _journal = new ComboJournal();
 
             _rng = new System.Random();
-            _day = new DaySession(startingGold);
+            _day = new DaySession(startingGold, _rng);
         }
 
         void Start()
@@ -80,6 +96,7 @@ namespace Telve.UI
             CurrentCupResolved = false;
             CurrentCup = CupDraw.Draw(_ownedSymbols, _rng, _activeCharms);
             OnStateChanged?.Invoke();
+            OnCupDrawn?.Invoke();
         }
 
         /// <summary>Fincan sırası tıklandığında: okuma sırasındaysa çıkar, değilse sona ekler.</summary>
@@ -99,6 +116,20 @@ namespace Telve.UI
         public IEnumerable<SymbolData> ReadingOrderSymbols =>
             ReadingOrderCupIndices.Select(i => CurrentCup[i]);
 
+        /// <summary>Sürükle-bırak: okuma sırasındaki iki pozisyonu yer değiştirir (ROADMAP.md Faz 1).</summary>
+        public void ReorderReadingOrder(int fromPosition, int toPosition)
+        {
+            if (CurrentCupResolved) return;
+            if (fromPosition < 0 || fromPosition >= ReadingOrderCupIndices.Count) return;
+            if (toPosition < 0 || toPosition >= ReadingOrderCupIndices.Count) return;
+            if (fromPosition == toPosition) return;
+
+            (ReadingOrderCupIndices[fromPosition], ReadingOrderCupIndices[toPosition]) =
+                (ReadingOrderCupIndices[toPosition], ReadingOrderCupIndices[fromPosition]);
+
+            OnStateChanged?.Invoke();
+        }
+
         public void SubmitReading()
         {
             if (CurrentCupResolved) return;
@@ -111,7 +142,10 @@ namespace Telve.UI
             _day.SubmitEncounter(result);
             CurrentCupResolved = true;
 
+            var newlyDiscovered = _journal.RecordEncounter(result.Score.TriggeredCombos);
+
             OnEncounterResolved?.Invoke(result);
+            if (newlyDiscovered.Count > 0) OnNewCombosDiscovered?.Invoke(newlyDiscovered);
             OnStateChanged?.Invoke();
         }
 
@@ -149,6 +183,7 @@ namespace Telve.UI
             if (offer.IsSymbol) _ownedSymbols.Add(offer.Symbol);
             else _activeCharms.Add(offer.Charm);
 
+            OnOfferPurchased?.Invoke(offer);
             CloseMarket();
             return true;
         }

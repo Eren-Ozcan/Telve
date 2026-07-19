@@ -1,3 +1,4 @@
+using System.Collections;
 using System.Text;
 using Telve.Gameplay;
 using UnityEngine;
@@ -23,6 +24,8 @@ namespace Telve.UI
         public const int MaxMarketOffers = 3;
 
         [SerializeField] Text readingOrderText;
+        [SerializeField] GameObject[] readingOrderChipRoots = new GameObject[MaxCupSlots];
+        [SerializeField] Text[] readingOrderChipLabels = new Text[MaxCupSlots];
         [SerializeField] Text statusText;
         [SerializeField] Text resultText;
         [SerializeField] Button submitButton;
@@ -32,20 +35,27 @@ namespace Telve.UI
         [SerializeField] Button[] marketOfferButtons = new Button[MaxMarketOffers];
         [SerializeField] Text[] marketOfferLabels = new Text[MaxMarketOffers];
         [SerializeField] Button closeMarketButton;
+        [SerializeField] RectTransform cupPanelRoot;
 
         static readonly Color UnselectedColor = new(0.85f, 0.85f, 0.85f);
         static readonly Color SelectedColor = new(1f, 0.85f, 0.3f);
+
+        const float CupFlipPunchScale = 1.15f;
+        const float CupFlipDuration = 0.22f;
+        const float SymbolRevealDuration = 0.25f;
 
         void OnEnable()
         {
             controller.OnStateChanged += Refresh;
             controller.OnEncounterResolved += ShowResult;
+            controller.OnCupDrawn += PlayCupDrawFeedback;
         }
 
         void OnDisable()
         {
             controller.OnStateChanged -= Refresh;
             controller.OnEncounterResolved -= ShowResult;
+            controller.OnCupDrawn -= PlayCupDrawFeedback;
         }
 
         void Start()
@@ -62,6 +72,14 @@ namespace Telve.UI
             {
                 int offerIndex = i; // closure capture
                 marketOfferButtons[i].onClick.AddListener(() => controller.TryBuyOffer(offerIndex));
+            }
+
+            for (int i = 0; i < MaxCupSlots; i++)
+            {
+                var chip = readingOrderChipRoots[i].GetComponent<ReadingOrderChip>();
+                if (chip == null) continue;
+                chip.Position = i;
+                chip.Controller = controller;
             }
 
             Refresh();
@@ -98,10 +116,22 @@ namespace Telve.UI
                 readingOrderText.text = order.ToString();
             }
 
+            for (int i = 0; i < MaxCupSlots; i++)
+            {
+                bool active = i < controller.ReadingOrderCupIndices.Count;
+                readingOrderChipRoots[i].SetActive(active);
+                if (!active) continue;
+
+                var symbol = controller.CurrentCup[controller.ReadingOrderCupIndices[i]];
+                readingOrderChipLabels[i].text = $"{i + 1}. {symbol.displayName}";
+            }
+
+            string archetypeSuffix = controller.CurrentArchetype == CustomerArchetype.Regular
+                ? string.Empty : $" ({controller.CurrentArchetype})";
             string dayStatus = controller.DayLost ? "GÜN KAYBEDİLDİ"
                 : controller.DayComplete ? "GÜN TAMAMLANDI"
                 : controller.IsMuhtarTurn ? "Muhtar geldi!"
-                : $"Müşteri {controller.CustomerIndex}/{CustomerEconomy.RegularCustomerCount}";
+                : $"Müşteri {controller.CustomerIndex}/{CustomerEconomy.RegularCustomerCount}{archetypeSuffix}";
             statusText.text = $"Altın: {controller.Gold}   {dayStatus}";
 
             bool dayOver = controller.DayLost || controller.DayComplete;
@@ -131,6 +161,52 @@ namespace Telve.UI
             resultText.text =
                 $"Taban: {result.Score.BaseScore:0}  Skor: {result.Score.FinalScore:0.#}\n" +
                 $"Eşik {(result.Payment.ThresholdMet ? "AŞILDI" : "AŞILAMADI")} — Ödeme: {result.Payment.Payment} altın";
+        }
+
+        /// <summary>
+        /// ROADMAP.md Faz 2 "Fincan çevirme animasyonu" + "Sembol belirme
+        /// efekti": Refresh() (OnStateChanged, önce çalışır) slotları zaten
+        /// aktif/etiketli hale getirmiş olur; burada sadece görsel punch/
+        /// reveal tween'i tetiklenir. Harici animasyon paketi yok — düz
+        /// coroutine tabanlı basit tween (Faz 1 placeholder kalitesine uygun).
+        /// </summary>
+        void PlayCupDrawFeedback()
+        {
+            if (cupPanelRoot != null) StartCoroutine(PunchScale(cupPanelRoot));
+
+            for (int i = 0; i < MaxCupSlots; i++)
+            {
+                if (i < controller.CurrentCup.Count) StartCoroutine(RevealSlot(cupSlotRoots[i].transform));
+            }
+        }
+
+        IEnumerator PunchScale(RectTransform target)
+        {
+            float elapsed = 0f;
+            while (elapsed < CupFlipDuration)
+            {
+                elapsed += Time.deltaTime;
+                float t = elapsed / CupFlipDuration;
+                float scale = Mathf.Lerp(CupFlipPunchScale, 1f, t);
+                target.localScale = Vector3.one * scale;
+                yield return null;
+            }
+
+            target.localScale = Vector3.one;
+        }
+
+        IEnumerator RevealSlot(Transform slot)
+        {
+            float elapsed = 0f;
+            while (elapsed < SymbolRevealDuration)
+            {
+                elapsed += Time.deltaTime;
+                float t = elapsed / SymbolRevealDuration;
+                slot.localScale = Vector3.one * Mathf.SmoothStep(0f, 1f, t);
+                yield return null;
+            }
+
+            slot.localScale = Vector3.one;
         }
 
         public void OnSubmitButtonPressed() => controller.SubmitReading();
