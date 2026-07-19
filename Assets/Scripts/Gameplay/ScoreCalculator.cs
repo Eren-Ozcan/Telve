@@ -31,10 +31,15 @@ namespace Telve.Gameplay
     /// </summary>
     public static class ScoreCalculator
     {
+        // Muhtar "kötü fala inanmaz" (ROADMAP.md Faz 2): negatif kombo
+        // cezası bu oranda şiddetlenir (1'e olan uzaklık ×1.4 büyür).
+        const float MuhtarNegativePenaltyBoost = 1.4f;
+
         public static ScoreResult Calculate(
             IReadOnlyList<SymbolData> readingOrder,
             IReadOnlyList<ComboData> comboLibrary,
-            IReadOnlyList<CharmData> activeCharms = null)
+            IReadOnlyList<CharmData> activeCharms = null,
+            bool punishesNegativeCombos = false)
         {
             activeCharms ??= Array.Empty<CharmData>();
 
@@ -76,7 +81,7 @@ namespace Telve.Gameplay
             {
                 if (match.Combo.effectType != ComboEffectType.Multiplier) continue;
 
-                float multiplier = AdjustedMultiplier(match.Combo, hasNazarSuppression, negativePenaltyReduction);
+                float multiplier = AdjustedMultiplier(match.Combo, hasNazarSuppression, negativePenaltyReduction, punishesNegativeCombos);
 
                 if (!firstMultiplierBoosted && hasFirstComboCharm)
                 {
@@ -120,7 +125,7 @@ namespace Telve.Gameplay
         // Not: mevcut veri setinde negatif kombolar her zaman Multiplier
         // tipinde; Flat tipte negatif kombo yok, bu yüzden bu ayarlama
         // sadece Multiplier dalında uygulanıyor.
-        static float AdjustedMultiplier(ComboData combo, bool hasNazarSuppression, float negativePenaltyReduction)
+        static float AdjustedMultiplier(ComboData combo, bool hasNazarSuppression, float negativePenaltyReduction, bool punishesNegativeCombos)
         {
             if (!combo.isNegative) return combo.effectValue;
 
@@ -129,12 +134,19 @@ namespace Telve.Gameplay
                 return 1f;
             }
 
-            if (negativePenaltyReduction > 0f)
+            float value = combo.effectValue;
+
+            if (punishesNegativeCombos)
             {
-                return 1f - (1f - combo.effectValue) * (1f - negativePenaltyReduction);
+                value = 1f - (1f - value) * MuhtarNegativePenaltyBoost;
             }
 
-            return combo.effectValue;
+            if (negativePenaltyReduction > 0f)
+            {
+                value = 1f - (1f - value) * (1f - negativePenaltyReduction);
+            }
+
+            return value;
         }
     }
 }

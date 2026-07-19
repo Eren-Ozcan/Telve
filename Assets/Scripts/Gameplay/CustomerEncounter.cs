@@ -29,7 +29,7 @@ namespace Telve.Gameplay
             IReadOnlyList<ComboData> comboLibrary,
             IReadOnlyList<CharmData> activeCharms = null)
         {
-            var score = ScoreCalculator.Calculate(readingOrder, comboLibrary, activeCharms);
+            var score = ScoreCalculator.Calculate(readingOrder, comboLibrary, activeCharms, profile.PunishesNegativeCombos);
             var payment = CustomerEconomy.Evaluate(profile, score.FinalScore, activeCharms);
             return new EncounterResult(score, payment);
         }

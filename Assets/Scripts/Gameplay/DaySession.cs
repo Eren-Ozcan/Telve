@@ -11,7 +11,14 @@ namespace Telve.Gameplay
     /// </summary>
     public class DaySession
     {
+        static readonly CustomerArchetype[] ArchetypePool =
+        {
+            CustomerArchetype.Regular, CustomerArchetype.Aceleci, CustomerArchetype.Kuskucu,
+            CustomerArchetype.Dertli, CustomerArchetype.Comert,
+        };
+
         readonly List<CustomerResult> _history = new();
+        readonly CustomerArchetype[] _archetypes;
 
         public int Gold { get; private set; }
         public int CurrentCustomerIndex { get; private set; } = 1; // 1..8, sonra muhtar
@@ -21,15 +28,31 @@ namespace Telve.Gameplay
 
         public bool IsMuhtarTurn => CurrentCustomerIndex > CustomerEconomy.RegularCustomerCount;
 
-        public DaySession(int startingGold)
+        public DaySession(int startingGold) : this(startingGold, null) { }
+
+        /// <summary>
+        /// ROADMAP.md Faz 2: rng verilirse her sıradan müşteriye rastgele
+        /// bir CustomerArchetype atanır (bkz. ArchetypePool). rng null ise
+        /// (geriye dönük uyumluluk) tüm müşteriler Regular kalır — eski
+        /// davranışla birebir aynı sayılar.
+        /// </summary>
+        public DaySession(int startingGold, System.Random rng)
         {
             Gold = startingGold;
+
+            _archetypes = new CustomerArchetype[CustomerEconomy.RegularCustomerCount];
+            for (int i = 0; i < _archetypes.Length; i++)
+            {
+                _archetypes[i] = rng != null ? ArchetypePool[rng.Next(ArchetypePool.Length)] : CustomerArchetype.Regular;
+            }
         }
 
         public CustomerProfile CurrentProfile()
         {
             ThrowIfDayOver();
-            return IsMuhtarTurn ? CustomerProfile.Muhtar() : CustomerProfile.Regular(CurrentCustomerIndex);
+            return IsMuhtarTurn
+                ? CustomerProfile.Muhtar()
+                : CustomerProfile.Regular(CurrentCustomerIndex, _archetypes[CurrentCustomerIndex - 1]);
         }
 
         public CustomerResult SubmitEncounter(EncounterResult encounter)
