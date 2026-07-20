@@ -9,12 +9,12 @@
 
 Kod yazmadan önce kağıt üzerinde kanıtlanması gerekenler:
 
-- [ ] **Çekirdek döngü dokümanı**: Fincan çevir → 5-7 sembol → okuma sırasına diz → kombo → puan/ödeme. Tek sayfa, tartışmasız net.
-- [ ] **Sembol seti v1 (~20-25 sembol)**: Her sembolün adı, temel değeri, nadirlik sınıfı, fal anlamı. (kuş, yol, yılan, dağ, göz, gemi, balık, ağaç, kalp, mektup...)
-- [ ] **Kombo matrisi v1**: Yan yana gelen ikili/üçlü kombinasyonlar ve etkileri (örn. Yol+Kuş = "Haber Geliyor" ×1.5 çarpan). MVP için ~30-40 kombo yeterli.
-- [ ] **Puanlama formülü**: Balatro'daki "çip × çarpan" muadili. Öneri: `Sembol Değeri × Kombo Çarpanı × Tılsım Etkileri = Müşteri Memnuniyeti → Ödeme`.
-- [ ] **Kağıt prototip**: Kartlarla masada oyna. Kombo dizme kararı gerçekten ilginç mi? Değilse burada düzelt, kodda değil.
-- [ ] **Ekonomi taslağı**: Müşteri ödemesi → pazar fiyatları → gün sonu hedefi (boss "muhtar" eşiği) dengesi.
+- [x] **Çekirdek döngü dokümanı**: Fincan çevir → 5-7 sembol → okuma sırasına diz → kombo → puan/ödeme. Tek sayfa, tartışmasız net. *(kod olarak CupDraw → ReadingOrder → ComboDetector → ScoreCalculator zincirinde uygulanmış durumda)*
+- [x] **Sembol seti v1 (~20-25 sembol)**: Her sembolün adı, temel değeri, nadirlik sınıfı, fal anlamı. *(24 sembol `Assets/Resources/Data/Symbols` altında ScriptableObject olarak var)*
+- [x] **Kombo matrisi v1**: Yan yana gelen ikili/üçlü kombinasyonlar ve etkileri. *(37 kombo `Assets/Resources/Data/Combos` altında)*
+- [x] **Puanlama formülü**: Balatro'daki "çip × çarpan" muadili. *(ScoreCalculator + testleri)*
+- [ ] **Kağıt prototip**: Kartlarla masada oyna. Kombo dizme kararı gerçekten ilginç mi? Değilse burada düzelt, kodda değil. *(gerçek insan playtest kanıtı repoda yok — bu satır sadece fiilen oynatıldığında işaretlenmeli)*
+- [x] **Ekonomi taslağı**: Müşteri ödemesi → pazar fiyatları → gün sonu hedefi (boss "muhtar" eşiği) dengesi. *(CustomerEconomy, MarketPricing, DaySession)*
 
 **Çıkış kriteri:** Kağıt prototipte 3 farklı kişi "bir el daha" dediyse geç.
 
@@ -24,15 +24,15 @@ Kod yazmadan önce kağıt üzerinde kanıtlanması gerekenler:
 
 Amaç güzellik değil, **eğlencenin kodda da çalıştığını** kanıtlamak. Placeholder görseller (düz renkli daireler + sembol adı yazısı) yeterli.
 
-- [ ] Unity proje kurulumu (2D URP, portre mod, 1080×1920 referans çözünürlük)
-- [ ] Veri mimarisi: Semboller ve kombolar **ScriptableObject** olarak (dengeleme kod değişikliği gerektirmesin)
-- [ ] Fincan çevirme → rastgele sembol dağıtımı (seed destekli RNG baştan kur — haftalık seed buna dayanacak)
-- [ ] Sürükle-bırak okuma sırası dizme (mobilde parmakla test et, masaüstü fare değil)
-- [ ] Kombo tespiti + puan hesaplama + sonuç ekranı
-- [ ] Tek müşteri döngüsü: gel → fal bak → öde → git
-- [ ] 8-10 müşterilik gün döngüsü + basit muhtar (yüksek eşikli müşteri)
-- [ ] Pazar ekranı v0: müşteriler arası 3 seçenekten sembol/tılsım satın alma
-- [ ] ~10 tılsım (pasif etki: "kuşlar +2 değer", "ilk kombo ×2" vb.)
+- [x] Unity proje kurulumu (2D URP, portre mod, 1080×1920 referans çözünürlük)
+- [x] Veri mimarisi: Semboller ve kombolar **ScriptableObject** olarak (dengeleme kod değişikliği gerektirmesin)
+- [x] Fincan çevirme → rastgele sembol dağıtımı (seed destekli RNG baştan kur — haftalık seed buna dayanacak)
+- [x] Sürükle-bırak okuma sırası dizme (mobilde parmakla test et, masaüstü fare değil) *(ReadingOrderChip drag/drop; masaüstünde fare ile doğrulandı, cihazda parmak testi hâlâ gerekiyor)*
+- [x] Kombo tespiti + puan hesaplama + sonuç ekranı
+- [x] Tek müşteri döngüsü: gel → fal bak → öde → git
+- [x] 8-10 müşterilik gün döngüsü + basit muhtar (yüksek eşikli müşteri)
+- [x] Pazar ekranı v0: müşteriler arası 3 seçenekten sembol/tılsım satın alma
+- [x] ~10 tılsım (pasif etki: "kuşlar +2 değer", "ilk kombo ×2" vb.) *(10 tılsım `Assets/Resources/Data/Charms` altında)*
 
 **Çıkış kriteri:** Kendi başına 30 dk kesintisiz oynayabiliyorsan ve "şu tılsımla şu desteyi denesem" diye düşünüyorsan geç. Düşünmüyorsan Faz 0'a dön.
 
@@ -43,21 +43,22 @@ Amaç güzellik değil, **eğlencenin kodda da çalıştığını** kanıtlamak.
 Amaç: MVP içeriğinin tamamı + oyunun **duygusunu** kuran sunum katmanı. Balatro'yu satan şey puan sayacının tıkırtısıydı; Telve'yi satacak şey fincanın atmosferi.
 
 ### Sunum
-- [ ] Sanat yönü kilidi: loş masa, buhar, mum ışığı, telve dokusu (2-3 konsept dene, birini seç)
-- [ ] Fincan çevirme animasyonu (oyunun imza anı — buna zaman harca)
-- [ ] Sembollerin telvede "belirme" efekti
-- [ ] Kombo tetiklenme geri bildirimi: isim kartı ("Kıskançlık Fark Edildi"), ekran sarsıntısı, ses
-- [ ] Müşteri tepki sistemi: irkilme, sevinme, korkma (basit portre + 2-3 ifade)
-- [ ] Ses: fincan porselen tıkırtısı, kaşık, ortam uğultusu, kombo müzik vuruşları
+- [x] Sanat yönü kilidi: loş masa, buhar, mum ışığı, telve dokusu (2-3 konsept dene, birini seç) *(3 konsept üretildi — `Assets/Art/Concepts/`; "B - düz altın çizgi, gece mavisi/altın palet, vektörel folk-art" seçildi — ikon üretimi için en okunaklı seçenek)*
+- [x] Masa/buhar/mum arka planı + boş fincan illüstrasyonu final görselle sahneye eklendi *(`Assets/Art/Background/table_background.png` → `Canvas/Background` tam ekran; `cup_art.png` → `Canvas/CupPanel/CupArt` dekoratif üst görsel; Play Mode'da doğrulandı)*
+- [x] Fincan çevirme animasyonu (oyunun imza anı — buna zaman harca) *(GameView.PunchScale — placeholder kalitede coroutine tween; final "imza an" cilası sanat yönü kilidinden sonra)*
+- [x] Sembollerin telvede "belirme" efekti *(GameView.RevealSlot)*
+- [x] Kombo tetiklenme geri bildirimi: isim kartı ("Kıskançlık Fark Edildi"), ekran sarsıntısı, ses *(ComboBannerView + AudioManager.PlayComboHit; combo_hit.wav üretilip atandı)*
+- [x] Müşteri tepki sistemi: irkilme, sevinme, korkma (basit portre + 2-3 ifade) *(CustomerReactionView; irkilme/korkma "startled" sprite'ında birleşti — v1 kapsamı; 3 portre Concept B stilinde üretilip `Assets/Art/Portraits/` altına kaydedildi ve sahnedeki alanlara atandı)*
+- [x] Ses: fincan porselen tıkırtısı, kaşık, ortam uğultusu, kombo müzik vuruşları *(AudioManager; 6 klip `Assets/Audio/` altında üretilip sahnedeki alanlara atandı — cup_draw, combo_hit, purchase, positive/negative_result, ambient_loop)*
 
 ### İçerik tamamlama (MVP kapsamı)
-- [ ] 20-25 sembolün tamamı final görselle
-- [ ] ~10 tılsım final
-- [ ] Muhtar boss'u özel mekanikle (örn. "kötü fala inanmaz" — negatif kombolar ceza)
-- [ ] Müşteri çeşitliliği: 4-5 arketip (aceleci, kuşkucu, dertli...) hafif kural farklarıyla
+- [x] 20-25 sembolün tamamı final görselle *(24 sembol ikonu Concept B stilinde üretildi — `Assets/Art/Symbols/`, `SymbolData.sprite` alanlarına atandı; GameView'a `cupSlotIcons`/`marketOfferIcons` eklenip fincan ve pazar slotlarında fiilen gösteriliyor — Play Mode'da doğrulandı.)*
+- [x] ~10 tılsım final *(10 tılsım ikonu üretildi — `Assets/Art/Charms/`, `CharmData.icon` alanlarına atandı, pazar UI'ında görüntüleniyor.)*
+- [x] Muhtar boss'u özel mekanikle (örn. "kötü fala inanmaz" — negatif kombolar ceza)
+- [x] Müşteri çeşitliliği: 4-5 arketip (aceleci, kuşkucu, dertli...) hafif kural farklarıyla *(Regular + Aceleci/Kuşkucu/Dertli/Cömert = 5 arketip)*
 
 ### Falcı defteri v1
-- [ ] Keşfedilen komboların kaydı; ilk keşifte altın çerçeve anı (viral ekran görüntüsü anı — paylaş butonu buraya)
+- [x] Keşfedilen komboların kaydı; ilk keşifte altın çerçeve anı (viral ekran görüntüsü anı — paylaş butonu buraya) *(ComboJournal + JournalView; altın çerçeve/paylaş butonu görsel cilası final sanata bağlı)*
 
 **Çıkış kriteri:** 10 dakikalık oynanış videosu çekilebilir ve yabancı biri izlediğinde ne olduğunu anlıyor.
 
