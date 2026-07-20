@@ -19,3 +19,4 @@ MonoBehaviour:
   effectTarget: 4
   effectValue: 1
   description: "Fincanda 1 sembol daha fazla \xE7\u0131kar (6-8 aras\u0131)"
+  icon: {fileID: 21300000, guid: d34795c04cb645a478c36861e1f716e7, type: 3}

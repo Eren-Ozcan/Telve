@@ -17,5 +17,5 @@ MonoBehaviour:
   baseValue: 5
   rarity: 1
   drawWeight: 45
-  sprite: {fileID: 0}
+  sprite: {fileID: 21300000, guid: 4b466ca167b4d5745abfe0de45263724, type: 3}
   falMeaning: "D\xFC\u015Fman, ihanet, dedikodu"

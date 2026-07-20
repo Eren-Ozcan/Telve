@@ -19,3 +19,4 @@ MonoBehaviour:
   effectTarget: 4
   effectValue: 1
   description: "Ta\xE7 sembol\xFC her elde garanti \xE7\u0131kar"
+  icon: {fileID: 21300000, guid: 8f9d7cbab92a63749badf312dd9a483a, type: 3}

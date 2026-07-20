@@ -17,5 +17,5 @@ MonoBehaviour:
   baseValue: 3
   rarity: 0
   drawWeight: 100
-  sprite: {fileID: 0}
+  sprite: {fileID: 21300000, guid: 7cae73498a1ddeb4a8e8cbba1572b994, type: 3}
   falMeaning: Bereket, para

@@ -17,5 +17,5 @@ MonoBehaviour:
   baseValue: 5
   rarity: 1
   drawWeight: 45
-  sprite: {fileID: 0}
+  sprite: {fileID: 21300000, guid: 66a5a5608f919d9499d78be09c4a8980, type: 3}
   falMeaning: "Ge\xE7i\u015F d\xF6nemi, karar an\u0131"

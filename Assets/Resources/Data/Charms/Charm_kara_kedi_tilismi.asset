@@ -19,3 +19,4 @@ MonoBehaviour:
   effectTarget: 3
   effectValue: 0.5
   description: "Negatif kombo cezalar\u0131 %50 azal\u0131r"
+  icon: {fileID: 21300000, guid: 9f6c8b9e5a8a5344aa05a3fd5725fead, type: 3}

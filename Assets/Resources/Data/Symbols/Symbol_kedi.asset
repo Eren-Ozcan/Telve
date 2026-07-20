@@ -17,5 +17,5 @@ MonoBehaviour:
   baseValue: 4
   rarity: 1
   drawWeight: 45
-  sprite: {fileID: 0}
+  sprite: {fileID: 21300000, guid: 8eddeb07464d9f248b9a58b799328518, type: 3}
   falMeaning: "K\u0131skan\xE7l\u0131k, hile"

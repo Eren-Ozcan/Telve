@@ -19,3 +19,4 @@ MonoBehaviour:
   effectTarget: 1
   effectValue: 5
   description: "Ayn\u0131 sembol iki kez yan yana gelirse +5 sabit bonus"
+  icon: {fileID: 21300000, guid: af8edbbe23c288e4d8d0352909dde66e, type: 3}

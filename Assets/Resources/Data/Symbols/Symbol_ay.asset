@@ -17,5 +17,5 @@ MonoBehaviour:
   baseValue: 3
   rarity: 0
   drawWeight: 100
-  sprite: {fileID: 0}
+  sprite: {fileID: 21300000, guid: 3a5764eda045e194eb73f8d56decf62a, type: 3}
   falMeaning: "De\u011Fi\u015Fim, gizli duygu"

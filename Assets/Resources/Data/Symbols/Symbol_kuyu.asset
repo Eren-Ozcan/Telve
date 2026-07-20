@@ -17,5 +17,5 @@ MonoBehaviour:
   baseValue: 7
   rarity: 2
   drawWeight: 15
-  sprite: {fileID: 0}
+  sprite: {fileID: 21300000, guid: 10bdbd9c048283e45875ba4de89c6f6d, type: 3}
   falMeaning: "Derin s\u0131r"

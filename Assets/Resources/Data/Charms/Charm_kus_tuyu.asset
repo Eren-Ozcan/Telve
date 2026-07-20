@@ -19,3 +19,4 @@ MonoBehaviour:
   effectTarget: 0
   effectValue: 2
   description: "Ku\u015F sembollerinin de\u011Feri +2"
+  icon: {fileID: 21300000, guid: 7d46872042184d0418882cc73daebea5, type: 3}

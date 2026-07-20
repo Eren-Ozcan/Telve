@@ -17,5 +17,5 @@ MonoBehaviour:
   baseValue: 7
   rarity: 2
   drawWeight: 15
-  sprite: {fileID: 0}
+  sprite: {fileID: 21300000, guid: ba12f9b423ddbd54bb87954bfb5cd359, type: 3}
   falMeaning: Dilek, umut

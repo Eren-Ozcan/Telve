@@ -17,5 +17,5 @@ MonoBehaviour:
   baseValue: 2
   rarity: 0
   drawWeight: 100
-  sprite: {fileID: 0}
+  sprite: {fileID: 21300000, guid: cf91eae95ca253d43b159900eaed8beb, type: 3}
   falMeaning: Nazar, korunma

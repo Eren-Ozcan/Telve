@@ -17,5 +17,5 @@ MonoBehaviour:
   baseValue: 2
   rarity: 0
   drawWeight: 100
-  sprite: {fileID: 0}
+  sprite: {fileID: 21300000, guid: 83ada2332bcc0b9418daaf8e8d12fcde, type: 3}
   falMeaning: "Belirsizlik, endi\u015Fe"

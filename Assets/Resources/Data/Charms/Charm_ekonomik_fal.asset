@@ -19,3 +19,4 @@ MonoBehaviour:
   effectTarget: 5
   effectValue: -0.15
   description: "Pazar fiyatlar\u0131 %15 d\xFC\u015Fer"
+  icon: {fileID: 21300000, guid: 94b1b4bf6fd7d2047a5bf3e55f4642ba, type: 3}

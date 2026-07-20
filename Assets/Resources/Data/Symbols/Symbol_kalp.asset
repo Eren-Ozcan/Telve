@@ -17,5 +17,5 @@ MonoBehaviour:
   baseValue: 3
   rarity: 0
   drawWeight: 100
-  sprite: {fileID: 0}
+  sprite: {fileID: 21300000, guid: 0486d9e9f67e6ee448d0bc8fdf771d82, type: 3}
   falMeaning: "A\u015Fk, duygusal ba\u011F"

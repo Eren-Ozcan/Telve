@@ -17,5 +17,5 @@ MonoBehaviour:
   baseValue: 4
   rarity: 1
   drawWeight: 45
-  sprite: {fileID: 0}
+  sprite: {fileID: 21300000, guid: 3fa41544518f97440a4d4625ee94b230, type: 3}
   falMeaning: "Yeni f\u0131rsat, \xE7\xF6z\xFCm"

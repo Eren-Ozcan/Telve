@@ -19,3 +19,4 @@ MonoBehaviour:
   effectTarget: 5
   effectValue: 1.5
   description: "Muhtar m\xFC\u015Fterisinde \xF6deme \xD71.5"
+  icon: {fileID: 21300000, guid: 23e59a485f3640c4ba1e5d300e16560d, type: 3}
