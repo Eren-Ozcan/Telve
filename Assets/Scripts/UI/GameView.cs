@@ -21,6 +21,7 @@ namespace Telve.UI
         [SerializeField] GameObject[] cupSlotRoots = new GameObject[MaxCupSlots];
         [SerializeField] Text[] cupSlotLabels = new Text[MaxCupSlots];
         [SerializeField] Image[] cupSlotBackgrounds = new Image[MaxCupSlots];
+        [SerializeField] Image[] cupSlotIcons = new Image[MaxCupSlots];
         public const int MaxMarketOffers = 3;
 
         [SerializeField] Text readingOrderText;
@@ -34,6 +35,7 @@ namespace Telve.UI
         [SerializeField] GameObject marketPanel;
         [SerializeField] Button[] marketOfferButtons = new Button[MaxMarketOffers];
         [SerializeField] Text[] marketOfferLabels = new Text[MaxMarketOffers];
+        [SerializeField] Image[] marketOfferIcons = new Image[MaxMarketOffers];
         [SerializeField] Button closeMarketButton;
         [SerializeField] RectTransform cupPanelRoot;
 
@@ -98,6 +100,12 @@ namespace Telve.UI
 
                 bool selected = controller.ReadingOrderCupIndices.Contains(i);
                 cupSlotBackgrounds[i].color = selected ? SelectedColor : UnselectedColor;
+
+                if (i < cupSlotIcons.Length && cupSlotIcons[i] != null)
+                {
+                    cupSlotIcons[i].sprite = symbol.sprite;
+                    cupSlotIcons[i].enabled = symbol.sprite != null;
+                }
             }
 
             if (controller.ReadingOrderCupIndices.Count == 0)
@@ -152,6 +160,13 @@ namespace Telve.UI
                     string kind = offer.IsSymbol ? "Sembol" : "Tılsım";
                     marketOfferLabels[i].text = $"{kind}: {offer.DisplayName}\n{offer.Price} altın";
                     marketOfferButtons[i].interactable = controller.Gold >= offer.Price;
+
+                    if (i < marketOfferIcons.Length && marketOfferIcons[i] != null)
+                    {
+                        var offerSprite = offer.IsSymbol ? offer.Symbol.sprite : offer.Charm.icon;
+                        marketOfferIcons[i].sprite = offerSprite;
+                        marketOfferIcons[i].enabled = offerSprite != null;
+                    }
                 }
             }
         }
