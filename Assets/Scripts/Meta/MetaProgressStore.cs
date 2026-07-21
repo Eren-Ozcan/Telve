@@ -20,6 +20,7 @@ namespace Telve.Meta
         const string SelectedCharacterKey = "Telve.Meta.SelectedCharacter";
         const string LanguageKey = "Telve.Meta.Language";
         const string TutorialCompletedKey = "Telve.Meta.TutorialCompleted";
+        const string OwnedCosmeticsKey = "Telve.Meta.OwnedCosmetics";
         const char ComboIdSeparator = '|';
 
         public static int LoadTotalWisdom() => PlayerPrefs.GetInt(TotalWisdomKey, 0);
@@ -82,6 +83,19 @@ namespace Telve.Meta
         public static void SaveTutorialCompleted()
         {
             PlayerPrefs.SetInt(TutorialCompletedKey, 1);
+            PlayerPrefs.Save();
+        }
+
+        /// <summary>ROADMAP.md Faz 4 "IAP altyapısı" — MockPurchaseService'in yerel sahiplik kaydı.</summary>
+        public static IEnumerable<string> LoadOwnedCosmeticIds()
+        {
+            string raw = PlayerPrefs.GetString(OwnedCosmeticsKey, string.Empty);
+            return string.IsNullOrEmpty(raw) ? Enumerable.Empty<string>() : raw.Split(ComboIdSeparator);
+        }
+
+        public static void SaveOwnedCosmeticIds(IEnumerable<string> cosmeticIds)
+        {
+            PlayerPrefs.SetString(OwnedCosmeticsKey, string.Join(ComboIdSeparator, cosmeticIds));
             PlayerPrefs.Save();
         }
     }
