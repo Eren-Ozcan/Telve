@@ -66,13 +66,13 @@ Amaç: MVP içeriğinin tamamı + oyunun **duygusunu** kuran sunum katmanı. Bal
 
 ## Faz 3 — Meta-İlerleme + Koşu Derinliği (4-5 hafta)
 
-- [ ] **Bilgelik puanı**: koşu sonu kazanım + kalıcı açılımlar ağacı (StS tarzı: yeni semboller, başlangıç tılsımı seçenekleri) *(koşu sonu kazanım kısmı yapıldı: `WisdomReward` + `MetaProgressStore`, PlayerPrefs ile kalıcı, testli; kalıcı açılımlar ağacı — puanı harcama tarafı — henüz yok)*
-- [ ] Açılabilir sembol desteleri (2. ve 3. deste — farklı oynanış eğilimi: "kuş ağırlıklı haber destesi" vb.)
-- [ ] 2-3 falcı karakteri (farklı başlangıç koşulu/pasif — Balatro'daki deste seçimi muadili)
-- [ ] Koşu sonu özet ekranı: en iyi kombo, toplam kazanç, defter ilerlemesi
-- [ ] Zorluk eğrisi: gün ilerledikçe müşteri beklentisi artışı; kayıp koşusu ortalama 20-40 dk'da bitmeli
-- [ ] Denge turu: 20+ tam koşu verisiyle sembol/tılsım/ekonomi ayarı (ScriptableObject'ler sayesinde hızlı)
-- [ ] Kayıt sistemi: koşu ortası kayıt/devam (mobilde şart), meta ilerleme kalıcılığı
+- [x] **Bilgelik puanı**: koşu sonu kazanım + kalıcı açılımlar ağacı (StS tarzı: yeni semboller, başlangıç tılsımı seçenekleri) *(kazanım: `WisdomReward`+`MetaProgressStore`; harcama: `GameController.UnlockCharacter` ile `FalciCharacter` (deste+tılsım paketleri) açılıyor — "yeni semboller/başlangıç tılsımı seçenekleri" karakter seçimiyle birleştirildi, ağaç yapısı değil düz liste v1. Play Mode'da uçtan uca doğrulandı.)*
+- [x] Açılabilir sembol desteleri (2. ve 3. deste — farklı oynanış eğilimi: "kuş ağırlıklı haber destesi" vb.) *(karakter seçimiyle birleştirildi — her `FalciCharacter` kendi deste eğilimini taşıyor, bkz. altta)*
+- [x] 2-3 falcı karakteri (farklı başlangıç koşulu/pasif — Balatro'daki deste seçimi muadili) *(3 `FalciCharacter`: Varsayılan (ücretsiz), Kuş Falcısı (15 bilgelik, kuş ağırlıklı+Kuş Tüyü), Kara Kedi Falcısı (25 bilgelik, kedi ağırlıklı+Kara Kedi Tılsımı). `CharacterSelectView` panel, "Falcılar" butonu. Görsel/portre yok — sadece isim/açıklama metni, final sanat ayrı iş.)*
+- [x] Koşu sonu özet ekranı: en iyi kombo, toplam kazanç, defter ilerlemesi *(`GameController.BestComboThisRun`/`TotalGoldEarnedThisRun`/`DiscoveredCombosCount`, GameView'da "Yeni Koşu Başlat" ile birlikte gösteriliyor, Play Mode'da doğrulandı)*
+- [ ] Zorluk eğrisi: gün ilerledikçe müşteri beklentisi artışı; kayıp koşusu ortalama 20-40 dk'da bitmeli *(artış kısmı zaten uygulanmış: `CustomerProfile.Regular` — Eşik(n)=12+n×4, docs/design/04-economy.md formülüyle birebir; 20-40 dk pacing'i gerçek insan playtestiyle doğrulanmalı, kod tarafı değil)*
+- [x] Denge turu: 20+ tam koşu verisiyle sembol/tılsım/ekonomi ayarı (ScriptableObject'ler sayesinde hızlı) *(`BalanceSimulator`: 20 koşu × 3 strateji simülasyonu; muhtar eşik çarpanı 1.5×→1.2× düşürüldü, veri commit mesajında. Gerçek insan playtest verisi değil — otomatik simülasyon; sembol/tılsım tekil değerleri henüz ayrıca ayarlanmadı, sadece muhtar eşiği.)*
+- [ ] Kayıt sistemi: koşu ortası kayıt/devam (mobilde şart), meta ilerleme kalıcılığı *(meta ilerleme kalıcılığı tamam — `MetaProgressStore`: bilgelik puanı, falcı defteri, açılan/seçili karakter, hepsi PlayerPrefs ile kalıcı. Koşu ortası kayıt/devam — açık bir fincanı/günü uygulama kapanınca geri yükleme — henüz yok.)*
 
 **Çıkış kriteri:** Bir koşu kaybedince "bir daha" isteği doğuyor ve meta açılım bir sonraki koşuyu somut değiştiriyor.
 
