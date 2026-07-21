@@ -15,6 +15,8 @@ namespace Telve.Meta
     {
         const string TotalWisdomKey = "Telve.Meta.TotalWisdom";
         const string DiscoveredCombosKey = "Telve.Meta.DiscoveredCombos";
+        const string UnlockedCharactersKey = "Telve.Meta.UnlockedCharacters";
+        const string SelectedCharacterKey = "Telve.Meta.SelectedCharacter";
         const char ComboIdSeparator = '|';
 
         public static int LoadTotalWisdom() => PlayerPrefs.GetInt(TotalWisdomKey, 0);
@@ -34,6 +36,27 @@ namespace Telve.Meta
         public static void SaveDiscoveredComboIds(IEnumerable<string> comboIds)
         {
             PlayerPrefs.SetString(DiscoveredCombosKey, string.Join(ComboIdSeparator, comboIds));
+            PlayerPrefs.Save();
+        }
+
+        /// <summary>ROADMAP.md Faz 3 "Açılabilir sembol desteleri" + "2-3 falcı karakteri": hangi FalciCharacter.characterId'lerin açıldığı.</summary>
+        public static IEnumerable<string> LoadUnlockedCharacterIds()
+        {
+            string raw = PlayerPrefs.GetString(UnlockedCharactersKey, string.Empty);
+            return string.IsNullOrEmpty(raw) ? Enumerable.Empty<string>() : raw.Split(ComboIdSeparator);
+        }
+
+        public static void SaveUnlockedCharacterIds(IEnumerable<string> characterIds)
+        {
+            PlayerPrefs.SetString(UnlockedCharactersKey, string.Join(ComboIdSeparator, characterIds));
+            PlayerPrefs.Save();
+        }
+
+        public static string LoadSelectedCharacterId() => PlayerPrefs.GetString(SelectedCharacterKey, string.Empty);
+
+        public static void SaveSelectedCharacterId(string characterId)
+        {
+            PlayerPrefs.SetString(SelectedCharacterKey, characterId);
             PlayerPrefs.Save();
         }
     }
