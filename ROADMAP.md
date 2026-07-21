@@ -81,12 +81,12 @@ Amaç: MVP içeriğinin tamamı + oyunun **duygusunu** kuran sunum katmanı. Bal
 ## Faz 4 — Mobil Cila + Monetizasyon (3-4 hafta)
 
 - [ ] Performans: düşük seviye Android cihazda 60 fps, pil dostu
-- [ ] IAP altyapısı (Unity IAP): fincan/masa örtüsü kozmetikleri — güç satmıyoruz, sadece görünüm
-- [ ] Rewarded ad entegrasyonu: koşu sonu "ikinci şans" + bilgelik puanı ×2 (2 nokta, fazlası deneyimi yer)
-- [ ] Tutorial / ilk 5 dakika akışı (ilk müşteri = öğretici fal)
-- [ ] Yerelleştirme altyapısı: TR + EN baştan (fal terminolojisinin İngilizce karşılıkları ayrı iş — erken başla)
-- [ ] Analitik: koşu tamamlama, ölüm noktaları, kombo keşif oranları, D1/D7 retention
-- [ ] GDPR/KVKK/ATT izin akışları, çevrimdışı oynanabilirlik
+- [ ] IAP altyapısı (Unity IAP): fincan/masa örtüsü kozmetikleri — güç satmıyoruz, sadece görünüm *(kod iskeleti hazır: `CosmeticItem` veri modeli + `IPurchaseService`/`MockPurchaseService` — GERÇEK MAĞAZA BAĞLANTISI YOK, ödeme almaz. Gerçek Unity IAP paketi + App Store/Google Play ürün kataloğu kurulumu ayrı, hesap gerektiren iş.)*
+- [x] Rewarded ad entegrasyonu: koşu sonu "ikinci şans" + bilgelik puanı ×2 (2 nokta, fazlası deneyimi yer) *(`IRewardedAdService`/`MockRewardedAdService` — GERÇEK REKLAM SDK'SI YOK. Oynanış akışı tam bağlı: `DaySession.TryGrantSecondChance` + `GameController.RequestSecondChance`/`RequestDoubleWisdom`, koşu başına birer kez, Play Mode'da uçtan uca doğrulandı. Gerçek reklam ağı bağlandığında sadece `AdService` ataması değişir.)*
+- [x] Tutorial / ilk 5 dakika akışı (ilk müşteri = öğretici fal) *(`TutorialView` — ilk hiç görülmemiş karşılaşmada bağlamsal ipuçları (sırala → oku → sonuç), bir daha görünmez. Play Mode'da doğrulandı.)*
+- [x] Yerelleştirme altyapısı: TR + EN baştan (fal terminolojisinin İngilizce karşılıkları ayrı iş — erken başla) *(`Localization`/`LocalizedText`/`LanguageToggleView` + `LocalizationTable` veri modeli; 12 statik UI metni (buton/panel başlıkları) TR/EN'e bağlandı, Play Mode'da doğrulandı. GameView.Refresh() içindeki dinamik/interpolasyonlu durum metinleri (altın/skor/müşteri sırası vb.) ve fal terminolojisi içeriği (sembol/kombo/tılsım/karakter adları) kapsam dışı — roadmap'in kendi notuyla uyumlu "ayrı iş".)*
+- [ ] Analitik: koşu tamamlama, ölüm noktaları, kombo keşif oranları, D1/D7 retention *(event altyapısı hazır — `AnalyticsEvents`/`IAnalyticsSink`, varsayılan yerel dosya sink'i; run_started/run_ended/death_point/combo_discovered loglanıyor, Play Mode'da doğrulandı. D1/D7 retention gerçek backend + çoklu oturum verisi gerektirir, henüz yok — gerçek sink bağlandığında otomatik çalışır.)*
+- [ ] GDPR/KVKK/ATT izin akışları, çevrimdışı oynanabilirlik *(çevrimdışı oynanabilirlik zaten sağlanıyor — kod tabanında hiçbir ağ çağrısı (UnityWebRequest/HttpClient) yok, tüm kalıcılık PlayerPrefs. GDPR/KVKK/ATT izin akışları gerçek hukuki metin gerektiriyor, kod iskeleti aşağıda.)*
 
 **Çıkış kriteri:** Tanımadık 10 kişi telefonda tutorial'sız yardım almadan bir gün döngüsünü bitirebiliyor.
 
