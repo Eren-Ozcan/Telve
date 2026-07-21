@@ -122,6 +122,9 @@ namespace Telve.UI
 
             _rng = new System.Random();
             _day = new DaySession(startingGold, _rng);
+
+            AnalyticsEvents.SessionStarted();
+            AnalyticsEvents.RunStarted(_selectedCharacterId);
         }
 
         /// <summary>
@@ -253,6 +256,7 @@ namespace Telve.UI
             {
                 _newCombosThisRun += newlyDiscovered.Count;
                 MetaProgressStore.SaveDiscoveredComboIds(_journal.DiscoveredComboIds);
+                foreach (var comboId in newlyDiscovered) AnalyticsEvents.ComboDiscovered(comboId);
             }
 
             OnEncounterResolved?.Invoke(result);
@@ -264,6 +268,9 @@ namespace Telve.UI
                 _totalWisdom += reward;
                 MetaProgressStore.SaveTotalWisdom(_totalWisdom);
                 OnRunEnded?.Invoke(reward);
+
+                AnalyticsEvents.RunEnded(_day.DayComplete, _day.History.Count, _day.Gold, reward);
+                if (_day.DayLost) AnalyticsEvents.DeathPoint(_day.CurrentCustomerIndex);
             }
 
             OnStateChanged?.Invoke();
@@ -285,6 +292,7 @@ namespace Telve.UI
             _bestComboImpactThisRun = float.MinValue;
             _day = new DaySession(startingGold, _rng);
 
+            AnalyticsEvents.RunStarted(_selectedCharacterId);
             DrawCup();
         }
 
