@@ -36,7 +36,7 @@ namespace Telve.Tests
         public void Muhtar_MatchesDocTable()
         {
             var profile = CustomerProfile.Muhtar();
-            Assert.AreEqual(66, profile.Threshold);
+            Assert.AreEqual(53, profile.Threshold);
             Assert.AreEqual(35, profile.BasePayment);
             Assert.IsTrue(profile.IsMuhtar);
         }
@@ -84,10 +84,10 @@ namespace Telve.Tests
         [Test]
         public void Evaluate_MuhtarWithGozdesiCharm_PaymentIsTimesOnePointFive()
         {
-            var profile = CustomerProfile.Muhtar(); // threshold 66, base 35
+            var profile = CustomerProfile.Muhtar(); // threshold 53, base 35
             var charms = new List<CharmData> { MakeCharm("muhtarin_gozdesi") };
 
-            var result = CustomerEconomy.Evaluate(profile, satisfaction: 66f, charms); // met -> 35 * 1.5
+            var result = CustomerEconomy.Evaluate(profile, satisfaction: 53f, charms); // met -> 35 * 1.5
 
             // MathF.Round uses banker's rounding (ToEven): 52.5 -> 52.
             Assert.AreEqual(52, result.Payment);
@@ -96,9 +96,9 @@ namespace Telve.Tests
         [Test]
         public void Evaluate_MuhtarWithoutGozdesiCharm_PaymentIsUnchanged()
         {
-            var profile = CustomerProfile.Muhtar(); // threshold 66, base 35
+            var profile = CustomerProfile.Muhtar(); // threshold 53, base 35
 
-            var result = CustomerEconomy.Evaluate(profile, satisfaction: 66f);
+            var result = CustomerEconomy.Evaluate(profile, satisfaction: 53f);
 
             Assert.AreEqual(35, result.Payment);
         }

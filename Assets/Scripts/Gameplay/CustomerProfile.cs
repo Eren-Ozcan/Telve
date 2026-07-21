@@ -46,10 +46,20 @@ namespace Telve.Gameplay
             return new CustomerProfile(threshold, basePayment, isMuhtar: false, archetype, punishesNegativeCombos: false);
         }
 
+        /// <summary>
+        /// Eşik çarpanı ROADMAP.md Faz 3 "Denge turu" simülasyonuyla (20 koşu,
+        /// BalanceSimulator) 1.5×'ten 1.2×'e düşürüldü: 1.5×'te (eşik 66)
+        /// açgözlü pazar alışverişi + optimal dizilimle bile muhtar geçme
+        /// oranı %25, ortalama ulaşılan skor eşiğin ~19 puan altındaydı.
+        /// 1.2× (eşik ~53) bu farkı kapatırken muhtar'ı hâlâ 8. müşteriden
+        /// zorlu tutuyor. Gerçek oyuncu verisiyle yeniden ayarlanabilir.
+        /// </summary>
+        const float MuhtarThresholdMultiplier = 1.2f;
+
         public static CustomerProfile Muhtar()
         {
             var lastRegular = Regular(CustomerEconomy.RegularCustomerCount);
-            int threshold = (int)System.MathF.Round(lastRegular.Threshold * 1.5f);
+            int threshold = (int)System.MathF.Round(lastRegular.Threshold * MuhtarThresholdMultiplier);
             return new CustomerProfile(threshold, basePayment: 35, isMuhtar: true, CustomerArchetype.Regular, punishesNegativeCombos: true);
         }
 
