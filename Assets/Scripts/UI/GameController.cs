@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Telve.Data;
 using Telve.Gameplay;
+using Telve.Meta;
 using UnityEngine;
 
 namespace Telve.UI
@@ -32,6 +33,8 @@ namespace Telve.UI
         System.Random _rng;
         DaySession _day;
         ComboJournal _journal;
+        int _totalWisdom;
+        int _newCombosThisRun;
 
         public IReadOnlyList<SymbolData> CurrentCup { get; private set; } = Array.Empty<SymbolData>();
 
@@ -57,9 +60,15 @@ namespace Telve.UI
         public IReadOnlyList<ComboData> AllCombos => _allCombos;
         public IReadOnlyCollection<string> DiscoveredComboIds => _journal.DiscoveredComboIds;
 
+        /// <summary>ROADMAP.md Faz 3 "Bilgelik puanı": koşular arası kalıcı toplam.</summary>
+        public int TotalWisdom => _totalWisdom;
+
         public event Action OnStateChanged;
         public event Action<EncounterResult> OnEncounterResolved;
         public event Action<IReadOnlyList<string>> OnNewCombosDiscovered;
+
+        /// <summary>ROADMAP.md Faz 3: koşu (gün) bittiğinde kazanılan bilgelik puanıyla tetiklenir.</summary>
+        public event Action<int> OnRunEnded;
 
         /// <summary>ROADMAP.md Faz 2 sunum katmanı: yeni fincan çekildiğinde (animasyon/ses tetikleyicisi).</summary>
         public event Action OnCupDrawn;
@@ -76,7 +85,8 @@ namespace Telve.UI
             // docs/design/04-economy.md: "Başlangıç destesi: en yaygın Common alt kümesi."
             _ownedSymbols = _allSymbols.Where(s => s.rarity == SymbolRarity.Common).ToList();
             _activeCharms = new List<CharmData>();
-            _journal = new ComboJournal();
+            _journal = new ComboJournal(MetaProgressStore.LoadDiscoveredComboIds());
+            _totalWisdom = MetaProgressStore.LoadTotalWisdom();
 
             _rng = new System.Random();
             _day = new DaySession(startingGold, _rng);
@@ -143,10 +153,42 @@ namespace Telve.UI
             CurrentCupResolved = true;
 
             var newlyDiscovered = _journal.RecordEncounter(result.Score.TriggeredCombos);
+            if (newlyDiscovered.Count > 0)
+            {
+                _newCombosThisRun += newlyDiscovered.Count;
+                MetaProgressStore.SaveDiscoveredComboIds(_journal.DiscoveredComboIds);
+            }
 
             OnEncounterResolved?.Invoke(result);
             if (newlyDiscovered.Count > 0) OnNewCombosDiscovered?.Invoke(newlyDiscovered);
+
+            if (_day.DayLost || _day.DayComplete)
+            {
+                int reward = WisdomReward.CalculateRunReward(_day.Gold, _day.DayComplete, _newCombosThisRun);
+                _totalWisdom += reward;
+                MetaProgressStore.SaveTotalWisdom(_totalWisdom);
+                OnRunEnded?.Invoke(reward);
+            }
+
             OnStateChanged?.Invoke();
+        }
+
+        /// <summary>
+        /// ROADMAP.md Faz 3 çıkış kriteri: "Bir koşu kaybedince 'bir daha'
+        /// isteği doğuyor". Bilgelik puanı ve falcı defteri (meta) kalıcı
+        /// kalır; deste/tılsımlar ve gün durumu koşuya özgü olduğundan
+        /// sıfırlanır.
+        /// </summary>
+        public void StartNewRun()
+        {
+            if (!_day.DayLost && !_day.DayComplete) return;
+
+            _ownedSymbols = _allSymbols.Where(s => s.rarity == SymbolRarity.Common).ToList();
+            _activeCharms = new List<CharmData>();
+            _newCombosThisRun = 0;
+            _day = new DaySession(startingGold, _rng);
+
+            DrawCup();
         }
 
         /// <summary>docs/design/04-economy.md: "Müşteriler arası pazara uğranabilir." Sadece mevcut fincan okunduktan sonra (müşteriler arası) açılabilir.</summary>
