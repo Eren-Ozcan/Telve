@@ -40,6 +40,20 @@ namespace Telve.UI
         int _newCombosThisRun;
         ComboData _bestComboThisRun;
         float _bestComboImpactThisRun = float.MinValue;
+        int _lastRunWisdomReward;
+        bool _secondChanceUsedThisRun;
+        bool _wisdomDoubledThisRun;
+
+        /// <summary>
+        /// ROADMAP.md Faz 4 "IAP altyapısı" / "Rewarded ad entegrasyonu".
+        /// Varsayılan olarak gerçek mağaza/reklam bağlantısı OLMAYAN mock
+        /// implementasyonlar atanır (Awake'te — MonoBehaviour constructor'ında
+        /// PlayerPrefs gibi Unity API'lerini çağırmak güvenli değil, bkz.
+        /// MockPurchaseService). Gerçek SDK'lar hazır olduğunda bu iki alana
+        /// atanarak tak-çalıştır değiştirilir.
+        /// </summary>
+        public IPurchaseService PurchaseService { get; set; }
+        public IRewardedAdService AdService { get; set; }
 
         public IReadOnlyList<SymbolData> CurrentCup { get; private set; } = Array.Empty<SymbolData>();
 
@@ -97,6 +111,9 @@ namespace Telve.UI
 
         void Awake()
         {
+            PurchaseService = new MockPurchaseService();
+            AdService = new MockRewardedAdService();
+
             _allSymbols = Resources.LoadAll<SymbolData>("Data/Symbols").ToList();
             _allCharmDefinitions = Resources.LoadAll<CharmData>("Data/Charms").ToList();
             _allCombos = Resources.LoadAll<ComboData>("Data/Combos").ToList();
@@ -265,6 +282,7 @@ namespace Telve.UI
             if (_day.DayLost || _day.DayComplete)
             {
                 int reward = WisdomReward.CalculateRunReward(_day.Gold, _day.DayComplete, _newCombosThisRun);
+                _lastRunWisdomReward = reward;
                 _totalWisdom += reward;
                 MetaProgressStore.SaveTotalWisdom(_totalWisdom);
                 OnRunEnded?.Invoke(reward);
@@ -290,10 +308,58 @@ namespace Telve.UI
             _newCombosThisRun = 0;
             _bestComboThisRun = null;
             _bestComboImpactThisRun = float.MinValue;
+            _secondChanceUsedThisRun = false;
+            _wisdomDoubledThisRun = false;
             _day = new DaySession(startingGold, _rng);
 
             AnalyticsEvents.RunStarted(_selectedCharacterId);
             DrawCup();
+        }
+
+        /// <summary>ROADMAP.md Faz 4 "Rewarded ad: koşu sonu ikinci şans". Sadece muhtar kaybında, koşu başına bir kez.</summary>
+        public bool CanRequestSecondChance => _day.DayLost && _day.IsMuhtarTurn && !_secondChanceUsedThisRun;
+
+        public void RequestSecondChance(Action<bool> onComplete = null)
+        {
+            if (!CanRequestSecondChance) { onComplete?.Invoke(false); return; }
+            if (!AdService.IsAdReady()) { onComplete?.Invoke(false); return; }
+
+            AdService.ShowAd(watched =>
+            {
+                if (watched && _day.TryGrantSecondChance())
+                {
+                    _secondChanceUsedThisRun = true;
+                    CurrentCupResolved = false;
+                    DrawCup();
+                    onComplete?.Invoke(true);
+                }
+                else
+                {
+                    onComplete?.Invoke(false);
+                }
+            });
+        }
+
+        /// <summary>ROADMAP.md Faz 4 "Rewarded ad: bilgelik puanı ×2". Koşu başına bir kez, sadece koşu bittikten sonra.</summary>
+        public bool CanRequestDoubleWisdom => (_day.DayLost || _day.DayComplete) && !_wisdomDoubledThisRun && _lastRunWisdomReward > 0;
+
+        public void RequestDoubleWisdom(Action<bool> onComplete = null)
+        {
+            if (!CanRequestDoubleWisdom) { onComplete?.Invoke(false); return; }
+            if (!AdService.IsAdReady()) { onComplete?.Invoke(false); return; }
+
+            AdService.ShowAd(watched =>
+            {
+                if (watched)
+                {
+                    _wisdomDoubledThisRun = true;
+                    _totalWisdom += _lastRunWisdomReward;
+                    MetaProgressStore.SaveTotalWisdom(_totalWisdom);
+                    OnStateChanged?.Invoke();
+                }
+
+                onComplete?.Invoke(watched);
+            });
         }
 
         /// <summary>Kombonun "en iyi kombo" sıralaması için kabaca kıyaslanabilir tek boyutlu etkisi: çarpan için yüzde artış, sabit bonus için puan.</summary>
