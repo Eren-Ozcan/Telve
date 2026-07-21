@@ -32,6 +32,7 @@ namespace Telve.UI
         [SerializeField] Button submitButton;
         [SerializeField] Button nextCustomerButton;
         [SerializeField] Button newRunButton;
+        [SerializeField] Text runSummaryText;
         [SerializeField] Button marketButton;
         [SerializeField] GameObject marketPanel;
         [SerializeField] Button[] marketOfferButtons = new Button[MaxMarketOffers];
@@ -152,6 +153,21 @@ namespace Telve.UI
             {
                 newRunButton.gameObject.SetActive(dayOver);
                 newRunButton.interactable = dayOver;
+            }
+
+            if (runSummaryText != null)
+            {
+                runSummaryText.gameObject.SetActive(dayOver);
+                if (dayOver)
+                {
+                    string bestCombo = controller.BestComboThisRun != null
+                        ? controller.BestComboThisRun.displayName
+                        : "yok";
+                    runSummaryText.text =
+                        $"Koşu Özeti — En iyi kombo: {bestCombo}   " +
+                        $"Toplam kazanç: {controller.TotalGoldEarnedThisRun} altın   " +
+                        $"Defter: {controller.DiscoveredCombosCount}/{controller.TotalCombosCount}";
+                }
             }
 
             marketPanel.SetActive(controller.IsMarketOpen);
