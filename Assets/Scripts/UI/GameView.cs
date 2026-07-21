@@ -33,6 +33,8 @@ namespace Telve.UI
         [SerializeField] Button nextCustomerButton;
         [SerializeField] Button newRunButton;
         [SerializeField] Text runSummaryText;
+        [SerializeField] Button secondChanceButton;
+        [SerializeField] Button doubleWisdomButton;
         [SerializeField] Button marketButton;
         [SerializeField] GameObject marketPanel;
         [SerializeField] Button[] marketOfferButtons = new Button[MaxMarketOffers];
@@ -155,6 +157,16 @@ namespace Telve.UI
                 newRunButton.interactable = dayOver;
             }
 
+            if (secondChanceButton != null)
+            {
+                secondChanceButton.gameObject.SetActive(controller.CanRequestSecondChance);
+            }
+
+            if (doubleWisdomButton != null)
+            {
+                doubleWisdomButton.gameObject.SetActive(controller.CanRequestDoubleWisdom);
+            }
+
             if (runSummaryText != null)
             {
                 runSummaryText.gameObject.SetActive(dayOver);
@@ -250,6 +262,8 @@ namespace Telve.UI
         public void OnSubmitButtonPressed() => controller.SubmitReading();
         public void OnNextCustomerButtonPressed() => controller.DrawCup();
         public void OnNewRunButtonPressed() => controller.StartNewRun();
+        public void OnSecondChanceButtonPressed() => controller.RequestSecondChance();
+        public void OnDoubleWisdomButtonPressed() => controller.RequestDoubleWisdom();
         public void OnMarketButtonPressed() => controller.OpenMarket();
         public void OnCloseMarketButtonPressed() => controller.CloseMarket();
     }
