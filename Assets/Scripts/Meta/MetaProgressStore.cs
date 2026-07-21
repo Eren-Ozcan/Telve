@@ -21,6 +21,7 @@ namespace Telve.Meta
         const string LanguageKey = "Telve.Meta.Language";
         const string TutorialCompletedKey = "Telve.Meta.TutorialCompleted";
         const string OwnedCosmeticsKey = "Telve.Meta.OwnedCosmetics";
+        const string PrivacyConsentGivenKey = "Telve.Meta.PrivacyConsentGiven";
         const char ComboIdSeparator = '|';
 
         public static int LoadTotalWisdom() => PlayerPrefs.GetInt(TotalWisdomKey, 0);
@@ -96,6 +97,15 @@ namespace Telve.Meta
         public static void SaveOwnedCosmeticIds(IEnumerable<string> cosmeticIds)
         {
             PlayerPrefs.SetString(OwnedCosmeticsKey, string.Join(ComboIdSeparator, cosmeticIds));
+            PlayerPrefs.Save();
+        }
+
+        /// <summary>ROADMAP.md Faz 4 "GDPR/KVKK/ATT izin akışları" — oyuncunun onay ekranını görüp kabul ettiğinin kalıcı kaydı.</summary>
+        public static bool LoadPrivacyConsentGiven() => PlayerPrefs.GetInt(PrivacyConsentGivenKey, 0) == 1;
+
+        public static void SavePrivacyConsentGiven()
+        {
+            PlayerPrefs.SetInt(PrivacyConsentGivenKey, 1);
             PlayerPrefs.Save();
         }
     }
