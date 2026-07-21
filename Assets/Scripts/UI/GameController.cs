@@ -23,6 +23,9 @@ namespace Telve.UI
         List<SymbolData> _allSymbols;
         List<CharmData> _allCharmDefinitions;
         List<ComboData> _allCombos;
+        List<FalciCharacter> _allCharacters;
+        HashSet<string> _unlockedCharacterIds;
+        string _selectedCharacterId;
 
         /// <summary>Oyuncunun elindeki deste — fincan bundan çekilir. Başlangıçta Common alt kümesi.</summary>
         List<SymbolData> _ownedSymbols;
@@ -74,6 +77,11 @@ namespace Telve.UI
         public int DiscoveredCombosCount => _journal.DiscoveredComboIds.Count;
         public int TotalCombosCount => _allCombos.Count;
 
+        /// <summary>ROADMAP.md Faz 3 "2-3 falcı karakteri" + "açılabilir sembol desteleri".</summary>
+        public IReadOnlyList<FalciCharacter> AllCharacters => _allCharacters;
+        public string SelectedCharacterId => _selectedCharacterId;
+        public bool IsCharacterUnlocked(string characterId) => _unlockedCharacterIds.Contains(characterId);
+
         public event Action OnStateChanged;
         public event Action<EncounterResult> OnEncounterResolved;
         public event Action<IReadOnlyList<string>> OnNewCombosDiscovered;
@@ -92,10 +100,21 @@ namespace Telve.UI
             _allSymbols = Resources.LoadAll<SymbolData>("Data/Symbols").ToList();
             _allCharmDefinitions = Resources.LoadAll<CharmData>("Data/Charms").ToList();
             _allCombos = Resources.LoadAll<ComboData>("Data/Combos").ToList();
+            _allCharacters = Resources.LoadAll<FalciCharacter>("Data/Characters").ToList();
 
-            // docs/design/04-economy.md: "Başlangıç destesi: en yaygın Common alt kümesi."
-            _ownedSymbols = _allSymbols.Where(s => s.rarity == SymbolRarity.Common).ToList();
-            _activeCharms = new List<CharmData>();
+            _unlockedCharacterIds = new HashSet<string>(MetaProgressStore.LoadUnlockedCharacterIds());
+            foreach (var character in _allCharacters)
+            {
+                if (character.wisdomCost == 0) _unlockedCharacterIds.Add(character.characterId);
+            }
+
+            _selectedCharacterId = MetaProgressStore.LoadSelectedCharacterId();
+            if (string.IsNullOrEmpty(_selectedCharacterId) || !_unlockedCharacterIds.Contains(_selectedCharacterId))
+            {
+                _selectedCharacterId = _allCharacters.FirstOrDefault(c => c.wisdomCost == 0)?.characterId ?? "";
+            }
+
+            BuildStartingDeckAndCharms();
             _journal = new ComboJournal(MetaProgressStore.LoadDiscoveredComboIds());
             _totalWisdom = MetaProgressStore.LoadTotalWisdom();
             _bestComboThisRun = null;
@@ -103,6 +122,60 @@ namespace Telve.UI
 
             _rng = new System.Random();
             _day = new DaySession(startingGold, _rng);
+        }
+
+        /// <summary>
+        /// docs/design/04-economy.md: "Başlangıç destesi: en yaygın Common
+        /// alt kümesi." + ROADMAP.md Faz 3: seçili falcı karakterinin
+        /// deste eğilimi (ekstra sembol kopyaları) ve başlangıç tılsımı
+        /// bu temel desteye eklenir.
+        /// </summary>
+        void BuildStartingDeckAndCharms()
+        {
+            _ownedSymbols = _allSymbols.Where(s => s.rarity == SymbolRarity.Common).ToList();
+            _activeCharms = new List<CharmData>();
+
+            var character = _allCharacters.FirstOrDefault(c => c.characterId == _selectedCharacterId);
+            if (character == null) return;
+
+            foreach (var bonusId in character.startingDeckBonusSymbolIds ?? Array.Empty<string>())
+            {
+                var symbol = _allSymbols.FirstOrDefault(s => s.symbolId == bonusId);
+                if (symbol != null) _ownedSymbols.Add(symbol);
+            }
+
+            if (!string.IsNullOrEmpty(character.startingCharmId))
+            {
+                var charm = _allCharmDefinitions.FirstOrDefault(c => c.charmId == character.startingCharmId);
+                if (charm != null) _activeCharms.Add(charm);
+            }
+        }
+
+        /// <summary>Sadece açılmış karakterler seçilebilir; seçim bir sonraki koşudan itibaren geçerli olur.</summary>
+        public bool SelectCharacter(string characterId)
+        {
+            if (!_unlockedCharacterIds.Contains(characterId)) return false;
+
+            _selectedCharacterId = characterId;
+            MetaProgressStore.SaveSelectedCharacterId(characterId);
+            OnStateChanged?.Invoke();
+            return true;
+        }
+
+        /// <summary>ROADMAP.md Faz 3 "Bilgelik puanı: kalıcı açılımlar ağacı" — karakter/deste açma.</summary>
+        public bool UnlockCharacter(string characterId)
+        {
+            var character = _allCharacters.FirstOrDefault(c => c.characterId == characterId);
+            if (character == null) return false;
+            if (_unlockedCharacterIds.Contains(characterId)) return false;
+            if (_totalWisdom < character.wisdomCost) return false;
+
+            _totalWisdom -= character.wisdomCost;
+            MetaProgressStore.SaveTotalWisdom(_totalWisdom);
+            _unlockedCharacterIds.Add(characterId);
+            MetaProgressStore.SaveUnlockedCharacterIds(_unlockedCharacterIds);
+            OnStateChanged?.Invoke();
+            return true;
         }
 
         void Start()
@@ -206,8 +279,7 @@ namespace Telve.UI
         {
             if (!_day.DayLost && !_day.DayComplete) return;
 
-            _ownedSymbols = _allSymbols.Where(s => s.rarity == SymbolRarity.Common).ToList();
-            _activeCharms = new List<CharmData>();
+            BuildStartingDeckAndCharms();
             _newCombosThisRun = 0;
             _bestComboThisRun = null;
             _bestComboImpactThisRun = float.MinValue;
