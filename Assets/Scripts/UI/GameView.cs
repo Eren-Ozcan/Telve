@@ -31,6 +31,7 @@ namespace Telve.UI
         [SerializeField] Text resultText;
         [SerializeField] Button submitButton;
         [SerializeField] Button nextCustomerButton;
+        [SerializeField] Button newRunButton;
         [SerializeField] Button marketButton;
         [SerializeField] GameObject marketPanel;
         [SerializeField] Button[] marketOfferButtons = new Button[MaxMarketOffers];
@@ -140,12 +141,18 @@ namespace Telve.UI
                 : controller.DayComplete ? "GÜN TAMAMLANDI"
                 : controller.IsMuhtarTurn ? "Muhtar geldi!"
                 : $"Müşteri {controller.CustomerIndex}/{CustomerEconomy.RegularCustomerCount}{archetypeSuffix}";
-            statusText.text = $"Altın: {controller.Gold}   {dayStatus}";
+            statusText.text = $"Altın: {controller.Gold}   {dayStatus}   Bilgelik: {controller.TotalWisdom}";
 
             bool dayOver = controller.DayLost || controller.DayComplete;
             submitButton.interactable = controller.ReadingOrderCupIndices.Count > 0 && !controller.CurrentCupResolved && !dayOver && !controller.IsMarketOpen;
             nextCustomerButton.interactable = !dayOver && !controller.IsMarketOpen;
             marketButton.interactable = controller.CurrentCupResolved && !dayOver && !controller.IsMarketOpen;
+
+            if (newRunButton != null)
+            {
+                newRunButton.gameObject.SetActive(dayOver);
+                newRunButton.interactable = dayOver;
+            }
 
             marketPanel.SetActive(controller.IsMarketOpen);
             if (controller.IsMarketOpen)
@@ -226,6 +233,7 @@ namespace Telve.UI
 
         public void OnSubmitButtonPressed() => controller.SubmitReading();
         public void OnNextCustomerButtonPressed() => controller.DrawCup();
+        public void OnNewRunButtonPressed() => controller.StartNewRun();
         public void OnMarketButtonPressed() => controller.OpenMarket();
         public void OnCloseMarketButtonPressed() => controller.CloseMarket();
     }
