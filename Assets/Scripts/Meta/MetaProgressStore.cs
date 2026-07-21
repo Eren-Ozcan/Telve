@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -17,6 +18,7 @@ namespace Telve.Meta
         const string DiscoveredCombosKey = "Telve.Meta.DiscoveredCombos";
         const string UnlockedCharactersKey = "Telve.Meta.UnlockedCharacters";
         const string SelectedCharacterKey = "Telve.Meta.SelectedCharacter";
+        const string LanguageKey = "Telve.Meta.Language";
         const char ComboIdSeparator = '|';
 
         public static int LoadTotalWisdom() => PlayerPrefs.GetInt(TotalWisdomKey, 0);
@@ -57,6 +59,19 @@ namespace Telve.Meta
         public static void SaveSelectedCharacterId(string characterId)
         {
             PlayerPrefs.SetString(SelectedCharacterKey, characterId);
+            PlayerPrefs.Save();
+        }
+
+        /// <summary>Varsayılan Türkçe — ROADMAP.md: proje TR odaklı başladı, EN Faz 4'te eklendi.</summary>
+        public static Language LoadLanguage()
+        {
+            int stored = PlayerPrefs.GetInt(LanguageKey, (int)Language.Turkish);
+            return Enum.IsDefined(typeof(Language), stored) ? (Language)stored : Language.Turkish;
+        }
+
+        public static void SaveLanguage(Language language)
+        {
+            PlayerPrefs.SetInt(LanguageKey, (int)language);
             PlayerPrefs.Save();
         }
     }
