@@ -83,6 +83,21 @@ namespace Telve.Gameplay
             return true;
         }
 
+        /// <summary>
+        /// ROADMAP.md Faz 4 "Rewarded ad: koşu sonu ikinci şans". Sadece
+        /// muhtar'a kaybedildiğinde geçerli (sıradan müşteri kaybı yok —
+        /// bkz. SubmitEncounter); muhtar turu tekrar denenebilir hale gelir.
+        /// Kaç kez kullanılabileceği (roadmap: "2 nokta, fazlası deneyimi
+        /// yer") bu sınıfın değil, çağıranın (GameController) sorumluluğu.
+        /// </summary>
+        public bool TryGrantSecondChance()
+        {
+            if (!DayLost || !IsMuhtarTurn) return false;
+
+            DayLost = false;
+            return true;
+        }
+
         void ThrowIfDayOver()
         {
             if (DayLost || DayComplete)
