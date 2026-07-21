@@ -19,6 +19,7 @@ namespace Telve.Meta
         const string UnlockedCharactersKey = "Telve.Meta.UnlockedCharacters";
         const string SelectedCharacterKey = "Telve.Meta.SelectedCharacter";
         const string LanguageKey = "Telve.Meta.Language";
+        const string TutorialCompletedKey = "Telve.Meta.TutorialCompleted";
         const char ComboIdSeparator = '|';
 
         public static int LoadTotalWisdom() => PlayerPrefs.GetInt(TotalWisdomKey, 0);
@@ -72,6 +73,15 @@ namespace Telve.Meta
         public static void SaveLanguage(Language language)
         {
             PlayerPrefs.SetInt(LanguageKey, (int)language);
+            PlayerPrefs.Save();
+        }
+
+        /// <summary>ROADMAP.md Faz 4 "Tutorial: ilk müşteri = öğretici fal" — bir daha gösterilmesin diye kalıcı işaret.</summary>
+        public static bool LoadTutorialCompleted() => PlayerPrefs.GetInt(TutorialCompletedKey, 0) == 1;
+
+        public static void SaveTutorialCompleted()
+        {
+            PlayerPrefs.SetInt(TutorialCompletedKey, 1);
             PlayerPrefs.Save();
         }
     }
