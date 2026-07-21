@@ -35,6 +35,8 @@ namespace Telve.UI
         ComboJournal _journal;
         int _totalWisdom;
         int _newCombosThisRun;
+        ComboData _bestComboThisRun;
+        float _bestComboImpactThisRun = float.MinValue;
 
         public IReadOnlyList<SymbolData> CurrentCup { get; private set; } = Array.Empty<SymbolData>();
 
@@ -63,6 +65,15 @@ namespace Telve.UI
         /// <summary>ROADMAP.md Faz 3 "Bilgelik puanı": koşular arası kalıcı toplam.</summary>
         public int TotalWisdom => _totalWisdom;
 
+        /// <summary>ROADMAP.md Faz 3 "Koşu sonu özet ekranı": bu koşuda tetiklenen en etkili kombo (yoksa null).</summary>
+        public ComboData BestComboThisRun => _bestComboThisRun;
+
+        /// <summary>Bu koşuda tüm müşterilerden toplanan altın (harcamalar hariç, bkz. DaySession.History).</summary>
+        public int TotalGoldEarnedThisRun => _day.History.Sum(h => h.Payment);
+
+        public int DiscoveredCombosCount => _journal.DiscoveredComboIds.Count;
+        public int TotalCombosCount => _allCombos.Count;
+
         public event Action OnStateChanged;
         public event Action<EncounterResult> OnEncounterResolved;
         public event Action<IReadOnlyList<string>> OnNewCombosDiscovered;
@@ -87,6 +98,8 @@ namespace Telve.UI
             _activeCharms = new List<CharmData>();
             _journal = new ComboJournal(MetaProgressStore.LoadDiscoveredComboIds());
             _totalWisdom = MetaProgressStore.LoadTotalWisdom();
+            _bestComboThisRun = null;
+            _bestComboImpactThisRun = float.MinValue;
 
             _rng = new System.Random();
             _day = new DaySession(startingGold, _rng);
@@ -152,6 +165,16 @@ namespace Telve.UI
             _day.SubmitEncounter(result);
             CurrentCupResolved = true;
 
+            foreach (var match in result.Score.TriggeredCombos)
+            {
+                float impact = ComboImpact(match.Combo);
+                if (impact > _bestComboImpactThisRun)
+                {
+                    _bestComboImpactThisRun = impact;
+                    _bestComboThisRun = match.Combo;
+                }
+            }
+
             var newlyDiscovered = _journal.RecordEncounter(result.Score.TriggeredCombos);
             if (newlyDiscovered.Count > 0)
             {
@@ -186,10 +209,16 @@ namespace Telve.UI
             _ownedSymbols = _allSymbols.Where(s => s.rarity == SymbolRarity.Common).ToList();
             _activeCharms = new List<CharmData>();
             _newCombosThisRun = 0;
+            _bestComboThisRun = null;
+            _bestComboImpactThisRun = float.MinValue;
             _day = new DaySession(startingGold, _rng);
 
             DrawCup();
         }
+
+        /// <summary>Kombonun "en iyi kombo" sıralaması için kabaca kıyaslanabilir tek boyutlu etkisi: çarpan için yüzde artış, sabit bonus için puan.</summary>
+        static float ComboImpact(ComboData combo) =>
+            combo.effectType == ComboEffectType.Multiplier ? (combo.effectValue - 1f) * 100f : combo.effectValue;
 
         /// <summary>docs/design/04-economy.md: "Müşteriler arası pazara uğranabilir." Sadece mevcut fincan okunduktan sonra (müşteriler arası) açılabilir.</summary>
         public void OpenMarket()
