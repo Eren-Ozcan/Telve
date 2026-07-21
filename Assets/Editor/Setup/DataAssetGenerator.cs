@@ -21,6 +21,7 @@ namespace Telve.EditorTools
         const string CombosFolder = "Assets/Resources/Data/Combos";
         const string CharmsFolder = "Assets/Resources/Data/Charms";
         const string CharactersFolder = "Assets/Resources/Data/Characters";
+        const string LocalizationFolder = "Assets/Resources/Data/Localization";
 
         struct SymbolRow
         {
@@ -84,6 +85,19 @@ namespace Telve.EditorTools
             AssetDatabase.SaveAssets();
             AssetDatabase.Refresh();
             Debug.Log($"DATA_GEN_CHARACTERS_DONE:characters={Characters.Length}");
+        }
+
+        /// <summary>Generate()'in aksine EditorApplication.Exit çağırmaz.</summary>
+        public static void GenerateLocalizationOnly()
+        {
+            EnsureFolder(LocalizationFolder);
+            var path = $"{LocalizationFolder}/UiStrings.asset";
+            var asset = LoadOrCreate<LocalizationTable>(path);
+            asset.entries = UiStrings;
+            EditorUtility.SetDirty(asset);
+            AssetDatabase.SaveAssets();
+            AssetDatabase.Refresh();
+            Debug.Log($"DATA_GEN_LOCALIZATION_DONE:entries={UiStrings.Length}");
         }
 
         static void EnsureFolder(string path)
@@ -273,6 +287,23 @@ namespace Telve.EditorTools
                 description = "Riskli fallara inanır — destesinde fazladan Kedi var ve Kara Kedi Tılsımıyla başlar.",
                 bonusSymbolIds = new[] { "kedi", "kedi" }, startingCharmId = "kara_kedi_tilismi",
             },
+        };
+
+        // --- ROADMAP.md Faz 4: "Yerelleştirme altyapısı: TR + EN". Sadece UI
+        // çerçevesi — fal terminolojisi (sembol/kombo/tılsım adları) kapsam
+        // dışı, bkz. LocalizationTable.cs.
+        static readonly LocalizationEntry[] UiStrings =
+        {
+            new() { key = "ui.submit_button", tr = "Falı Oku", en = "Read the Fortune" },
+            new() { key = "ui.next_customer_button", tr = "Sıradaki Müşteri", en = "Next Customer" },
+            new() { key = "ui.market_button", tr = "Pazar", en = "Market" },
+            new() { key = "ui.market_title", tr = "PAZAR", en = "MARKET" },
+            new() { key = "ui.journal_button", tr = "Falcı Defteri", en = "Fortune-teller's Journal" },
+            new() { key = "ui.journal_title", tr = "Falcı Defteri", en = "Fortune-teller's Journal" },
+            new() { key = "ui.close_button", tr = "Kapat", en = "Close" },
+            new() { key = "ui.new_run_button", tr = "Yeni Koşu Başlat", en = "Start New Run" },
+            new() { key = "ui.character_select_button", tr = "Falcılar", en = "Fortune-tellers" },
+            new() { key = "ui.character_title", tr = "Falcılar", en = "Fortune-tellers" },
         };
     }
 }

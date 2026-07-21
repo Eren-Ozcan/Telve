@@ -1,0 +1,45 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ebabc6fc9c03eef48b0ef0ce20076b44, type: 3}
+  m_Name: UiStrings
+  m_EditorClassIdentifier: 
+  entries:
+  - key: ui.submit_button
+    tr: "Fal\u0131 Oku"
+    en: Read the Fortune
+  - key: ui.next_customer_button
+    tr: "S\u0131radaki M\xFC\u015Fteri"
+    en: Next Customer
+  - key: ui.market_button
+    tr: Pazar
+    en: Market
+  - key: ui.market_title
+    tr: PAZAR
+    en: MARKET
+  - key: ui.journal_button
+    tr: "Falc\u0131 Defteri"
+    en: Fortune-teller's Journal
+  - key: ui.journal_title
+    tr: "Falc\u0131 Defteri"
+    en: Fortune-teller's Journal
+  - key: ui.close_button
+    tr: Kapat
+    en: Close
+  - key: ui.new_run_button
+    tr: "Yeni Ko\u015Fu Ba\u015Flat"
+    en: Start New Run
+  - key: ui.character_select_button
+    tr: "Falc\u0131lar"
+    en: Fortune-tellers
+  - key: ui.character_title
+    tr: "Falc\u0131lar"
+    en: Fortune-tellers
