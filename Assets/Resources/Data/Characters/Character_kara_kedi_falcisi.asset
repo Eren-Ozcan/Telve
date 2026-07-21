@@ -1,0 +1,23 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8e9b42fddecdc3a489777954f2988898, type: 3}
+  m_Name: Character_kara_kedi_falcisi
+  m_EditorClassIdentifier: 
+  characterId: kara_kedi_falcisi
+  displayName: Gizemli Sema
+  description: "Riskli fallara inan\u0131r \u2014 destesinde fazladan Kedi var ve
+    Kara Kedi T\u0131ls\u0131m\u0131yla ba\u015Flar."
+  wisdomCost: 25
+  startingDeckBonusSymbolIds:
+  - kedi
+  - kedi
+  startingCharmId: kara_kedi_tilismi

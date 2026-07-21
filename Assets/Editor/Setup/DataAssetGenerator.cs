@@ -20,6 +20,7 @@ namespace Telve.EditorTools
         const string SymbolsFolder = "Assets/Resources/Data/Symbols";
         const string CombosFolder = "Assets/Resources/Data/Combos";
         const string CharmsFolder = "Assets/Resources/Data/Charms";
+        const string CharactersFolder = "Assets/Resources/Data/Characters";
 
         struct SymbolRow
         {
@@ -46,20 +47,43 @@ namespace Telve.EditorTools
             public float effectValue;
         }
 
+        struct CharacterRow
+        {
+            public string id, displayName, description, startingCharmId;
+            public int wisdomCost;
+            public string[] bonusSymbolIds;
+        }
+
         public static void Generate()
         {
             EnsureFolder(SymbolsFolder);
             EnsureFolder(CombosFolder);
             EnsureFolder(CharmsFolder);
+            EnsureFolder(CharactersFolder);
 
             foreach (var row in Symbols) CreateSymbol(row);
             foreach (var row in Combos) CreateCombo(row);
             foreach (var row in Charms) CreateCharm(row);
+            foreach (var row in Characters) CreateCharacter(row);
 
             AssetDatabase.SaveAssets();
             AssetDatabase.Refresh();
-            Debug.Log($"DATA_GEN_DONE:symbols={Symbols.Length},combos={Combos.Length},charms={Charms.Length}");
+            Debug.Log($"DATA_GEN_DONE:symbols={Symbols.Length},combos={Combos.Length},charms={Charms.Length},characters={Characters.Length}");
             EditorApplication.Exit(0);
+        }
+
+        /// <summary>
+        /// Generate()'in aksine EditorApplication.Exit çağırmaz — açık,
+        /// canlı bir Editor oturumunda (MCP script çalıştırma gibi)
+        /// güvenle çağrılabilir.
+        /// </summary>
+        public static void GenerateCharactersOnly()
+        {
+            EnsureFolder(CharactersFolder);
+            foreach (var row in Characters) CreateCharacter(row);
+            AssetDatabase.SaveAssets();
+            AssetDatabase.Refresh();
+            Debug.Log($"DATA_GEN_CHARACTERS_DONE:characters={Characters.Length}");
         }
 
         static void EnsureFolder(string path)
@@ -118,6 +142,19 @@ namespace Telve.EditorTools
             asset.effectTarget = row.effectTarget;
             asset.effectValue = row.effectValue;
             asset.description = row.description;
+            EditorUtility.SetDirty(asset);
+        }
+
+        static void CreateCharacter(CharacterRow row)
+        {
+            var path = $"{CharactersFolder}/Character_{row.id}.asset";
+            var asset = LoadOrCreate<FalciCharacter>(path);
+            asset.characterId = row.id;
+            asset.displayName = row.displayName;
+            asset.description = row.description;
+            asset.wisdomCost = row.wisdomCost;
+            asset.startingDeckBonusSymbolIds = row.bonusSymbolIds;
+            asset.startingCharmId = row.startingCharmId;
             EditorUtility.SetDirty(asset);
         }
 
@@ -213,6 +250,29 @@ namespace Telve.EditorTools
             new() { id = "sans_tekerlegi", displayName = "Şans Tekerleği", rarity = SymbolRarity.Rare, price = 38, effectTarget = CharmEffectTarget.DrawRng, effectValue = 0.5f, description = "Rare ve Epic sembol çekiliş ağırlığı %50 artar" },
             new() { id = "muhtarin_gozdesi", displayName = "Muhtarın Gözdesi", rarity = SymbolRarity.Rare, price = 38, effectTarget = CharmEffectTarget.Economy, effectValue = 1.5f, description = "Muhtar müşterisinde ödeme ×1.5" },
             new() { id = "kader_anahtari", displayName = "Kader Anahtarı", rarity = SymbolRarity.Epic, price = 65, effectTarget = CharmEffectTarget.DrawRng, effectValue = 1f, description = "Taç sembolü her elde garanti çıkar" },
+        };
+
+        // --- ROADMAP.md Faz 3: "2-3 falcı karakteri" + "açılabilir sembol desteleri" ---
+        static readonly CharacterRow[] Characters =
+        {
+            new()
+            {
+                id = "varsayilan", displayName = "Falcı Ayşe", wisdomCost = 0,
+                description = "Klasik falcı. Dengeli başlangıç destesi, özel bir eğilimi yok.",
+                bonusSymbolIds = System.Array.Empty<string>(), startingCharmId = "",
+            },
+            new()
+            {
+                id = "kus_falcisi", displayName = "Haberci Zehra", wisdomCost = 15,
+                description = "Kuş sembolüne düşkün — destesinde fazladan Kuş var ve Kuş Tüyü tılsımıyla başlar.",
+                bonusSymbolIds = new[] { "kus", "kus" }, startingCharmId = "kus_tuyu",
+            },
+            new()
+            {
+                id = "kara_kedi_falcisi", displayName = "Gizemli Sema", wisdomCost = 25,
+                description = "Riskli fallara inanır — destesinde fazladan Kedi var ve Kara Kedi Tılsımıyla başlar.",
+                bonusSymbolIds = new[] { "kedi", "kedi" }, startingCharmId = "kara_kedi_tilismi",
+            },
         };
     }
 }
