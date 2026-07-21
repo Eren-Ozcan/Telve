@@ -66,7 +66,7 @@ Amaç: MVP içeriğinin tamamı + oyunun **duygusunu** kuran sunum katmanı. Bal
 
 ## Faz 3 — Meta-İlerleme + Koşu Derinliği (4-5 hafta)
 
-- [ ] **Bilgelik puanı**: koşu sonu kazanım + kalıcı açılımlar ağacı (StS tarzı: yeni semboller, başlangıç tılsımı seçenekleri)
+- [ ] **Bilgelik puanı**: koşu sonu kazanım + kalıcı açılımlar ağacı (StS tarzı: yeni semboller, başlangıç tılsımı seçenekleri) *(koşu sonu kazanım kısmı yapıldı: `WisdomReward` + `MetaProgressStore`, PlayerPrefs ile kalıcı, testli; kalıcı açılımlar ağacı — puanı harcama tarafı — henüz yok)*
 - [ ] Açılabilir sembol desteleri (2. ve 3. deste — farklı oynanış eğilimi: "kuş ağırlıklı haber destesi" vb.)
 - [ ] 2-3 falcı karakteri (farklı başlangıç koşulu/pasif — Balatro'daki deste seçimi muadili)
 - [ ] Koşu sonu özet ekranı: en iyi kombo, toplam kazanç, defter ilerlemesi
