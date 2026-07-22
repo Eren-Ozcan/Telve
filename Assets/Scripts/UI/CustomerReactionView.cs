@@ -22,7 +22,18 @@ namespace Telve.UI
         {
             controller.OnEncounterResolved += HandleEncounterResolved;
             controller.OnCupDrawn += ResetPortrait;
-            ResetPortrait();
+
+            // Koşu-ortası kayıttan devamda son karşılaşmanın sonucunu yansıt
+            // (aksi hâlde her zaman nötr'e sıfırlanırdı — bkz. GameController.
+            // LastEncounterThresholdMet).
+            if (controller.LastEncounterThresholdMet is { } thresholdMet)
+            {
+                if (portraitImage != null) portraitImage.sprite = thresholdMet ? happySprite : startledSprite;
+            }
+            else
+            {
+                ResetPortrait();
+            }
         }
 
         void OnDisable()
