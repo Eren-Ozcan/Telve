@@ -22,15 +22,23 @@ namespace Telve.UI
         [SerializeField] Button[] characterButtons = new Button[MaxCharacters];
         [SerializeField] Text[] characterLabels = new Text[MaxCharacters];
 
-        void OnEnable()
+        void Awake()
         {
-            openButton.onClick.AddListener(Open);
-            closeButton.onClick.AddListener(Close);
+            // Sabit karakter butonlarının tıklama bağlantısı nesne ömrü
+            // boyunca bir kez kurulur — OnEnable'da kurulsaydı ve OnDisable'da
+            // kaldırılmasaydı, tekrarlayan enable/disable döngülerinde
+            // dinleyiciler birikip her tıklamayı birden çok kez tetiklerdi.
             for (int i = 0; i < MaxCharacters; i++)
             {
                 int index = i; // closure capture
                 characterButtons[i].onClick.AddListener(() => OnCharacterButtonPressed(index));
             }
+        }
+
+        void OnEnable()
+        {
+            openButton.onClick.AddListener(Open);
+            closeButton.onClick.AddListener(Close);
 
             controller.OnStateChanged += RefreshIfOpen;
             panel.SetActive(false);
