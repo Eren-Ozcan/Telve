@@ -89,6 +89,14 @@ namespace Telve.UI
         /// <summary>Bu koşuda tüm müşterilerden toplanan altın (harcamalar hariç, bkz. DaySession.History).</summary>
         public int TotalGoldEarnedThisRun => _day.History.Sum(h => h.Payment);
 
+        /// <summary>
+        /// Son çözülen karşılaşmanın eşiği aşıp aşmadığı (null = bu koşuda
+        /// henüz karşılaşma yok). CustomerReactionView'ın koşu-ortası
+        /// kayıttan devamda doğru portreyle (mutlu/ürkmüş) açılması için —
+        /// aksi hâlde her zaman nötr'e sıfırlanırdı.
+        /// </summary>
+        public bool? LastEncounterThresholdMet { get; private set; }
+
         public int DiscoveredCombosCount => _journal.DiscoveredComboIds.Count;
         public int TotalCombosCount => _allCombos.Count;
 
@@ -186,10 +194,15 @@ namespace Telve.UI
             _bestComboThisRun = string.IsNullOrEmpty(data.bestComboId) ? null : _allCombos.FirstOrDefault(c => c.comboId == data.bestComboId);
             _bestComboImpactThisRun = data.bestComboImpact;
 
+            _secondChanceUsedThisRun = data.secondChanceUsedThisRun;
+            _wisdomDoubledThisRun = data.wisdomDoubledThisRun;
+            _lastRunWisdomReward = data.lastRunWisdomReward;
+            LastEncounterThresholdMet = data.hasLastEncounterResult ? data.lastEncounterThresholdMet : (bool?)null;
+
             _rng = new System.Random();
         }
 
-        void SaveRunState()
+        void SaveRunState(bool flushToDisk = true)
         {
             var data = new RunSaveData
             {
@@ -202,6 +215,11 @@ namespace Telve.UI
                 newCombosThisRun = _newCombosThisRun,
                 bestComboId = _bestComboThisRun?.comboId ?? "",
                 bestComboImpact = _bestComboImpactThisRun,
+                secondChanceUsedThisRun = _secondChanceUsedThisRun,
+                wisdomDoubledThisRun = _wisdomDoubledThisRun,
+                lastRunWisdomReward = _lastRunWisdomReward,
+                hasLastEncounterResult = LastEncounterThresholdMet.HasValue,
+                lastEncounterThresholdMet = LastEncounterThresholdMet.GetValueOrDefault(),
             };
 
             foreach (var h in _day.History) data.history.Add(new SavedCustomerResult { thresholdMet = h.ThresholdMet, payment = h.Payment });
@@ -211,7 +229,7 @@ namespace Telve.UI
             foreach (var s in CurrentCup) data.currentCupSymbolIds.Add(s.symbolId);
             data.readingOrderCupIndices.AddRange(ReadingOrderCupIndices);
 
-            RunSaveService.Save(data);
+            RunSaveService.Save(data, flushToDisk);
         }
 
         /// <summary>
@@ -286,6 +304,7 @@ namespace Telve.UI
 
             ReadingOrderCupIndices.Clear();
             CurrentCupResolved = false;
+            LastEncounterThresholdMet = null;
             CurrentCup = CupDraw.Draw(_ownedSymbols, _rng, _activeCharms);
             SaveRunState();
             OnStateChanged?.Invoke();
@@ -303,7 +322,7 @@ namespace Telve.UI
                 ReadingOrderCupIndices.Add(cupIndex);
             }
 
-            SaveRunState();
+            SaveRunState(flushToDisk: false);
             OnStateChanged?.Invoke();
         }
 
@@ -321,7 +340,7 @@ namespace Telve.UI
             (ReadingOrderCupIndices[fromPosition], ReadingOrderCupIndices[toPosition]) =
                 (ReadingOrderCupIndices[toPosition], ReadingOrderCupIndices[fromPosition]);
 
-            SaveRunState();
+            SaveRunState(flushToDisk: false);
             OnStateChanged?.Invoke();
         }
 
@@ -336,6 +355,7 @@ namespace Telve.UI
             var result = CustomerEncounter.Resolve(profile, readingOrder, _allCombos, _activeCharms);
             _day.SubmitEncounter(result);
             CurrentCupResolved = true;
+            LastEncounterThresholdMet = result.Payment.ThresholdMet;
 
             foreach (var match in result.Score.TriggeredCombos)
             {
@@ -435,6 +455,7 @@ namespace Telve.UI
                     _wisdomDoubledThisRun = true;
                     _totalWisdom += _lastRunWisdomReward;
                     MetaProgressStore.SaveTotalWisdom(_totalWisdom);
+                    SaveRunState();
                     OnStateChanged?.Invoke();
                 }
 

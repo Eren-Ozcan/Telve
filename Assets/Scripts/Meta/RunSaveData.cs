@@ -39,5 +39,18 @@ namespace Telve.Meta
         public int newCombosThisRun;
         public string bestComboId = "";
         public float bestComboImpact;
+
+        /// <summary>
+        /// ROADMAP.md Faz 4 rewarded ad "koşu başına bir kez" sınırları.
+        /// Bunlar kaydedilmezse oyuncu uygulamayı yeniden başlatarak
+        /// ikinci şansı/×2 bilgeliği sınırsız tekrar kullanabilir.
+        /// </summary>
+        public bool secondChanceUsedThisRun;
+        public bool wisdomDoubledThisRun;
+        public int lastRunWisdomReward;
+
+        /// <summary>JsonUtility bool? desteklemediği için iki alanla temsil edilir.</summary>
+        public bool hasLastEncounterResult;
+        public bool lastEncounterThresholdMet;
     }
 }
