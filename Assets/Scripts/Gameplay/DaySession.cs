@@ -28,6 +28,9 @@ namespace Telve.Gameplay
 
         public bool IsMuhtarTurn => CurrentCustomerIndex > CustomerEconomy.RegularCustomerCount;
 
+        /// <summary>ROADMAP.md Faz 3 "Kayıt sistemi": koşu ortası kayıt için sıradan müşteri arketiplerinin (1..8) dışa açılan hâli.</summary>
+        public IReadOnlyList<CustomerArchetype> Archetypes => _archetypes;
+
         public DaySession(int startingGold) : this(startingGold, null) { }
 
         /// <summary>
@@ -45,6 +48,36 @@ namespace Telve.Gameplay
             {
                 _archetypes[i] = rng != null ? ArchetypePool[rng.Next(ArchetypePool.Length)] : CustomerArchetype.Regular;
             }
+        }
+
+        /// <summary>
+        /// ROADMAP.md Faz 3 "Kayıt sistemi: koşu ortası kayıt/devam".
+        /// Kaydedilmiş bir koşuyu, orijinal arketip atamalarını ve
+        /// geçmişini koruyarak birebir geri kurar (yeni bir DaySession
+        /// oluşturmak arketipleri rastgele yeniden atardı — bu yüzden ayrı
+        /// bir yol). RNG durumu kasıtlı olarak kurtarılmıyor: System.Random
+        /// iç durumunu dışa açmıyor, bundan sonraki çekilişler yeni bir
+        /// rastgelelikle devam eder — zaten çekilmiş/geçmişe işlenmiş hiçbir
+        /// şeyi etkilemez.
+        /// </summary>
+        public static DaySession Restore(
+            int gold, int currentCustomerIndex, bool dayLost, bool dayComplete,
+            List<CustomerResult> history, CustomerArchetype[] archetypes)
+        {
+            var session = new DaySession(gold, null)
+            {
+                CurrentCustomerIndex = currentCustomerIndex,
+                DayLost = dayLost,
+                DayComplete = dayComplete,
+            };
+
+            for (int i = 0; i < archetypes.Length && i < session._archetypes.Length; i++)
+            {
+                session._archetypes[i] = archetypes[i];
+            }
+
+            session._history.AddRange(history);
+            return session;
         }
 
         public CustomerProfile CurrentProfile()
