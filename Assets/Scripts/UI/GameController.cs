@@ -43,6 +43,7 @@ namespace Telve.UI
         int _lastRunWisdomReward;
         bool _secondChanceUsedThisRun;
         bool _wisdomDoubledThisRun;
+        bool _restoredFromSave;
 
         /// <summary>
         /// ROADMAP.md Faz 4 "IAP altyapısı" / "Rewarded ad entegrasyonu".
@@ -131,17 +132,86 @@ namespace Telve.UI
                 _selectedCharacterId = _allCharacters.FirstOrDefault(c => c.wisdomCost == 0)?.characterId ?? "";
             }
 
-            BuildStartingDeckAndCharms();
             _journal = new ComboJournal(MetaProgressStore.LoadDiscoveredComboIds());
             _totalWisdom = MetaProgressStore.LoadTotalWisdom();
-            _bestComboThisRun = null;
-            _bestComboImpactThisRun = float.MinValue;
 
-            _rng = new System.Random();
-            _day = new DaySession(startingGold, _rng);
+            // ROADMAP.md Faz 3 "Kayıt sistemi: koşu ortası kayıt/devam".
+            var savedRun = RunSaveService.HasSavedRun() ? RunSaveService.Load() : null;
+            if (savedRun != null)
+            {
+                RestoreRunState(savedRun);
+                _restoredFromSave = true;
+            }
+            else
+            {
+                BuildStartingDeckAndCharms();
+                _bestComboThisRun = null;
+                _bestComboImpactThisRun = float.MinValue;
+                _rng = new System.Random();
+                _day = new DaySession(startingGold, _rng);
+            }
 
             AnalyticsEvents.SessionStarted();
-            AnalyticsEvents.RunStarted(_selectedCharacterId);
+            if (!_restoredFromSave) AnalyticsEvents.RunStarted(_selectedCharacterId);
+        }
+
+        /// <summary>
+        /// ROADMAP.md Faz 3 "Kayıt sistemi". RNG durumu kasıtlı olarak
+        /// kurtarılmıyor (bkz. DaySession.Restore) — sadece bundan sonraki
+        /// çekilişleri etkiler, zaten çekilmiş fincanı (CurrentCup) değil.
+        /// </summary>
+        void RestoreRunState(RunSaveData data)
+        {
+            _selectedCharacterId = data.selectedCharacterId;
+
+            _ownedSymbols = data.ownedSymbolIds
+                .Select(id => _allSymbols.FirstOrDefault(s => s.symbolId == id))
+                .Where(s => s != null).ToList();
+            _activeCharms = data.activeCharmIds
+                .Select(id => _allCharmDefinitions.FirstOrDefault(c => c.charmId == id))
+                .Where(c => c != null).ToList();
+
+            var history = data.history.Select(h => new CustomerResult(h.thresholdMet, h.payment)).ToList();
+            var archetypes = data.archetypes.Select(a => (CustomerArchetype)a).ToArray();
+            _day = DaySession.Restore(data.gold, data.currentCustomerIndex, data.dayLost, data.dayComplete, history, archetypes);
+
+            CurrentCup = data.currentCupSymbolIds
+                .Select(id => _allSymbols.FirstOrDefault(s => s.symbolId == id))
+                .Where(s => s != null).ToList();
+            ReadingOrderCupIndices.Clear();
+            ReadingOrderCupIndices.AddRange(data.readingOrderCupIndices);
+            CurrentCupResolved = data.currentCupResolved;
+
+            _newCombosThisRun = data.newCombosThisRun;
+            _bestComboThisRun = string.IsNullOrEmpty(data.bestComboId) ? null : _allCombos.FirstOrDefault(c => c.comboId == data.bestComboId);
+            _bestComboImpactThisRun = data.bestComboImpact;
+
+            _rng = new System.Random();
+        }
+
+        void SaveRunState()
+        {
+            var data = new RunSaveData
+            {
+                gold = _day.Gold,
+                currentCustomerIndex = _day.CurrentCustomerIndex,
+                dayLost = _day.DayLost,
+                dayComplete = _day.DayComplete,
+                currentCupResolved = CurrentCupResolved,
+                selectedCharacterId = _selectedCharacterId,
+                newCombosThisRun = _newCombosThisRun,
+                bestComboId = _bestComboThisRun?.comboId ?? "",
+                bestComboImpact = _bestComboImpactThisRun,
+            };
+
+            foreach (var h in _day.History) data.history.Add(new SavedCustomerResult { thresholdMet = h.ThresholdMet, payment = h.Payment });
+            foreach (var a in _day.Archetypes) data.archetypes.Add((int)a);
+            foreach (var s in _ownedSymbols) data.ownedSymbolIds.Add(s.symbolId);
+            foreach (var c in _activeCharms) data.activeCharmIds.Add(c.charmId);
+            foreach (var s in CurrentCup) data.currentCupSymbolIds.Add(s.symbolId);
+            data.readingOrderCupIndices.AddRange(ReadingOrderCupIndices);
+
+            RunSaveService.Save(data);
         }
 
         /// <summary>
@@ -200,6 +270,12 @@ namespace Telve.UI
 
         void Start()
         {
+            if (_restoredFromSave)
+            {
+                OnStateChanged?.Invoke();
+                return;
+            }
+
             DrawCup();
         }
 
@@ -211,6 +287,7 @@ namespace Telve.UI
             ReadingOrderCupIndices.Clear();
             CurrentCupResolved = false;
             CurrentCup = CupDraw.Draw(_ownedSymbols, _rng, _activeCharms);
+            SaveRunState();
             OnStateChanged?.Invoke();
             OnCupDrawn?.Invoke();
         }
@@ -226,6 +303,7 @@ namespace Telve.UI
                 ReadingOrderCupIndices.Add(cupIndex);
             }
 
+            SaveRunState();
             OnStateChanged?.Invoke();
         }
 
@@ -243,6 +321,7 @@ namespace Telve.UI
             (ReadingOrderCupIndices[fromPosition], ReadingOrderCupIndices[toPosition]) =
                 (ReadingOrderCupIndices[toPosition], ReadingOrderCupIndices[fromPosition]);
 
+            SaveRunState();
             OnStateChanged?.Invoke();
         }
 
@@ -291,6 +370,7 @@ namespace Telve.UI
                 if (_day.DayLost) AnalyticsEvents.DeathPoint(_day.CurrentCustomerIndex);
             }
 
+            SaveRunState();
             OnStateChanged?.Invoke();
         }
 
@@ -400,6 +480,7 @@ namespace Telve.UI
             if (offer.IsSymbol) _ownedSymbols.Add(offer.Symbol);
             else _activeCharms.Add(offer.Charm);
 
+            SaveRunState();
             OnOfferPurchased?.Invoke(offer);
             CloseMarket();
             return true;
