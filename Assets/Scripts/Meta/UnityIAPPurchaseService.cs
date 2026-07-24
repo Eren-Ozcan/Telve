@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Purchasing;
+using UnityEngine.Purchasing.Extension;
 
 namespace Telve.Meta
 {
@@ -16,7 +17,7 @@ namespace Telve.Meta
     /// `GameController.PurchaseService = new UnityIAPPurchaseService();`
     /// ile tak-çalıştır devreye alınır.
     /// </summary>
-    public class UnityIAPPurchaseService : IPurchaseService, IStoreListener
+    public class UnityIAPPurchaseService : IPurchaseService, IDetailedStoreListener
     {
         IStoreController _controller;
         bool _initialized;
@@ -89,7 +90,13 @@ namespace Telve.Meta
             return PurchaseProcessingResult.Complete;
         }
 
-        public void OnPurchaseFailed(Product product, PurchaseFailureReason reason)
+        public void OnPurchaseFailed(Product product, PurchaseFailureReason reason) =>
+            FailPurchase(product, reason.ToString());
+
+        public void OnPurchaseFailed(Product product, PurchaseFailureDescription failureDescription) =>
+            FailPurchase(product, $"{failureDescription.reason}: {failureDescription.message}");
+
+        void FailPurchase(Product product, string reasonText)
         {
             if (_pendingCallbacks.TryGetValue(product.definition.id, out var callback))
             {
@@ -97,7 +104,7 @@ namespace Telve.Meta
                 callback?.Invoke(false);
             }
 
-            Debug.LogWarning($"UnityIAPPurchaseService: satın alma başarısız — {product.definition.id}: {reason}");
+            Debug.LogWarning($"UnityIAPPurchaseService: satın alma başarısız — {product.definition.id}: {reasonText}");
         }
     }
 }
