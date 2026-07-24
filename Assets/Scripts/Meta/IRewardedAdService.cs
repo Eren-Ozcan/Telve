@@ -4,9 +4,9 @@ namespace Telve.Meta
 {
     /// <summary>
     /// ROADMAP.md Faz 4 "Rewarded ad entegrasyonu: koşu sonu 'ikinci şans'
-    /// + bilgelik puanı ×2". Gerçek bir reklam SDK'sı (Unity Ads/AdMob vb.)
-    /// bu arayüzü implemente edip GameController.AdService'e atanarak
-    /// tak-çalıştır entegre edilir.
+    /// + bilgelik puanı ×2". Gerçek implementasyon: LevelPlayRewardedAdService
+    /// (com.unity.services.levelplay) — LevelPlay hesabı/app key kurulunca
+    /// GameController.AdService'e atanarak tak-çalıştır devreye alınır.
     /// </summary>
     public interface IRewardedAdService
     {
