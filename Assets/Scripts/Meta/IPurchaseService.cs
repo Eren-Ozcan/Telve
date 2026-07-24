@@ -3,10 +3,10 @@ using System;
 namespace Telve.Meta
 {
     /// <summary>
-    /// ROADMAP.md Faz 4 "IAP altyapısı (Unity IAP)". Gerçek bir mağaza
-    /// entegrasyonu (Unity IAP + App Store/Google Play) bu arayüzü
-    /// implemente edip GameController.PurchaseService'e atanarak
-    /// tak-çalıştır entegre edilir.
+    /// ROADMAP.md Faz 4 "IAP altyapısı (Unity IAP)". Gerçek implementasyon:
+    /// UnityIAPPurchaseService (com.unity.purchasing) — mağaza ürün kataloğu
+    /// kurulunca GameController.PurchaseService'e atanarak tak-çalıştır
+    /// devreye alınır.
     /// </summary>
     public interface IPurchaseService
     {
