@@ -120,6 +120,13 @@ namespace Telve.UI
 
         void Awake()
         {
+            // ROADMAP.md Faz 4 performans: vSync kapalı + sabit 60fps hedefi
+            // olmadan mobil GPU'lar (özellikle düşük seviye Android) ekran
+            // yenileme hızına göre değişken/gereksiz yüksek fps'de render
+            // eder, pil tüketir. 2D UI-ağırlıklı oyun için 60 yeterli üst sınır.
+            QualitySettings.vSyncCount = 0;
+            Application.targetFrameRate = 60;
+
             PurchaseService = new MockPurchaseService();
             AdService = new MockRewardedAdService();
 

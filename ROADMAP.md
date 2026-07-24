@@ -80,7 +80,7 @@ Amaç: MVP içeriğinin tamamı + oyunun **duygusunu** kuran sunum katmanı. Bal
 
 ## Faz 4 — Mobil Cila + Monetizasyon (3-4 hafta)
 
-- [ ] Performans: düşük seviye Android cihazda 60 fps, pil dostu
+- [ ] Performans: düşük seviye Android cihazda 60 fps, pil dostu *(kod tarafında elden gelenler yapıldı: 42 texture'ın tamamına Android/iOS için ASTC 6x6 sıkıştırma override'ı verildi (önceden `overridden: 0` varsayılan haldeydi), Quality Settings'te tüm seviyelerde anisotropic filtering kapatıldı (2D sprite'lar için gereksiz), `GameController.Awake()`'e `vSyncCount=0` + `targetFrameRate=60` eklendi. Kod tarafında Update()/FindObjectOfType gibi performans kokusu taranıp bulunamadı. GERÇEK fiziksel düşük seviye Android cihazda fps/pil ölçümü yapılmadı — bu madde ancak cihaz testiyle işaretlenebilir.)*
 - [ ] IAP altyapısı (Unity IAP): fincan/masa örtüsü kozmetikleri — güç satmıyoruz, sadece görünüm *(kod iskeleti hazır: `CosmeticItem` veri modeli + `IPurchaseService`/`MockPurchaseService` — GERÇEK MAĞAZA BAĞLANTISI YOK, ödeme almaz. Gerçek Unity IAP paketi + App Store/Google Play ürün kataloğu kurulumu ayrı, hesap gerektiren iş.)*
 - [x] Rewarded ad entegrasyonu: koşu sonu "ikinci şans" + bilgelik puanı ×2 (2 nokta, fazlası deneyimi yer) *(`IRewardedAdService`/`MockRewardedAdService` — GERÇEK REKLAM SDK'SI YOK. Oynanış akışı tam bağlı: `DaySession.TryGrantSecondChance` + `GameController.RequestSecondChance`/`RequestDoubleWisdom`, koşu başına birer kez, Play Mode'da uçtan uca doğrulandı. Gerçek reklam ağı bağlandığında sadece `AdService` ataması değişir.)*
 - [x] Tutorial / ilk 5 dakika akışı (ilk müşteri = öğretici fal) *(`TutorialView` — ilk hiç görülmemiş karşılaşmada bağlamsal ipuçları (sırala → oku → sonuç), bir daha görünmez. Play Mode'da doğrulandı.)*
