@@ -23,6 +23,17 @@ namespace Telve.EditorTools
     /// </summary>
     public static class BalanceSimulator
     {
+        // Gerçek insan playtest verisi yok (bkz. ROADMAP.md Faz 0 — kağıt
+        // prototip kanıtı da eksik). Bu iki sabit, 00-core-loop.md'deki adım
+        // sayısına dayanan kaba tahminlerdir (fincan çevirme animasyonu +
+        // sürükle-bırak dizme kararı + kombo/sonuç bildirimi ~= tek fincan;
+        // pazar ekranında 3 teklife göz atma ~= tek pazar uğrağı). Amaç
+        // ROADMAP'in "20-40 dk" hedefiyle aynı büyüklük mertebesinde miyiz
+        // sinyalini vermek, kesin süre iddia etmek değil — gerçek süre
+        // ancak insan playtestiyle doğrulanabilir.
+        const float EstimatedSecondsPerEncounter = 75f;
+        const float EstimatedSecondsPerMarketVisit = 12f;
+
         public static void RunSimulation(string resultPath, int runCount)
         {
             var allSymbols = LoadAll<SymbolData>("Assets/Resources/Data/Symbols");
@@ -52,6 +63,15 @@ namespace Telve.EditorTools
             sb.AppendLine(upliftPct >= 15f
                 ? "-> Faz 0 varsayımı destekleniyor: dizilim kararı skoru anlamlı şekilde değiştiriyor."
                 : "-> Uyarı: dizilim kararının etkisi düşük görünüyor, kombo matrisi/pozisyon bonusları güçlendirilmeli (bkz. ROADMAP.md Faz 0 riski).");
+            sb.AppendLine();
+
+            float realisticMinutes = (float)(optimalWithMarket.CustomersReached.Average() * EstimatedSecondsPerEncounter
+                + optimalWithMarket.MarketVisits.Average() * EstimatedSecondsPerMarketVisit) / 60f;
+            bool withinTarget = realisticMinutes >= 20f && realisticMinutes <= 40f;
+            sb.AppendLine($"Zorluk eğrisi pacing sinyali (gerçekçi üst sınır senaryosu): ~{realisticMinutes:0.#} dk / koşu.");
+            sb.AppendLine(withinTarget
+                ? "-> ROADMAP.md Faz 3 hedefi olan 20-40 dk aralığıyla aynı büyüklük mertebesinde (SİMÜLASYON TAHMİNİ, insan playtestiyle DOĞRULANMADI)."
+                : "-> ROADMAP.md Faz 3'ün 20-40 dk hedefinin dışında görünüyor (SİMÜLASYON TAHMİNİ) — saniye sabitleri kaba olduğundan kesin sonuç değil, ama gerçek playtestte pacing'e dikkat edilmeli.");
 
             File.WriteAllText(resultPath, sb.ToString());
             Debug.Log("BALANCE_SIMULATION_DONE");
@@ -70,6 +90,7 @@ namespace Telve.EditorTools
             public List<int> CustomersReached = new();
             public List<int> FinalGold = new();
             public List<int> WisdomEarned = new();
+            public List<int> MarketVisits = new();
             public float AvgScorePerCup;
             public List<float> MuhtarScores = new();
             public int MuhtarThreshold;
@@ -89,6 +110,7 @@ namespace Telve.EditorTools
                 var day = new DaySession(startingGold: 20, rng);
                 var ownedSymbols = new List<SymbolData>(startingDeck);
                 var activeCharms = new List<CharmData>();
+                int marketVisits = 0;
 
                 while (!day.DayLost && !day.DayComplete)
                 {
@@ -107,6 +129,7 @@ namespace Telve.EditorTools
 
                     if (useMarket && !wasMuhtar && !day.DayLost && !day.DayComplete)
                     {
+                        marketVisits++;
                         GreedyMarketPurchase(day, ownedSymbols, activeCharms, allSymbols, allCharms, rng);
                     }
                 }
@@ -115,6 +138,7 @@ namespace Telve.EditorTools
                 stats.CustomersReached.Add(day.History.Count);
                 stats.FinalGold.Add(day.Gold);
                 stats.WisdomEarned.Add(WisdomReward.CalculateRunReward(day.Gold, day.DayComplete, 0));
+                stats.MarketVisits.Add(marketVisits);
             }
 
             stats.AvgScorePerCup = scoreSamples.Count > 0 ? scoreSamples.Average() : 0f;
@@ -147,6 +171,9 @@ namespace Telve.EditorTools
             sb.AppendLine($"  Ortalama bitiş altını: {stats.FinalGold.Average():0.#}");
             sb.AppendLine($"  Ortalama kazanılan bilgelik puanı: {stats.WisdomEarned.Average():0.#}");
             sb.AppendLine($"  Ortalama skor / fincan: {stats.AvgScorePerCup:0.#}");
+            float estimatedMinutes = (float)(stats.CustomersReached.Average() * EstimatedSecondsPerEncounter
+                + stats.MarketVisits.Average() * EstimatedSecondsPerMarketVisit) / 60f;
+            sb.AppendLine($"  Tahmini koşu süresi: ~{estimatedMinutes:0.#} dk (kaba tahmin, bkz. sınıf başı not — insan playtestiyle doğrulanmadı)");
             if (stats.MuhtarScores.Count > 0)
             {
                 sb.AppendLine($"  Muhtar eşiği: {stats.MuhtarThreshold}, ortalama muhtar skoru: {stats.MuhtarScores.Average():0.#} (fark: {stats.MuhtarScores.Average() - stats.MuhtarThreshold:0.#})");
