@@ -1,7 +1,11 @@
 {
     "name": "Telve.Runtime",
     "rootNamespace": "Telve",
-    "references": [],
+    "references": [
+        "UnityEngine.Purchasing",
+        "UnityEngine.Purchasing.Stores",
+        "Unity.LevelPlay"
+    ],
     "includePlatforms": [],
     "excludePlatforms": [],
     "allowUnsafeCode": false,
