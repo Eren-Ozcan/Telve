@@ -64,3 +64,6 @@ Thumbs.db
 
 # Coplay package's own data (logs, local settings) — per its own .gitignore
 Packages/Coplay/Editor/
+
+# Private/local-only store & marketing assets (mirrored to private Eren-Ozcan/pictures repo)
+docs/store-assets-originals/
