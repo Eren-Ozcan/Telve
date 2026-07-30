@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using Telve.Gameplay;
+using Telve.Meta;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -51,7 +52,7 @@ namespace Telve.UI
             foreach (var match in combos)
             {
                 bannerRoot.SetActive(true);
-                bannerText.text = $"{match.Combo.displayName} Fark Edildi";
+                bannerText.text = string.Format(Localization.Get("combo_banner.discovered_template"), ContentLocalization.ComboName(match.Combo));
                 bannerText.color = match.Combo.isNegative ? NegativeColor : PositiveColor;
 
                 if (shakeTarget != null) yield return StartCoroutine(Shake());

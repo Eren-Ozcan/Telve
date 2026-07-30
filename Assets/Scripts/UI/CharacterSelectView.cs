@@ -1,3 +1,4 @@
+using Telve.Meta;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -41,6 +42,7 @@ namespace Telve.UI
             closeButton.onClick.AddListener(Close);
 
             controller.OnStateChanged += RefreshIfOpen;
+            Localization.OnLanguageChanged += RefreshIfOpen;
             panel.SetActive(false);
         }
 
@@ -49,6 +51,7 @@ namespace Telve.UI
             openButton.onClick.RemoveListener(Open);
             closeButton.onClick.RemoveListener(Close);
             controller.OnStateChanged -= RefreshIfOpen;
+            Localization.OnLanguageChanged -= RefreshIfOpen;
         }
 
         void Open()
@@ -77,8 +80,11 @@ namespace Telve.UI
                 bool unlocked = controller.IsCharacterUnlocked(character.characterId);
                 bool selected = character.characterId == controller.SelectedCharacterId;
 
-                string status = selected ? "SEÇİLİ" : unlocked ? "Seç" : $"Aç ({character.wisdomCost} bilgelik)";
-                characterLabels[i].text = $"{character.displayName}\n{character.description}\n{status}";
+                string status = selected ? Localization.Get("character_select.status_selected")
+                    : unlocked ? Localization.Get("character_select.status_select")
+                    : string.Format(Localization.Get("character_select.status_unlock"), character.wisdomCost);
+                characterLabels[i].text = string.Format(Localization.Get("character_select.label_template"),
+                    ContentLocalization.CharacterName(character), ContentLocalization.CharacterDescription(character), status);
                 characterButtons[i].interactable = !selected && (unlocked || controller.TotalWisdom >= character.wisdomCost);
             }
         }

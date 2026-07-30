@@ -24,6 +24,5 @@ namespace Telve.Gameplay
         }
 
         public bool IsSymbol => Symbol != null;
-        public string DisplayName => IsSymbol ? Symbol.displayName : Charm.displayName;
     }
 }

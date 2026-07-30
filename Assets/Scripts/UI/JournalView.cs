@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Telve.Gameplay;
+using Telve.Meta;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -30,6 +31,7 @@ namespace Telve.UI
             openButton.onClick.AddListener(Open);
             closeButton.onClick.AddListener(Close);
             controller.OnNewCombosDiscovered += OnNewCombosDiscovered;
+            Localization.OnLanguageChanged += RefreshIfOpen;
             panel.SetActive(false);
         }
 
@@ -38,6 +40,12 @@ namespace Telve.UI
             openButton.onClick.RemoveListener(Open);
             closeButton.onClick.RemoveListener(Close);
             controller.OnNewCombosDiscovered -= OnNewCombosDiscovered;
+            Localization.OnLanguageChanged -= RefreshIfOpen;
+        }
+
+        void RefreshIfOpen()
+        {
+            if (panel.activeSelf) RefreshRows();
         }
 
         void Open()
@@ -64,7 +72,7 @@ namespace Telve.UI
             {
                 bool discovered = controller.DiscoveredComboIds.Contains(combo.comboId);
                 var row = Instantiate(rowPrefab, contentParent);
-                row.text = discovered ? combo.displayName : "???";
+                row.text = discovered ? ContentLocalization.ComboName(combo) : "???";
                 row.color = discovered ? DiscoveredColor : UndiscoveredColor;
                 row.gameObject.SetActive(true);
             }

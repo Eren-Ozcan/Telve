@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Text;
 using Telve.Gameplay;
+using Telve.Meta;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -50,11 +51,14 @@ namespace Telve.UI
         const float CupFlipDuration = 0.22f;
         const float SymbolRevealDuration = 0.25f;
 
+        bool _hasShownResult;
+
         void OnEnable()
         {
             controller.OnStateChanged += Refresh;
             controller.OnEncounterResolved += ShowResult;
             controller.OnCupDrawn += PlayCupDrawFeedback;
+            Localization.OnLanguageChanged += Refresh;
         }
 
         void OnDisable()
@@ -62,6 +66,7 @@ namespace Telve.UI
             controller.OnStateChanged -= Refresh;
             controller.OnEncounterResolved -= ShowResult;
             controller.OnCupDrawn -= PlayCupDrawFeedback;
+            Localization.OnLanguageChanged -= Refresh;
         }
 
         void Start()
@@ -100,7 +105,7 @@ namespace Telve.UI
                 if (!active) continue;
 
                 var symbol = controller.CurrentCup[i];
-                cupSlotLabels[i].text = $"{symbol.displayName}\n{symbol.baseValue}";
+                cupSlotLabels[i].text = $"{ContentLocalization.SymbolName(symbol)}\n{symbol.baseValue}";
 
                 bool selected = controller.ReadingOrderCupIndices.Contains(i);
                 cupSlotBackgrounds[i].color = selected ? SelectedColor : UnselectedColor;
@@ -114,15 +119,15 @@ namespace Telve.UI
 
             if (controller.ReadingOrderCupIndices.Count == 0)
             {
-                readingOrderText.text = "Sıra: (henüz seçim yok)";
+                readingOrderText.text = Localization.Get("status.reading_order_empty");
             }
             else
             {
-                var order = new StringBuilder("Sıra: ");
+                var order = new StringBuilder(Localization.Get("status.reading_order_prefix"));
                 int n = 1;
                 foreach (var symbol in controller.ReadingOrderSymbols)
                 {
-                    order.Append($"{n}.{symbol.displayName} ");
+                    order.Append($"{n}.{ContentLocalization.SymbolName(symbol)} ");
                     n++;
                 }
                 readingOrderText.text = order.ToString();
@@ -135,16 +140,16 @@ namespace Telve.UI
                 if (!active) continue;
 
                 var symbol = controller.CurrentCup[controller.ReadingOrderCupIndices[i]];
-                readingOrderChipLabels[i].text = $"{i + 1}. {symbol.displayName}";
+                readingOrderChipLabels[i].text = $"{i + 1}. {ContentLocalization.SymbolName(symbol)}";
             }
 
             string archetypeSuffix = controller.CurrentArchetype == CustomerArchetype.Regular
-                ? string.Empty : $" ({controller.CurrentArchetype})";
-            string dayStatus = controller.DayLost ? "GÜN KAYBEDİLDİ"
-                : controller.DayComplete ? "GÜN TAMAMLANDI"
-                : controller.IsMuhtarTurn ? "Muhtar geldi!"
-                : $"Müşteri {controller.CustomerIndex}/{CustomerEconomy.RegularCustomerCount}{archetypeSuffix}";
-            statusText.text = $"Altın: {controller.Gold}   {dayStatus}   Bilgelik: {controller.TotalWisdom}";
+                ? string.Empty : $" ({ContentLocalization.ArchetypeName(controller.CurrentArchetype)})";
+            string dayStatus = controller.DayLost ? Localization.Get("status.day_lost")
+                : controller.DayComplete ? Localization.Get("status.day_complete")
+                : controller.IsMuhtarTurn ? Localization.Get("status.muhtar_turn")
+                : string.Format(Localization.Get("status.customer_progress"), controller.CustomerIndex, CustomerEconomy.RegularCustomerCount, archetypeSuffix);
+            statusText.text = string.Format(Localization.Get("status.gold_line"), controller.Gold, dayStatus, controller.TotalWisdom);
 
             bool dayOver = controller.DayLost || controller.DayComplete;
             submitButton.interactable = controller.ReadingOrderCupIndices.Count > 0 && !controller.CurrentCupResolved && !dayOver && !controller.IsMarketOpen;
@@ -173,14 +178,14 @@ namespace Telve.UI
                 if (dayOver)
                 {
                     string bestCombo = controller.BestComboThisRun != null
-                        ? controller.BestComboThisRun.displayName
-                        : "yok";
-                    runSummaryText.text =
-                        $"Koşu Özeti — En iyi kombo: {bestCombo}   " +
-                        $"Toplam kazanç: {controller.TotalGoldEarnedThisRun} altın   " +
-                        $"Defter: {controller.DiscoveredCombosCount}/{controller.TotalCombosCount}";
+                        ? ContentLocalization.ComboName(controller.BestComboThisRun)
+                        : Localization.Get("run_summary.no_combo");
+                    runSummaryText.text = string.Format(Localization.Get("run_summary.template"),
+                        bestCombo, controller.TotalGoldEarnedThisRun, controller.DiscoveredCombosCount, controller.TotalCombosCount);
                 }
             }
+
+            if (!_hasShownResult) resultText.text = Localization.Get("result.placeholder");
 
             marketPanel.SetActive(controller.IsMarketOpen);
             if (controller.IsMarketOpen)
@@ -192,8 +197,9 @@ namespace Telve.UI
                     if (!hasOffer) continue;
 
                     var offer = controller.CurrentOffers[i];
-                    string kind = offer.IsSymbol ? "Sembol" : "Tılsım";
-                    marketOfferLabels[i].text = $"{kind}: {offer.DisplayName}\n{offer.Price} altın";
+                    string kind = Localization.Get(offer.IsSymbol ? "market.symbol_label" : "market.charm_label");
+                    string offerName = offer.IsSymbol ? ContentLocalization.SymbolName(offer.Symbol) : ContentLocalization.CharmName(offer.Charm);
+                    marketOfferLabels[i].text = string.Format(Localization.Get("market.offer_template"), kind, offerName, offer.Price);
                     marketOfferButtons[i].interactable = controller.Gold >= offer.Price;
 
                     if (i < marketOfferIcons.Length && marketOfferIcons[i] != null)
@@ -208,9 +214,11 @@ namespace Telve.UI
 
         void ShowResult(EncounterResult result)
         {
-            resultText.text =
-                $"Taban: {result.Score.BaseScore:0}  Skor: {result.Score.FinalScore:0.#}\n" +
-                $"Eşik {(result.Payment.ThresholdMet ? "AŞILDI" : "AŞILAMADI")} — Ödeme: {result.Payment.Payment} altın";
+            _hasShownResult = true;
+            string thresholdWord = Localization.Get(result.Payment.ThresholdMet ? "result.threshold_met" : "result.threshold_missed");
+            resultText.text = string.Format(Localization.Get("result.template"),
+                result.Score.BaseScore.ToString("0"), result.Score.FinalScore.ToString("0.#"),
+                thresholdWord, result.Payment.Payment);
         }
 
         /// <summary>

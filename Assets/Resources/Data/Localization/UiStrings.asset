@@ -43,3 +43,78 @@ MonoBehaviour:
   - key: ui.character_title
     tr: "Falc\u0131lar"
     en: Fortune-tellers
+  - key: status.reading_order_empty
+    tr: "S\u0131ra: (hen\xFCz se\xE7im yok)"
+    en: "Order: (nothing selected yet)"
+  - key: status.reading_order_prefix
+    tr: "S\u0131ra: "
+    en: "Order: "
+  - key: status.day_lost
+    tr: "G\xDCN KAYBED\u0130LD\u0130"
+    en: "DAY LOST"
+  - key: status.day_complete
+    tr: "G\xDCN TAMAMLANDI"
+    en: "DAY COMPLETE"
+  - key: status.muhtar_turn
+    tr: "Muhtar geldi!"
+    en: "The Headman has arrived!"
+  - key: status.customer_progress
+    tr: "M\xFC\u015fteri {0}/{1}{2}"
+    en: "Customer {0}/{1}{2}"
+  - key: status.gold_line
+    tr: "Alt\u0131n: {0}   {1}   Bilgelik: {2}"
+    en: "Gold: {0}   {1}   Wisdom: {2}"
+  - key: run_summary.no_combo
+    tr: yok
+    en: none
+  - key: run_summary.template
+    tr: "Ko\u015fu \xD6zeti \u2014 En iyi kombo: {0}   Toplam kazan\xE7: {1} alt\u0131n   Defter: {2}/{3}"
+    en: "Run Summary \u2014 Best combo: {0}   Total earnings: {1} gold   Journal: {2}/{3}"
+  - key: market.symbol_label
+    tr: Sembol
+    en: Symbol
+  - key: market.charm_label
+    tr: "T\u0131ls\u0131m"
+    en: Charm
+  - key: market.offer_template
+    tr: "{0}: {1}\n{2} alt\u0131n"
+    en: "{0}: {1}\n{2} gold"
+  - key: result.template
+    tr: "Taban: {0}  Skor: {1}\nE\u015fik {2} \u2014 \xD6deme: {3} alt\u0131n"
+    en: "Base: {0}  Score: {1}\nThreshold {2} \u2014 Payment: {3} gold"
+  - key: result.threshold_met
+    tr: "A\u015eILDI"
+    en: MET
+  - key: result.threshold_missed
+    tr: "A\u015eILAMADI"
+    en: "NOT MET"
+  - key: character_select.status_selected
+    tr: "SE\xC7\u0130L\u0130"
+    en: SELECTED
+  - key: character_select.status_select
+    tr: "Se\xE7"
+    en: Select
+  - key: character_select.status_unlock
+    tr: "A\xE7 ({0} bilgelik)"
+    en: "Unlock ({0} wisdom)"
+  - key: character_select.label_template
+    tr: "{0}\n{1}\n{2}"
+    en: "{0}\n{1}\n{2}"
+  - key: combo_banner.discovered_template
+    tr: "{0} Fark Edildi"
+    en: "{0} Noticed"
+  - key: archetype.aceleci
+    tr: "Aceleci"
+    en: Hasty
+  - key: archetype.kuskucu
+    tr: "Ku\u015fkucu"
+    en: Skeptical
+  - key: archetype.dertli
+    tr: Dertli
+    en: Troubled
+  - key: archetype.comert
+    tr: "C\xF6mert"
+    en: Generous
+  - key: result.placeholder
+    tr: "(Falı oku d\xFCğmesine bas)"
+    en: "(Press the Read the Fortune button)"
