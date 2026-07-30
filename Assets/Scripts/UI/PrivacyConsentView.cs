@@ -4,12 +4,13 @@ using UnityEngine;
 namespace Telve.UI
 {
     /// <summary>
-    /// ROADMAP.md Faz 4 "GDPR/KVKK/ATT izin akışları". YER TUTUCU METİN —
-    /// gerçek gizlilik politikası/aydınlatma metni ve ATT (App Tracking
-    /// Transparency, iOS) sistem izni entegrasyonu hukuki inceleme
-    /// gerektirir, burada değil. Bu bileşen sadece akışın iskeletini
-    /// kurar: ilk açılışta bir kez gösterilir, kabul edilmeden oyun
-    /// başlamaz, kabul kalıcı kaydedilir.
+    /// ROADMAP.md Faz 4 "GDPR/KVKK/ATT izin akışları". Sahnedeki ConsentText
+    /// artık yer tutucu değil, gerçekçi bir KVKK/GDPR aydınlatma taslağı
+    /// taşıyor (Game.unity, GameObject "ConsentText") — ama nihai metin
+    /// bağımsız hukuki incelemeden geçmeli, burada onaylanmış sayılmaz.
+    /// iOS ATT (App Tracking Transparency) sistem izni entegrasyonu ayrı
+    /// iş, henüz yok. Bu bileşen akışın iskeletini kurar: ilk açılışta bir
+    /// kez gösterilir, kabul edilmeden oyun başlamaz, kabul kalıcı kaydedilir.
     /// </summary>
     public class PrivacyConsentView : MonoBehaviour
     {

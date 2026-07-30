@@ -6398,11 +6398,11 @@ RectTransform:
   - {fileID: 941244220}
   m_Father: {fileID: 1730503731}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 5, y: 5}
-  m_AnchorMax: {x: 5, y: 5}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 0, y: -350}
   m_SizeDelta: {x: 400, y: 120}
-  m_Pivot: {x: 5, y: 5}
+  m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &968529632
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -11523,11 +11523,11 @@ RectTransform:
   m_Children: []
   m_Father: {fileID: 1730503731}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 5, y: 5}
-  m_AnchorMax: {x: 5, y: 5}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 0, y: 150}
   m_SizeDelta: {x: 900, y: 600}
-  m_Pivot: {x: 5, y: 5}
+  m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &2100551980
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -11561,9 +11561,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: "[YER TUTUCU \u2014 ger\xE7ek metin hukuki incelemeden ge\xE7meli]\n\nTelve,
-    ilerlemeni cihaz\u0131nda saklar. Devam ederek gizlilik politikam\u0131z\u0131
-    kabul etmi\u015F olursun."
+  m_Text: "Gizlilik ve Veri Kullan\u0131m\u0131\n\nTelve, oyun ilerlemeni yaln\u0131zca bu cihazda saklar; hesap olu\u015Fturman\u0131 istemeyiz ve ki\u015Fisel verilerini kendi sunucular\u0131m\u0131za g\u00F6ndermeyiz.\n\nOyunda g\u00F6sterilen \u00F6d\u00FCll\u00FC reklamlar LevelPlay (ironSource) reklam a\u011F\u0131 ve ba\u011Fl\u0131 reklam ortaklar\u0131 \u00FCzerinden sunulur; bu s\u0131rada bu taraflar reklamlar\u0131 sunmak ve ki\u015Fiselle\u015Ftirmek i\u00E7in cihaz tan\u0131mlay\u0131c\u0131s\u0131 gibi teknik verileri i\u015Fleyebilir. Bu i\u015Fleme, 6698 say\u0131l\u0131 KVKK ve (Avrupa Ekonomik Alan\u0131 kullan\u0131c\u0131lar\u0131 i\u00E7in) GDPR kapsam\u0131nda burada verdi\u011Fin r\u0131zaya dayan\u0131r.\n\nHaklar\u0131n: verilerinin i\u015Flenip i\u015Flenmedi\u011Fini \u00F6\u011Frenme, d\u00FCzeltilmesini veya silinmesini isteme ve r\u0131zan\u0131 istedi\u011Fin zaman geri \u00E7ekme; bunun i\u00E7in bize a\u015Fa\u011F\u0131daki adresten ula\u015Fabilir veya cihaz\u0131n\u0131n sistem ayarlar\u0131ndan reklam ki\u015Fiselle\u015Ftirmesini kapatabilirsin. Talep ve sorular i\u00E7in: yilkgamesstudio@gmail.com\n\niOS cihazlarda, sistem ayr\u0131ca \u0130zleme \u015Eeffafl\u0131\u011F\u0131 (App Tracking Transparency) iznini ayr\u0131 bir sistem penceresiyle soracakt\u0131r.\n\nDevam ederek bu bilgilendirmeyi okudu\u011Funu ve yukar\u0131daki veri i\u015Flemeyi kabul etti\u011Fini onaylars\u0131n."
 --- !u!222 &2100551981
 CanvasRenderer:
   m_ObjectHideFlags: 0
