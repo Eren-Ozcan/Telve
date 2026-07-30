@@ -1,0 +1,87 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 239fe33ecee84f4ba0ff1be0bc57e6ba, type: 3}
+  m_Name: SymbolStrings
+  m_EditorClassIdentifier:
+  entries:
+  - id: agac
+    nameEn: Tree
+    detailEn: "Family, roots, growth"
+  - id: anahtar
+    nameEn: Key
+    detailEn: "New opportunity, solution"
+  - id: ay
+    nameEn: Moon
+    detailEn: "Change, hidden feelings"
+  - id: balik
+    nameEn: Fish
+    detailEn: "Abundance, money"
+  - id: bulut
+    nameEn: Cloud
+    detailEn: "Uncertainty, worry"
+  - id: can
+    nameEn: Bell
+    detailEn: "Wedding or ceremony news"
+  - id: cicek
+    nameEn: Flower
+    detailEn: "Good news, a proposal"
+  - id: dag
+    nameEn: Mountain
+    detailEn: "A major obstacle, hardship"
+  - id: gemi
+    nameEn: Ship
+    detailEn: "A long journey"
+  - id: goz
+    nameEn: Eye
+    detailEn: "Evil eye, protection"
+  - id: gunes
+    nameEn: Sun
+    detailEn: "Success, happiness"
+  - id: kalp
+    nameEn: Heart
+    detailEn: "Love, an emotional bond"
+  - id: kapi
+    nameEn: Door
+    detailEn: "A new beginning, opportunity"
+  - id: kedi
+    nameEn: Cat
+    detailEn: "Jealousy, deceit"
+  - id: kopru
+    nameEn: Bridge
+    detailEn: "A transition, a moment of decision"
+  - id: kus
+    nameEn: Bird
+    detailEn: "News, good tidings"
+  - id: kuyu
+    nameEn: Well
+    detailEn: "A deep secret"
+  - id: mektup
+    nameEn: Letter
+    detailEn: "Awaited news"
+  - id: merdiven
+    nameEn: Stairs
+    detailEn: "Rise, promotion"
+  - id: ok
+    nameEn: Arrow
+    detailEn: "Direction, a firm decision"
+  - id: tac
+    nameEn: Crown
+    detailEn: "Great power, a turning point of fate"
+  - id: yilan
+    nameEn: Snake
+    detailEn: "An enemy, betrayal, gossip"
+  - id: yildiz
+    nameEn: Star
+    detailEn: "A wish, hope"
+  - id: yol
+    nameEn: Road
+    detailEn: "A journey, change, a new direction"

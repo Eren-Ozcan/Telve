@@ -1,0 +1,126 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 239fe33ecee84f4ba0ff1be0bc57e6ba, type: 3}
+  m_Name: ComboStrings
+  m_EditorClassIdentifier:
+  entries:
+  - id: aile_mutlulugu
+    nameEn: Family Happiness
+    detailEn:
+  - id: ask_ucgeni
+    nameEn: Love Triangle
+    detailEn:
+  - id: beklenen_mektup
+    nameEn: Awaited Letter
+    detailEn:
+  - id: belirsiz_gelecek
+    nameEn: Uncertain Future
+    detailEn:
+  - id: bereketli_deniz
+    nameEn: Bountiful Sea
+    detailEn:
+  - id: bol_kazanc
+    nameEn: Abundant Gain
+    detailEn:
+  - id: buyuk_ask_kaderi
+    nameEn: Great Love Destiny
+    detailEn:
+  - id: dedikodu
+    nameEn: Gossip
+    detailEn:
+  - id: derin_sir
+    nameEn: Deep Secret
+    detailEn:
+  - id: dugun_haberi
+    nameEn: Wedding News
+    detailEn:
+  - id: efsanevi_bereket
+    nameEn: Legendary Fortune
+    detailEn:
+  - id: gecis_donemi
+    nameEn: Transition Period
+    detailEn:
+  - id: gizli_ask
+    nameEn: Secret Love
+    detailEn:
+  - id: gokyuzu_fali
+    nameEn: Sky Fortune
+    detailEn:
+  - id: gorulen_sir
+    nameEn: Revealed Secret
+    detailEn:
+  - id: haber_geliyor
+    nameEn: News Is Coming
+    detailEn:
+  - id: ihanete_ugrayan_ask
+    nameEn: Betrayed Love
+    detailEn:
+  - id: iki_yuzlu_dusman
+    nameEn: Two-Faced Enemy
+    detailEn:
+  - id: kaderin_kapisi
+    nameEn: Door of Fate
+    detailEn:
+  - id: kader_aski
+    nameEn: Fated Love
+    detailEn:
+  - id: kara_gun
+    nameEn: Dark Day
+    detailEn:
+  - id: kesin_haber
+    nameEn: Certain News
+    detailEn:
+  - id: korunan_dilek
+    nameEn: Protected Wish
+    detailEn:
+  - id: mutlu_toren
+    nameEn: Joyful Ceremony
+    detailEn:
+  - id: nazar_kiriliyor
+    nameEn: Evil Eye Breaking
+    detailEn:
+  - id: romantik_surpriz
+    nameEn: Romantic Surprise
+    detailEn:
+  - id: uzak_yolculuk
+    nameEn: Distant Journey
+    detailEn:
+  - id: yeni_ask
+    nameEn: New Love
+    detailEn:
+  - id: yeni_firsat_kapisi
+    nameEn: Door of New Opportunity
+    detailEn:
+  - id: yeni_hayat_yolu
+    nameEn: New Path in Life
+    detailEn:
+  - id: yeni_nesil
+    nameEn: New Generation
+    detailEn:
+  - id: yeni_yola_cikis
+    nameEn: Setting Out on a New Path
+    detailEn:
+  - id: yolda_haber
+    nameEn: News Along the Way
+    detailEn:
+  - id: yukselen_yildiz
+    nameEn: Rising Star
+    detailEn:
+  - id: zaferin_zirvesi
+    nameEn: Peak of Victory
+    detailEn:
+  - id: zorlu_engel
+    nameEn: Tough Obstacle
+    detailEn:
+  - id: zorlu_yolculuk
+    nameEn: Arduous Journey
+    detailEn:
