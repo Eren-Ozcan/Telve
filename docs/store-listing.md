@@ -97,11 +97,17 @@ Play Console'da yalnızca önceden tanımlı bir etiket listesinden seçim yapı
   "Reklam veya pazarlama" olarak işaretlendi ve kaydedildi. ✅
 - **Data safety formu**: Cihaz veya diğer kimlikler (reklam kimliği),
   toplandı + paylaşıldı, amaç = Reklam veya pazarlama, kısa süreli
-  işlenmiyor, zorunlu toplama, aktarım şifreli olarak dolduruldu ve
-  **taslak olarak kaydedildi**. ✅ (taslak) — tam gönderim için
-  gizlilik politikası URL'si gerekiyor, bkz. Kalanlar. Konum verisi
-  toplanmıyor, hesap sistemi yok ("Uygulamam kullanıcıların hesap
-  oluşturmasına izin vermiyor" işaretlendi).
+  işlenmiyor, zorunlu toplama, aktarım şifreli olarak dolduruldu.
+  Gizlilik politikası URL'si eklendikten sonra **tam gönderildi**
+  (artık taslak değil). ✅ Konum verisi toplanmıyor, hesap sistemi
+  yok ("Uygulamam kullanıcıların hesap oluşturmasına izin vermiyor"
+  işaretlendi).
+- **Gizlilik politikası**: `https://yilkgames.com/privacy-policy/`
+  Play Console'a girildi ve kaydedildi. ✅ Bu, stüdyo geneli tek bir
+  sayfa (Reefy, Little Grand Hotel, Çengel Bulmaca, Dleverse, Telve,
+  Lightwake, Domina, CosmicRumble hepsi kapsamında) — yeni oyun
+  eklendiğinde otomatik güncelleniyor, ayrıca Telv'e özel bir sayfa
+  gerekmiyor.
 - **İçerik derecelendirmesi anketi**: tamamlandı ve gönderildi. ✅
   Tüm otoritelerde en düşük/Genel kategori çıktı (AG, L, E, 3, 0, 3+, 3
   — ESRB/PEGI/USK/ClassInd vb.), cengeBulmaca ile aynı profil.
@@ -125,13 +131,8 @@ Play Console'da yalnızca önceden tanımlı bir etiket listesinden seçim yapı
 
 - ⏳ Mağaza görselleri (ikon 512×512, feature graphic 1024×500, en az
   2 telefon ekran görüntüsü) — Play Console'da bunlar olmadan mağaza
-  girişi "Kaydet" ile tam gönderilemiyor, sadece taslak kalıyor.
-- ⏳ **Gizlilik politikası URL'si** — asıl darboğaz bu: hem mağaza
-  girişinde hem Data Safety formunun tam gönderiminde gerekiyor
-  ("Göndermek için, Gizlilik politikası sayfasında gizlilik
-  politikanıza bağlantı verin" uyarısı). Bir URL'de yayınlanmalı (örn.
-  yilkgames.com veya GitHub Pages) — oyun içi onay ekranı metninden
-  (`Assets/Scenes/Game.unity` → ConsentText) uyarlanabilir.
+  girişi "Kaydet" ile tam gönderilemiyor, sadece taslak kalıyor. Prompt
+  taslakları: `docs/store-visual-prompts.md`.
 - ⏳ Dahili test kanalı — yüklenecek bir Android build (AAB) yok, Unity
   projesi henüz Android için derlenmedi (keystore, Android Build Support
   modülü kurulumu gerekiyor).
