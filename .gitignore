@@ -67,3 +67,9 @@ Packages/Coplay/Editor/
 
 # Private/local-only store & marketing assets (mirrored to private Eren-Ozcan/pictures repo)
 docs/store-assets-originals/
+
+# Android release signing keystore (mirrored to private Eren-Ozcan/pictures repo, never public)
+android-keystore/
+
+# Unity Android build temp cache
+.utmp/
