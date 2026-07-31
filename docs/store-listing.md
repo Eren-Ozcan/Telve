@@ -139,8 +139,11 @@ Play Console'da yalnızca önceden tanımlı bir etiket listesinden seçim yapı
   Console'da bunlar olmadan mağaza girişi "Kaydet" ile tam
   gönderilemiyor, sadece taslak kalıyor. Prompt taslakları:
   `docs/store-visual-prompts.md`.
-- ⏳ Dahili test kanalı — yüklenecek bir Android build (AAB) yok, Unity
-  projesi henüz Android için derlenmedi (keystore, Android Build Support
-  modülü kurulumu gerekiyor).
+- ⏳ Dahili test kanalı — keystore oluşturuldu (`android-keystore/telve-upload.jks`,
+  gitignore'lu, private `pictures/Telv/android-keystore/` reposunda yedekli)
+  ve ilk imzalı test AAB'si başarıyla üretildi (0 hata, 55.7 MB,
+  `android-keystore/build-output/telve-test.aab`, bkz. ROADMAP.md Faz 4).
+  Kalan: bu AAB'nin gerçek cihazda kurulup çalıştığının doğrulanması ve
+  Play Console'a fiilen yüklenmesi.
 - ⏳ IAP ürün kataloğu ve gerçek LevelPlay hesabı.
 - ⏳ Türkçe mağaza metni (ikincil dil olarak eklenmeli).
