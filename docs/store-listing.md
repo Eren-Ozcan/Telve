@@ -79,9 +79,14 @@ Play Console'da yalnızca önceden tanımlı bir etiket listesinden seçim yapı
 - [ ] Uygulama simgesi 512×512 PNG — henüz üretilmedi
 - [ ] Öne çıkan görsel (feature graphic) 1024×500 PNG (24-bit, alfasız) —
   henüz üretilmedi
-- [ ] Ekran görüntüleri (en az 2, önerilen 4-8) — henüz alınmadı, oyun
-  Play Mode'da çalışır durumda (bkz. ROADMAP.md Faz 2), gerçek cihaz/
-  Editor ekran görüntüsü alınabilir
+- [x] Ekran görüntüleri (en az 2, önerilen 4-8) — 4 adet gerçek Unity
+  Editor Play Mode yakalaması alındı (coplay-mcp + `ScreenCapture`,
+  portre 1080×1920 Game View boyutunda): fincan dolu (`01_cup_full.png`),
+  okuma sırası seçimi (`02_reading_order.png`), sonuç/skor ekranı
+  (`03_result.png`), pazar ekranı (`04_market.png`).
+  `docs/store-assets-originals/screenshots/` altında (gitignore'lu).
+  Gerçek Android cihazda tekrar alınması Faz 4'ün "gerçek cihaz testi"
+  maddesiyle birleştirilebilir ama Play Console girişi için bu yeterli.
 - CLAUDE.md kuralına göre üretilecek görseller bu public repoya değil,
   `docs/store-assets-originals/` (gitignore'lu) + private `Eren-Ozcan/pictures`
   reposuna (`pictures/Telv/`) kaydedilecek
@@ -129,10 +134,11 @@ Play Console'da yalnızca önceden tanımlı bir etiket listesinden seçim yapı
 
 ## Kalanlar
 
-- ⏳ Mağaza görselleri (ikon 512×512, feature graphic 1024×500, en az
-  2 telefon ekran görüntüsü) — Play Console'da bunlar olmadan mağaza
-  girişi "Kaydet" ile tam gönderilemiyor, sadece taslak kalıyor. Prompt
-  taslakları: `docs/store-visual-prompts.md`.
+- ⏳ Mağaza görselleri: ikon 512×512 ve feature graphic 1024×500 henüz
+  üretilmedi (ekran görüntüleri tamamlandı, yukarı bakın) — Play
+  Console'da bunlar olmadan mağaza girişi "Kaydet" ile tam
+  gönderilemiyor, sadece taslak kalıyor. Prompt taslakları:
+  `docs/store-visual-prompts.md`.
 - ⏳ Dahili test kanalı — yüklenecek bir Android build (AAB) yok, Unity
   projesi henüz Android için derlenmedi (keystore, Android Build Support
   modülü kurulumu gerekiyor).
