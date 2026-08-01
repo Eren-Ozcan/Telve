@@ -1,11 +1,12 @@
 # Google Play Store Listing
 
-Play Console'a girilecek metinler. Karakter sınırlarına dikkat: başlık 30,
-kısa açıklama 80, uzun açıklama 4000. Play Console'daki "Varsayılan dil"
-İngilizce (en-US) seçildi (2026-07-31), bu yüzden ana metin İngilizce.
-Türkiye soft launch'ı (ROADMAP.md Faz 5) öncesi Türkçe çeviri ayrı bir
-dil girişi olarak eklenmeli — oyun içi TR/EN yerelleştirme zaten var
-(`ContentLocalization`), metin çevirisi oradan uyarlanabilir.
+The texts to be entered into the Play Console. Mind the character limits: title
+30, short description 80, full description 4000. The "Default language" in the
+Play Console was set to English (en-US) (2026-07-31), which is why the main text
+is in English. Before the Turkey soft launch (ROADMAP.md Phase 5), a Turkish
+translation must be added as a separate language entry — the in-game TR/EN
+localization already exists (`ContentLocalization`), so the store text can be
+adapted from there.
 
 ## App name (30 characters)
 
@@ -66,84 +67,79 @@ yours say?
 
 ## Category
 
-Games > Card (Play Console'daki tam adı "Kağıt")
+Games > Card (shown as "Kağıt" in the Turkish Play Console UI)
 
 ## Tags
 
-Play Console'da yalnızca önceden tanımlı bir etiket listesinden seçim yapılabiliyor
-(serbest metin değil) — "tarot", "kahve", "fal" gibi tam eşleşme yok. Seçilenler:
-**Bulmaca, Gündelik, Roguelike oyunlar**.
+The Play Console only allows selecting from a predefined tag list (not free
+text) — there is no exact match for tags like "tarot", "coffee" or "fortune".
+Selected: **Puzzle, Casual, Roguelike games** (chosen in the Turkish Play
+Console UI as "Bulmaca, Gündelik, Roguelike oyunlar").
 
-## Grafik gereksinimleri
+## Graphic requirements
 
-- [ ] Uygulama simgesi 512×512 PNG — henüz üretilmedi
-- [ ] Öne çıkan görsel (feature graphic) 1024×500 PNG (24-bit, alfasız) —
-  henüz üretilmedi
-- [x] Ekran görüntüleri (en az 2, önerilen 4-8) — 4 adet gerçek Unity
-  Editor Play Mode yakalaması alındı (coplay-mcp + `ScreenCapture`,
-  portre 1080×1920 Game View boyutunda): fincan dolu (`01_cup_full.png`),
-  okuma sırası seçimi (`02_reading_order.png`), sonuç/skor ekranı
-  (`03_result.png`), pazar ekranı (`04_market.png`).
-  `docs/store-assets-originals/screenshots/` altında (gitignore'lu).
-  Gerçek Android cihazda tekrar alınması Faz 4'ün "gerçek cihaz testi"
-  maddesiyle birleştirilebilir ama Play Console girişi için bu yeterli.
-- CLAUDE.md kuralına göre üretilecek görseller bu public repoya değil,
-  `docs/store-assets-originals/` (gitignore'lu) + private `Eren-Ozcan/pictures`
-  reposuna (`pictures/Telv/`) kaydedilecek
+- [ ] App icon 512×512 PNG — not produced yet
+- [ ] Feature graphic 1024×500 PNG (24-bit, no alpha) — not produced yet
+- [x] Screenshots (at least 2, 4-8 recommended) — 4 real Unity Editor Play Mode
+  captures were taken (coplay-mcp + `ScreenCapture`, at the portrait 1080×1920
+  Game View size): full cup (`01_cup_full.png`), reading order selection
+  (`02_reading_order.png`), result/score screen (`03_result.png`), market screen
+  (`04_market.png`). They are under
+  `docs/store-assets-originals/screenshots/` (gitignored).
+  Retaking them on a real Android device can be merged with the "real device
+  test" item of Phase 4, but this is enough for the Play Console entry.
+- Per the CLAUDE.md rule, the visuals to be produced will not be saved in this
+  public repo but in `docs/store-assets-originals/` (gitignored) + the private
+  `Eren-Ozcan/pictures` repo (`pictures/Telv/`)
 
-## Reklam / Data Safety notları (Play Console) — 2026-07-31 itibarıyla
+## Ads / Data Safety notes (Play Console) — as of 2026-07-31
 
-- Uygulama LevelPlay (ironSource) mediation ile ödüllü reklam gösteriyor
-  (`LevelPlayRewardedAdService` — koşu sonu "ikinci şans" ve "bilgelik ×2").
-  Gerçek LevelPlay hesabı/app key henüz yok (ROADMAP.md Faz 4).
-- **App content → Ads**: "Uygulamam reklam içeriyor" = Evet olarak
-  işaretlendi ve kaydedildi. ✅
-- **Reklam Kimliği (Ad ID) beyanı**: "Evet, kullanıyor" + amaç =
-  "Reklam veya pazarlama" olarak işaretlendi ve kaydedildi. ✅
-- **Data safety formu**: Cihaz veya diğer kimlikler (reklam kimliği),
-  toplandı + paylaşıldı, amaç = Reklam veya pazarlama, kısa süreli
-  işlenmiyor, zorunlu toplama, aktarım şifreli olarak dolduruldu.
-  Gizlilik politikası URL'si eklendikten sonra **tam gönderildi**
-  (artık taslak değil). ✅ Konum verisi toplanmıyor, hesap sistemi
-  yok ("Uygulamam kullanıcıların hesap oluşturmasına izin vermiyor"
-  işaretlendi).
-- **Gizlilik politikası**: `https://yilkgames.com/privacy-policy/`
-  Play Console'a girildi ve kaydedildi. ✅ Bu, stüdyo geneli tek bir
-  sayfa (Reefy, Little Grand Hotel, Çengel Bulmaca, Dleverse, Telve,
-  Lightwake, Domina, CosmicRumble hepsi kapsamında) — yeni oyun
-  eklendiğinde otomatik güncelleniyor, ayrıca Telv'e özel bir sayfa
-  gerekmiyor.
-- **İçerik derecelendirmesi anketi**: tamamlandı ve gönderildi. ✅
-  Tüm otoritelerde en düşük/Genel kategori çıktı (AG, L, E, 3, 0, 3+, 3
-  — ESRB/PEGI/USK/ClassInd vb.), cengeBulmaca ile aynı profil.
-- **Hedef kitle**: 13-15, 16-17, 18 yaş ve üstü olarak ayarlandı ve
-  kaydedildi. ✅ (cengeBulmaca ile tutarlı — çocuk kategorileri hariç
-  tutuldu, reklam/veri politikalarında ek "Çocuklara Yönelik"
-  kısıtlamasından kaçınmak için)
-- **Resmi kurum uygulamaları**: Hayır, kaydedildi. ✅
-- **Finans ile ilgili özellikler**: "Sağlanmıyor" olarak kaydedildi. ✅
-- **Sağlık uygulamaları**: "Yok" olarak kaydedildi. ✅
-- IAP: kozmetik fincan/masa örtüsü öğeleri (`CosmeticItem`,
-  `UnityIAPPurchaseService`) — güç satmıyor, sadece görünüm. Play
-  Console ürün kataloğu henüz oluşturulmadı.
-- Uygulama kategorisi: Kağıt (Card). Etiketler: Bulmaca, Gündelik,
-  Roguelike oyunlar (Play Console'un önceden tanımlı etiket listesinden
-  seçildi — "tarot"/"kahve"/"fal" gibi serbest metin etiket yok).
-- Mağaza girişi metni (ana dil İngilizce): uygulama adı, kısa açıklama,
-  tam açıklama girildi ve **taslak olarak kaydedildi**. ✅ (taslak)
+- The app shows rewarded ads through LevelPlay (ironSource) mediation
+  (`LevelPlayRewardedAdService` — end-of-run "second chance" and "wisdom ×2").
+  There is no real LevelPlay account/app key yet (ROADMAP.md Phase 4).
+- **App content → Ads**: "My app contains ads" = Yes was selected and saved. ✅
+- **Advertising ID (Ad ID) declaration**: "Yes, it uses it" + purpose =
+  "Advertising or marketing" was selected and saved. ✅
+- **Data safety form**: Device or other IDs (advertising ID), collected +
+  shared, purpose = Advertising or marketing, not processed ephemerally,
+  collection is required, transfer is encrypted. After the privacy policy URL
+  was added it was **fully submitted** (no longer a draft). ✅ No location data
+  is collected and there is no account system ("My app does not allow users to
+  create an account" was selected).
+- **Privacy policy**: `https://yilkgames.com/privacy-policy/` was entered into
+  the Play Console and saved. ✅ This is a single studio-wide page (covering
+  Reefy, Little Grand Hotel, Çengel Bulmaca, Dleverse, Telve, Lightwake, Domina
+  and CosmicRumble) — it is updated automatically when a new game is added, and
+  no Telv-specific page is required.
+- **Content rating questionnaire**: completed and submitted. ✅ It came out at
+  the lowest/General category across all authorities (AG, L, E, 3, 0, 3+, 3 —
+  ESRB/PEGI/USK/ClassInd etc.), the same profile as cengeBulmaca.
+- **Target audience**: set to 13-15, 16-17 and 18+ and saved. ✅ (consistent
+  with cengeBulmaca — the children's categories were excluded to avoid the
+  extra "Designed for Families" restrictions in the ads/data policies)
+- **Government apps**: No, saved. ✅
+- **Financial features**: saved as "Not provided". ✅
+- **Health apps**: saved as "None". ✅
+- IAP: cosmetic cup/tablecloth items (`CosmeticItem`, `UnityIAPPurchaseService`)
+  — they do not sell power, only looks. The Play Console product catalog has not
+  been created yet.
+- App category: Card ("Kağıt"). Tags: Puzzle, Casual, Roguelike games (selected
+  from the Play Console's predefined tag list — there are no free-text tags like
+  "tarot"/"coffee"/"fortune").
+- Store listing text (primary language English): app name, short description and
+  full description were entered and **saved as a draft**. ✅ (draft)
 
-## Kalanlar
+## Remaining
 
-- ⏳ Mağaza görselleri: ikon 512×512 ve feature graphic 1024×500 henüz
-  üretilmedi (ekran görüntüleri tamamlandı, yukarı bakın) — Play
-  Console'da bunlar olmadan mağaza girişi "Kaydet" ile tam
-  gönderilemiyor, sadece taslak kalıyor. Prompt taslakları:
-  `docs/store-visual-prompts.md`.
-- ⏳ Dahili test kanalı — keystore oluşturuldu (`android-keystore/telve-upload.jks`,
-  gitignore'lu, private `pictures/Telv/android-keystore/` reposunda yedekli)
-  ve ilk imzalı test AAB'si başarıyla üretildi (0 hata, 55.7 MB,
-  `android-keystore/build-output/telve-test.aab`, bkz. ROADMAP.md Faz 4).
-  Kalan: bu AAB'nin gerçek cihazda kurulup çalıştığının doğrulanması ve
-  Play Console'a fiilen yüklenmesi.
-- ⏳ IAP ürün kataloğu ve gerçek LevelPlay hesabı.
-- ⏳ Türkçe mağaza metni (ikincil dil olarak eklenmeli).
+- ⏳ Store visuals: the 512×512 icon and the 1024×500 feature graphic have not
+  been produced yet (the screenshots are done, see above) — without them the
+  store listing cannot be fully submitted with "Save" in the Play Console and
+  stays a draft. Prompt drafts: `docs/store-visual-prompts.md`.
+- ⏳ Internal test track — the keystore was created (`android-keystore/telve-upload.jks`,
+  gitignored, backed up in the private `pictures/Telv/android-keystore/` repo)
+  and the first signed test AAB was produced successfully (0 errors, 55.7 MB,
+  `android-keystore/build-output/telve-test.aab`, see ROADMAP.md Phase 4).
+  Remaining: verifying that this AAB installs and runs on a real device, and
+  actually uploading it to the Play Console.
+- ⏳ The IAP product catalog and a real LevelPlay account.
+- ⏳ Turkish store text (to be added as a secondary language).

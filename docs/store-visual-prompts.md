@@ -1,19 +1,20 @@
 # Store Visual Generation Prompts
 
-Bu dosya, Play Console mağaza görselleri (ikon, feature graphic) için üretim
-promptları içerir. Üretilen görseller CLAUDE.md kuralına göre bu public repoya
-commit edilmez — `docs/store-assets-originals/` (gitignore'lu) + private
-`Eren-Ozcan/pictures` reposuna (`pictures/Telv/`) kaydedilmeli.
+This file contains the generation prompts for the Play Console store visuals
+(icon, feature graphic). Per the CLAUDE.md rule, the generated visuals are not
+committed to this public repo — they must be saved to
+`docs/store-assets-originals/` (gitignored) + the private `Eren-Ozcan/pictures`
+repo (`pictures/Telv/`).
 
-## Stil DNA'sı (her promptun ortak temeli)
+## Style DNA (the shared basis of every prompt)
 
-Tüm görseller `Assets/Art/Concepts/concept_B_flatgold.png` ("Concept B —
-düz altın çizgi, gece mavisi/altın palet, vektörel folk-art") stiliyle
-birebir tutarlı olmalı. Referans için bakılacak dosyalar:
+All visuals must be exactly consistent with the style of
+`Assets/Art/Concepts/concept_B_flatgold.png` ("Concept B — flat gold linework,
+midnight blue/gold palette, vector folk-art"). Files to look at for reference:
 `Assets/Art/Background/cup_art.png`, `Assets/Art/Symbols/symbol_kus.png`,
 `Assets/Art/Portraits/customer_happy.png`.
 
-Ortak stil tanımı (her promptun başına eklenebilir):
+Shared style definition (can be prepended to every prompt):
 
 ```
 Deep midnight navy background (#0b1130 to #10173f range), fine elegant gold
@@ -27,17 +28,17 @@ tasseography (Turkish coffee fortune-telling) atmosphere. Clean vector
 linework, no visible brush texture, no photographic elements.
 ```
 
-## 1. Uygulama simgesi (512×512, tek başına net okunmalı)
+## 1. App icon (512×512, must read clearly on its own)
 
-İkon en küçük boyutta (telefon ana ekranında ~48px) bile okunaklı olmalı —
-bu yüzden Concept B zaten "ikon üretimi için en okunaklı seçenek" olarak
-seçilmişti (ROADMAP.md Faz 2). İkon TEK ve KALIN bir motif olmalı, sahne
-değil.
+The icon has to stay legible even at the smallest size (~48px on a phone home
+screen) — this is exactly why Concept B was chosen as "the most legible option
+for icon production" (ROADMAP.md Phase 2). The icon must be a SINGLE and BOLD
+motif, not a scene.
 
-**Ana seçenek — kuştan bakış fincan:**
+**Main option — top-down cup:**
 
 ```
-[stil DNA'sı buraya]
+[style DNA here]
 
 App icon, square 512x512, centered composition filling the frame edge to
 edge. A single Turkish coffee cup and saucer viewed from directly above,
@@ -51,10 +52,10 @@ every corner (no transparency, no rounded corners — Play Store adds its
 own icon mask).
 ```
 
-**Alternatif — tek sembol:**
+**Alternative — a single symbol:**
 
 ```
-[stil DNA'sı buraya]
+[style DNA here]
 
 App icon, square 512x512, centered composition. A single bold gold-line
 crescent moon with a star nested inside its curve, in the same folk-art
@@ -66,14 +67,14 @@ the full square, edge to edge. No text, no additional ornamentation.
 
 ## 2. Feature graphic (1024×500, Play Store banner)
 
-Metin (oyun adı "TELVE") görsele AI tarafından gömülmemeli — üretim
-modelleri düz yazıyı genelde bozar. Görseli metinsiz üret, "TELVE"
-wordmark'ını sonradan (Figma/Photoshop) ayrı bir katman olarak ekle; bu
-yüzden sol yarıda (veya üstte) görece sade/koyu bir alan bırakan bir
-kompozisyon iste.
+Text (the game name "TELVE") should not be baked into the image by the AI —
+generation models usually mangle plain text. Generate the image without text and
+add the "TELVE" wordmark afterwards (in Figma/Photoshop) as a separate layer;
+for that reason, ask for a composition that leaves a relatively plain/dark area
+on the left half (or at the top).
 
 ```
-[stil DNA'sı buraya]
+[style DNA here]
 
 Wide banner, 1024x500, landscape orientation. A cozy fortune-telling
 table scene at night: a Turkish coffee cup and saucer with gold
@@ -88,30 +89,29 @@ logo/title to be added afterward. No text baked into the image. Same
 fine gold linework, deep navy palette as the rest of the game's art.
 ```
 
-## 3. Ekran görüntüleri (Play Console: en az 2, önerilen 4-8)
+## 3. Screenshots (Play Console: at least 2, 4-8 recommended)
 
-Ekran görüntüleri için AI-üretilmiş sahte arayüz **kullanılmamalı** —
-Play Store politikası gerçek uygulama içeriğini yansıtmasını istiyor.
-Bunlar gerçek Play Mode ekran yakalamaları olmalı (fincan çevirme,
-okuma sırası dizme, kombo banner'ı, pazar ekranı, koşu özeti gibi anlar).
+AI-generated fake interfaces **must not be used** for screenshots — Play Store
+policy requires them to reflect the real app content. These must be real Play
+Mode captures (moments such as the cup flip, arranging the reading order, the
+combo banner, the market screen, the run summary).
 
-Unity şu an açık ve coplay-mcp bağlantısı çalışıyor durumda — gerçek
-Play Mode ekran görüntülerini şimdi almamı isterseniz söyleyin, aşağıdaki
-adımları izlerim:
-1. `capture_ui_canvas` ile 4-6 farklı oyun anını yakala (fincan dolu,
-   okuma sırası dizilirken, kombo tetiklenince, pazar açıkken, koşu
-   özeti ekranı).
-2. Bunları `docs/store-assets-originals/screenshots/` altına kaydet
-   (gitignore'lu).
-3. İsterseniz her birine kısa bir başlık (örn. "Flip the cup, read your
-   fortune") eklemek için basit bir dekoratif çerçeve/overlay prompt'u
-   da hazırlarım — bu durumda çerçeve AI ile üretilir, içindeki gerçek
-   arayüz görüntüsü değişmeden kalır.
+Unity is currently open and the coplay-mcp connection is working — say the word
+if you want me to take the real Play Mode screenshots now, and I will follow the
+steps below:
+1. Capture 4-6 different game moments with `capture_ui_canvas` (full cup, while
+   the reading order is being arranged, when a combo triggers, with the market
+   open, the run summary screen).
+2. Save them under `docs/store-assets-originals/screenshots/` (gitignored).
+3. If you want, I can also prepare a simple decorative frame/overlay prompt for
+   adding a short caption to each one (e.g. "Flip the cup, read your fortune") —
+   in that case the frame is AI-generated while the real interface capture
+   inside it stays unchanged.
 
-İstersen bu dekoratif çerçeve için ayrı bir prompt:
+If you want, here is a separate prompt for that decorative frame:
 
 ```
-[stil DNA'sı buraya]
+[style DNA here]
 
 Phone screenshot decorative frame/background, portrait orientation
 1080x1920, designed to have a game UI screenshot composited on top
