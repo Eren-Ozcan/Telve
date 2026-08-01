@@ -1,28 +1,28 @@
-# Ekonomi Taslağı
+# Economy Draft
 
-> Bu bir **taslaktır**, kesin sayılar değildir. ROADMAP.md Faz 3'te
-> 20+ tam koşu verisiyle yeniden dengelenecek. Buradaki amaç,
-> döngünün uçtan uca **oynanabilir** olması — her sayı ScriptableObject'te
-> tutulacağı için değiştirmek kod değişikliği gerektirmeyecek.
+> This is a **draft**, not final numbers. It will be rebalanced in ROADMAP.md
+> Phase 3 with data from 20+ full runs. The purpose here is for the loop to be
+> **playable** end to end — since every number will live in a ScriptableObject,
+> changing them will not require code changes.
 
-## Başlangıç Durumu
+## Starting State
 
-- Başlangıç altını: **20**
-- Başlangıç destesi: Faz 1'de tanımlanacak temel sembol alt kümesi
-  (ör. 24 sembolün en yaygın 10 Common'ı) + 0 tılsım.
+- Starting gold: **20**
+- Starting deck: a basic symbol subset to be defined in Phase 1
+  (e.g. the 10 most common Commons out of the 24 symbols) + 0 charms.
 
-## Müşteri Eşikleri (Gün İçi Zorluk Eğrisi)
+## Customer Thresholds (Within-Day Difficulty Curve)
 
-8 sıradan müşteri + 1 muhtar (gün sonu boss).
+8 ordinary customers + 1 Headman (end-of-day boss).
 
 ```
-Eşik(n)  = 12 + n × 4        (n = müşteri sırası, 1-8)
-Ödeme(n) = 6 + n × 2 taban   + (Memnuniyet - Eşik) × 0.3  [eşik aşılırsa]
+Threshold(n) = 12 + n × 4        (n = customer order, 1-8)
+Payment(n)   = 6 + n × 2 base    + (Satisfaction - Threshold) × 0.3  [if the threshold is beaten]
 ```
 
-| Müşteri | Eşik | Taban Ödeme | Not |
+| Customer | Threshold | Base Payment | Note |
 |---|---|---|---|
-| 1 | 16 | 8 | Öğretici zorluk |
+| 1 | 16 | 8 | Tutorial difficulty |
 | 2 | 20 | 10 | |
 | 3 | 24 | 12 | |
 | 4 | 28 | 14 | |
@@ -30,57 +30,59 @@ Eşik(n)  = 12 + n × 4        (n = müşteri sırası, 1-8)
 | 6 | 36 | 18 | |
 | 7 | 40 | 20 | |
 | 8 | 44 | 22 | |
-| **Muhtar** | **66** (Eşik(8) × 1.5) | **35** | Gün sonu boss |
+| **Headman** | **66** (Threshold(8) × 1.5) | **35** | End-of-day boss |
 
-- Eşik **aşılırsa**: `Taban Ödeme + (Memnuniyet - Eşik) × 0.3` altın
-  kazanılır, müşteri olumlu tepki verir, defter/itibar puanı işler.
-- Eşik **aşılamazsa**: taban ödemenin **%40**'ı verilir (fal yine de
-  bir şeyler söyler, ama müşteri tatmin olmaz), olumsuz tepki animasyonu
-  oynar.
-- **Muhtar aşılamazsa**: gün kaybedilir, koşu sona erer (roguelike
-  ölüm koşulu).
+- If the threshold **is beaten**: `Base Payment + (Satisfaction - Threshold) × 0.3`
+  gold is earned, the customer reacts positively, and the journal/reputation
+  score is updated.
+- If the threshold **is not beaten**: **40%** of the base payment is given (the
+  fortune still says something, but the customer is not satisfied), and the
+  negative reaction animation plays.
+- **If the Headman is not beaten**: the day is lost and the run ends (the
+  roguelike death condition).
 
-## Pazar Fiyatları
+## Market Prices
 
-Müşteriler arası pazara uğranarak deste güçlendirilir.
+The deck is strengthened by visiting the market between customers.
 
-| Nadirlik | Sembol Fiyatı | Tılsım Fiyatı |
+| Rarity | Symbol Price | Charm Price |
 |---|---|---|
 | Common | 8 | 12 |
 | Uncommon | 15 | 22 |
 | Rare | 28 | 38 |
 | Epic | 50 | 65 |
 
-- Her pazar ziyaretinde 3 seçenek sunulur (ROADMAP.md Faz 1: "3
-  seçenekten sembol/tılsım satın alma").
-- Seçenekler o güne kadar açılmış nadirlik havuzundan rastgele çekilir
-  (Epic havuzu ilk günlerde kilitli olabilir — Faz 3'te meta-ilerleme
-  ile açılması değerlendirilecek).
+- 3 options are offered on each market visit (ROADMAP.md Phase 1: "buy a
+  symbol/charm from 3 options").
+- The options are drawn at random from the rarity pool unlocked so far (the
+  Epic pool may be locked in the first days — unlocking it via meta-progression
+  will be evaluated in Phase 3).
 
-## Gün Sonu Hedefi Dengesi
+## End-of-Day Target Balance
 
-Bir günün toplam potansiyel kazancı (8 müşteri taban ödemesi + muhtar,
-bonus hariç):
+The total potential earnings of one day (base payments of 8 customers + the
+Headman, excluding bonuses):
 
 ```
-8 + 10 + 12 + 14 + 16 + 18 + 20 + 22 + 35 = 155 altın (taban, gün sonu toplamı)
+8 + 10 + 12 + 14 + 16 + 18 + 20 + 22 + 35 = 155 gold (base, end-of-day total)
 ```
 
-- Bu, oyuncunun gün içinde ortalama **1-2 Common** veya **1 Uncommon**
-  seviye alım yapabileceği bir bütçeye denk gelir — her gün somut ama
-  yavaş bir deste büyümesi hissi hedefleniyor.
-- Hedef aralık ROADMAP.md'deki ilkeyle uyumlu: ne çok cömert (deste
-  hemen doyar, kararlar anlamsızlaşır) ne çok cimri (oyuncu asla
-  yükseltme yapamaz).
+- This corresponds to a budget where the player can make roughly **1-2 Common**
+  or **1 Uncommon** level purchases within a day — the aim is a sense of
+  concrete but slow deck growth every day.
+- The target range is consistent with the principle in ROADMAP.md: neither too
+  generous (the deck saturates immediately and decisions become meaningless)
+  nor too stingy (the player can never upgrade).
 
-## Açık Sorular (Faz 3 Denge Turunda Netleşecek)
+## Open Questions (To Be Settled in the Phase 3 Balance Pass)
 
-- Kullanılmayan altın gün sonunda taşınıyor mu, yoksa sıfırlanıyor mu?
-  (Öneri: taşınır — biriktirme stratejisi de geçerli bir oyun tarzı
-  olmalı.)
-- Muhtar özel mekaniği ("kötü fala inanmaz" — negatif kombolar ceza,
-  ROADMAP.md Faz 2) ekonomiye nasıl yansır? Şimdilik sadece eşik
-  çarpanı (×1.5) ile temsil ediliyor, özel mekanik Faz 2'de eklenecek.
-- Rewarded ad "ikinci şans" (ROADMAP.md Faz 4) ekonomiyi nasıl
-  etkiler? Muhtemelen kaybedilen günde bir kerelik eşik affı — bu
-  taslağın kapsamı dışında, Faz 4'te tasarlanacak.
+- Does unspent gold carry over at the end of the day, or is it reset?
+  (Suggestion: it carries over — a saving strategy should be a valid playstyle
+  too.)
+- How does the Headman's special mechanic ("doesn't believe in bad fortunes" —
+  negative combos are penalized, ROADMAP.md Phase 2) reflect on the economy?
+  For now it is only represented by the threshold multiplier (×1.5); the
+  special mechanic will be added in Phase 2.
+- How does the rewarded ad "second chance" (ROADMAP.md Phase 4) affect the
+  economy? Probably a one-time threshold pardon on a lost day — that is outside
+  the scope of this draft and will be designed in Phase 4.

@@ -1,81 +1,84 @@
-# Puanlama Formülü
+# Scoring Formula
 
-Balatro'daki "Çip × Çarpan" muadili:
+The equivalent of Balatro's "Chips × Mult":
 
 ```
-Müşteri Memnuniyeti =
-    ( Σ Sembol Değerleri  +  Σ Sabit Kombo Bonusları  +  Σ Sabit Tılsım Bonusları )
-    × ( Π Kombo Çarpanları )
-    × ( Π Tılsım Çarpanları )
+Customer Satisfaction =
+    ( Σ Symbol Values  +  Σ Flat Combo Bonuses  +  Σ Flat Charm Bonuses )
+    × ( Π Combo Multipliers )
+    × ( Π Charm Multipliers )
 ```
 
-## Adım Adım Hesaplama Sırası
+## Step-by-Step Calculation Order
 
-1. **Taban Puan**: Dizilimdeki tüm sembollerin `baseValue` toplamı.
-2. **Kombo Tespiti**: 02-combos.md'deki matrise göre dizilimdeki tüm
-   komşu çiftler/üçlüler taranır. Çakışma kuralı uygulanır (en yüksek
-   çarpanlı kombo kazanır, alt kombolar bastırılır — bkz. 02-combos.md).
-3. **Sabit Bonuslar Toplanır**: Tetiklenen kombolardaki tüm `+N` etkiler
-   taban puana eklenir.
-4. **Kombo Çarpanları Sırayla Uygulanır**: Tetiklenen kombolardaki tüm
-   `×N` etkiler, dizilimdeki tetiklenme sırasına göre çarpılır (sıra
-   tılsım etkileriyle önemli hale gelir — bkz. "İlk Kombo Çarpanı"
-   tılsımı, 05-charms.md).
-5. **Tılsım Etkileri Uygulanır**: Aktif tılsımlar sırasıyla kendi
-   etkilerini uygular (sembol değerine, kombo çarpanına veya nihai
-   sonuca göre değişir — her tılsımın etki hedefi 05-charms.md'de
-   tanımlı).
-6. **Sonuç**: Müşteri Memnuniyeti puanı çıkar → 04-economy.md'deki
-   ödeme formülüne girdi olur.
+1. **Base Score**: The sum of the `baseValue` of every symbol in the arrangement.
+2. **Combo Detection**: All adjacent pairs/triples in the arrangement are
+   scanned against the matrix in 02-combos.md. The overlap rule is applied
+   (the combo with the highest multiplier wins, lower combos are suppressed —
+   see 02-combos.md).
+3. **Flat Bonuses Are Summed**: All `+N` effects from the triggered combos are
+   added to the base score.
+4. **Combo Multipliers Are Applied In Order**: All `×N` effects from the
+   triggered combos are multiplied in their trigger order within the
+   arrangement (the order becomes important with charm effects — see the
+   "First Combo Multiplier" charm, 05-charms.md).
+5. **Charm Effects Are Applied**: Active charms apply their effects in turn
+   (this varies by whether they target the symbol value, the combo multiplier
+   or the final result — each charm's effect target is defined in
+   05-charms.md).
+6. **Result**: The Customer Satisfaction score comes out → it becomes the input
+   to the payment formula in 04-economy.md.
 
-## Örnek Hesaplama 1 — Tılsımsız
+## Example Calculation 1 — Without Charms
 
-Dizilim: **Yol(3) → Kuş(3) → Mektup(2)**
+Arrangement: **Road(3) → Bird(3) → Letter(2)**
 
-- Taban puan: 3 + 3 + 2 = **8**
-- Kombo taraması: Yol-Kuş, Kuş-Mektup, Yol-Kuş-Mektup (üçlü) hepsi eşleşiyor.
-  Çakışma kuralı: üçlü kombo ("Kesin Haber", ×2.5) en yüksek çarpanlı
-  olduğu için ikili kombolar bastırılır.
-- Sabit bonus: yok (bastırılan ikili kombolardaki +3 "Yolda Haber" de
-  aynı üçlü sembol grubuna ait olduğu için sayılmaz — çakışma kuralı
-  sabitler için de geçerli).
-- Çarpan uygulama: 8 × 2.5 = **20**
-- **Müşteri Memnuniyeti = 20**
+- Base score: 3 + 3 + 2 = **8**
+- Combo scan: Road-Bird, Bird-Letter, Road-Bird-Letter (triple) all match.
+  Overlap rule: since the triple combo ("Certain News", ×2.5) has the highest
+  multiplier, the pair combos are suppressed.
+- Flat bonus: none (the +3 "News on the Road" from the suppressed pair combos
+  does not count either, because it belongs to the same triple symbol group —
+  the overlap rule applies to flat bonuses as well).
+- Multiplier application: 8 × 2.5 = **20**
+- **Customer Satisfaction = 20**
 
-## Örnek Hesaplama 2 — Tılsımlı
+## Example Calculation 2 — With a Charm
 
-Aynı dizilim + **"İlk Kombo Çarpanı" tılsımı** (tetiklenen ilk kombonun
-çarpanını ×2 yapar):
+The same arrangement + the **"First Combo Multiplier" charm** (doubles the
+multiplier of the first triggered combo):
 
-- Taban puan: 8
-- Tetiklenen tek kombo "Kesin Haber" (×2.5) zaten dizilimdeki ilk (ve
-  tek) kombo → tılsım onu ×2 katlar: 2.5 × 2 = 5.0 efektif çarpan.
+- Base score: 8
+- The only triggered combo, "Certain News" (×2.5), is already the first (and
+  only) combo in the arrangement → the charm doubles it: 2.5 × 2 = 5.0
+  effective multiplier.
 - 8 × 5.0 = **40**
-- **Müşteri Memnuniyeti = 40**
+- **Customer Satisfaction = 40**
 
-## Örnek Hesaplama 3 — Negatif Kombo Riski
+## Example Calculation 3 — The Risk of a Negative Combo
 
-Dizilim: **Yılan(5) → Dağ(8) → Bulut(2)**
+Arrangement: **Snake(5) → Mountain(8) → Cloud(2)**
 
-- Taban puan: 5 + 8 + 2 = **15**
-- Kombo: üçlü "Kara Gün" tetiklenir (×0.6) — ikili Dağ+Bulut (×0.8) bastırılır.
+- Base score: 5 + 8 + 2 = **15**
+- Combo: the triple "Black Day" triggers (×0.6) — the pair Mountain+Cloud
+  (×0.8) is suppressed.
 - 15 × 0.6 = **9**
-- **Müşteri Memnuniyeti = 9** (aynı sembolleri farklı sırada dizmek —
-  örn. Yılanı en başa değil ortaya koyup üçlüyü bozmak — bu cezayı
-  önleyebilirdi. Bu, dizilim kararının neden önemli olduğunun somut
-  kanıtı.)
+- **Customer Satisfaction = 9** (arranging the same symbols in a different
+  order — e.g. putting the Snake in the middle instead of at the very front to
+  break up the triple — would have avoided this penalty. This is the concrete
+  proof of why the arrangement decision matters.)
 
-## Tasarım İlkeleri
+## Design Principles
 
-- **Sabit bonuslar önce, çarpanlar sonra**: erken oyunda küçük
-  sabitler anlamlı hissettirir, geç oyunda çarpan yığınları patlama
-  yaratır (Balatro'nun "chips then mult" felsefesiyle aynı sıralama
-  mantığı).
-- **Çarpanlar çarpımsal (sıra bağımsız), sabit tılsımlar toplamsal**:
-  hesaplama basit ve öngörülebilir kalır; oyuncu zihinden
-  yaklaşık hesap yapabilmeli (Balatro'nun okunabilirlik dersi).
-- Tüm katsayılar (`1.5`, `×2`, `+3` vb.) Faz 1'de ScriptableObject
-  alanları olarak tutulacak, kod değişikliği gerektirmeden
-  dengelenebilecek (ROADMAP.md tasarım kuralı).
-- Bu formül bir **taslaktır** — kesin denge Faz 3'te 20+ tam koşu
-  verisiyle ayarlanacak (ROADMAP.md Faz 3).
+- **Flat bonuses first, multipliers after**: small flat values feel meaningful
+  in the early game, while stacks of multipliers create the explosion in the
+  late game (the same ordering logic as Balatro's "chips then mult"
+  philosophy).
+- **Multipliers are multiplicative (order independent), flat charms are
+  additive**: the calculation stays simple and predictable; the player should
+  be able to approximate it in their head (Balatro's readability lesson).
+- All coefficients (`1.5`, `×2`, `+3`, etc.) will be kept as ScriptableObject
+  fields in Phase 1, so they can be balanced without code changes (ROADMAP.md
+  design rule).
+- This formula is a **draft** — the final balance will be tuned in Phase 3 with
+  data from 20+ full runs (ROADMAP.md Phase 3).

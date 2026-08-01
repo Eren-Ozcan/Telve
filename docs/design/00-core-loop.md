@@ -1,80 +1,85 @@
-# Çekirdek Döngü
+# Core Loop
 
-> Faz 0 çıkış maddesi: "Tek sayfa, tartışmasız net."
+> Phase 0 exit item: "One page, unambiguously clear."
 
-## Bir Müşteri Turu (Tek El)
-
-```
-1. FİNCAN ÇEVİR
-   Müşteri kahvesini içer, fincanı tabağa ters kapatır, bekler, çevirir.
-   → Telvede 5-7 sembol rastgele belirir (destedeki sembol havuzundan,
-     nadirlik ağırlıklı çekiliş, seed'li RNG).
-
-2. OKUMA SIRASINA DİZ
-   Oyuncu belirlenen sembolleri sürükleyip bir okuma sırasına dizer
-   (soldan sağa, fincanın ağzından dibine doğru okunur — fal geleneği).
-   Bu, Balatro'daki "eldeki kartları seçme" kararının muadili: hangi
-   sembolü nereye koyarsan hangi komboyu tetiklersin.
-
-3. KOMBO TESPİTİ
-   Dizilimdeki komşu sembol çiftleri/üçlüleri önceden tanımlı kombo
-   matrisine bakılarak taranır (bkz. 02-combos.md). Her kombo bir isim
-   kartı ve bir etki (sabit bonus veya çarpan) tetikler.
-
-4. PUAN HESAPLA
-   Taban puan (sembol değerleri toplamı) → kombo etkileri → aktif
-   tılsım etkileri sırasıyla uygulanır → Müşteri Memnuniyeti puanı
-   çıkar (bkz. 03-scoring.md).
-
-5. ÖDEME / TEPKİ
-   Memnuniyet puanı o müşterinin eşiğiyle karşılaştırılır. Eşik
-   aşılırsa tam+bonus ödeme ve olumlu tepki; aşılmazsa düşük ödeme ve
-   olumsuz tepki (bkz. 04-economy.md). Falcı defterine yeni keşfedilen
-   kombolar altın çerçeveyle kaydedilir.
-
-6. SIRADAKİ MÜŞTERİ
-   Müşteriler arası pazara uğranabilir: kazanılan altınla yeni sembol
-   veya tılsım satın alınıp deste güçlendirilir (bkz. 04-economy.md).
-```
-
-## Gün Döngüsü
+## One Customer Turn (a Single Hand)
 
 ```
-Müşteri 1 → [pazar] → Müşteri 2 → [pazar] → ... → Müşteri 8
-→ [pazar] → Muhtar (gün sonu boss, yüksek eşikli özel müşteri)
-→ Gün Sonu Özeti → Ertesi Gün
+1. FLIP THE CUP
+   The customer drinks their coffee, turns the cup upside down onto the
+   saucer, waits, then flips it back.
+   → 5-7 symbols appear at random in the grounds (from the deck's symbol
+     pool, a rarity-weighted draw, seeded RNG).
+
+2. ARRANGE THE READING ORDER
+   The player drags the revealed symbols into a reading order
+   (left to right, read from the rim of the cup down to its bottom —
+   fortune-telling tradition). This is the equivalent of Balatro's
+   "select the cards in your hand" decision: which symbol you place
+   where determines which combo you trigger.
+
+3. COMBO DETECTION
+   Adjacent symbol pairs/triples in the arrangement are scanned against
+   the predefined combo matrix (see 02-combos.md). Each combo triggers a
+   name card and an effect (flat bonus or multiplier).
+
+4. SCORE CALCULATION
+   Base score (sum of symbol values) → combo effects → active charm
+   effects are applied in that order → the Customer Satisfaction score
+   comes out (see 03-scoring.md).
+
+5. PAYMENT / REACTION
+   The satisfaction score is compared against that customer's threshold.
+   If the threshold is beaten, full+bonus payment and a positive
+   reaction; if not, low payment and a negative reaction (see
+   04-economy.md). Newly discovered combos are recorded in the
+   fortune-teller's journal with a golden frame.
+
+6. NEXT CUSTOMER
+   The market can be visited between customers: with the gold earned,
+   new symbols or charms are bought to strengthen the deck (see
+   04-economy.md).
 ```
 
-- Bir günde 8-10 sıradan müşteri + 1 muhtar vardır.
-- Zorluk gün içinde artar: müşteri eşikleri sıraya göre yükselir.
-- Muhtar geçilemezse gün kaybedilir (roguelike ölüm koşulu — koşu biter).
+## Day Loop
 
-## Neden Bu Döngü Balatro Analojisiyle Çalışır
+```
+Customer 1 → [market] → Customer 2 → [market] → ... → Customer 8
+→ [market] → Headman (end-of-day boss, a special high-threshold customer)
+→ End-of-Day Summary → Next Day
+```
+
+- A day has 8-10 ordinary customers + 1 Headman.
+- Difficulty rises within the day: customer thresholds increase with order.
+- If the Headman is not beaten, the day is lost (the roguelike death condition — the run ends).
+
+## Why This Loop Works With the Balatro Analogy
 
 | Balatro | Telve |
 |---|---|
-| Kart eli çek | Fincan çevir → sembol çık |
-| Poker eli seç (hangi kartlar oynanır) | Okuma sırasına dizme (hangi sembol nereye) |
-| Poker eli türü (flush, straight...) | Kombo (Yol+Kuş = "Haber Geliyor") |
-| Çip × Çarpan | Sembol Değeri × Kombo Çarpanı × Tılsım |
-| Blind eşiği | Müşteri Memnuniyeti eşiği |
-| Joker kartları | Tılsımlar |
-| Mağaza | Pazar |
-| Boss blind | Muhtar |
+| Draw a hand of cards | Flip the cup → symbols appear |
+| Select a poker hand (which cards are played) | Arrange the reading order (which symbol goes where) |
+| Poker hand type (flush, straight...) | Combo (Road+Bird = "News Is Coming") |
+| Chips × Mult | Symbol Value × Combo Multiplier × Charm |
+| Blind threshold | Customer Satisfaction threshold |
+| Joker cards | Charms |
+| Shop | Market |
+| Boss blind | Headman |
 
-Fark: Balatro'da el *seçimi* önemliyken Telve'de el *sırası* (dizilim)
-önemli — komşuluk bazlı kombo sistemi, sıralama kararını oyunun
-merkezine koyar. Bu, Faz 0 kağıt prototipinde en kritik test edilecek
-varsayımdır (bkz. ROADMAP.md Faz 0 çıkış kriteri).
+The difference: in Balatro the *selection* of the hand matters, while in Telve
+the *order* of the hand (the arrangement) matters — the adjacency-based combo
+system puts the ordering decision at the center of the game. This is the most
+critical assumption to be tested in the Phase 0 paper prototype (see the
+Phase 0 exit criterion in ROADMAP.md).
 
-## Açık Sorular (Kağıt Prototipte Cevaplanacak)
+## Open Questions (To Be Answered in the Paper Prototype)
 
-- Sürükleme sırasında zaman baskısı olmalı mı, yoksa serbest düşünme
-  süresi mi? (Öneri: Faz 1'de serbest, ileride zorluk modu olarak
-  süre eklenebilir.)
-- Sembol sayısı sabit mi (her zaman 6) yoksa değişken mi (5-7)? (Öneri:
-  değişken — tılsımlarla etkileşim alanı açar, bkz. "Kahve Telvesi
-  Yoğun" tılsımı.)
-- Dizilimde kullanılmayan (telvede kalan ama sıraya konmayan) sembol
-  olabilir mi? (Öneri: hayır, MVP'de çekilen tüm semboller dizilmek
-  zorunda — basitlik için.)
+- Should there be time pressure while dragging, or free thinking time?
+  (Suggestion: free in Phase 1, a timer can be added later as a
+  difficulty mode.)
+- Is the symbol count fixed (always 6) or variable (5-7)? (Suggestion:
+  variable — it opens up an interaction space with charms, see the
+  "Thick Coffee Grounds" charm.)
+- Can there be symbols that go unused (left in the grounds but not placed
+  into the order)? (Suggestion: no, in the MVP every drawn symbol must be
+  arranged — for simplicity.)

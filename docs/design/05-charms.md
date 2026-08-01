@@ -1,47 +1,47 @@
-# Tılsım Listesi v1
+# Charm List v1
 
-10 pasif tılsım (Balatro'daki Joker kartlarının muadili). Her tılsım
-otomatik ve pasif etki yapar, oyuncu elle tetiklemez.
+10 passive charms (the equivalent of Balatro's Joker cards). Each charm has an
+automatic, passive effect; the player never triggers them manually.
 
-| Tılsım | Nadirlik | Fiyat | Etki |
+| Charm | Rarity | Price | Effect |
 |---|---|---|---|
-| Kuş Tüyü | Common | 12 | Kuş sembollerinin değeri +2 |
-| Şanslı Nazar | Common | 12 | Göz sembolü içeren negatif kombolar etkisiz olur |
-| Sadık Dost | Common | 12 | Aynı sembol iki kez yan yana gelirse +5 sabit bonus |
-| Ekonomik Fal | Common | 12 | Pazar fiyatları %15 düşer |
-| İlk Kombo Çarpanı | Uncommon | 22 | Dizilimde tetiklenen ilk kombonun çarpanı ×2 olur |
-| Kahve Telvesi Yoğun | Uncommon | 22 | Fincanda 1 sembol daha fazla çıkar (6-8 arası) |
-| Kara Kedi Tılsımı | Uncommon | 22 | Negatif kombo cezaları %50 azalır (örn. ×0.6 → ×0.8) |
-| Şans Tekerleği | Rare | 38 | Rare ve Epic sembol çekiliş ağırlığı %50 artar |
-| Muhtarın Gözdesi | Rare | 38 | Muhtar müşterisinde ödeme ×1.5 |
-| Kader Anahtarı | Epic | 65 | Taç sembolü her elde garanti çıkar |
+| Bird Feather | Common | 12 | Bird symbols are worth +2 |
+| Lucky Evil Eye | Common | 12 | Negative combos containing the Eye symbol have no effect |
+| Loyal Friend | Common | 12 | If the same symbol appears twice side by side, +5 flat bonus |
+| Thrifty Fortune | Common | 12 | Market prices drop by 15% |
+| First Combo Multiplier | Uncommon | 22 | The multiplier of the first combo triggered in the arrangement becomes ×2 |
+| Thick Coffee Grounds | Uncommon | 22 | 1 extra symbol appears in the cup (6-8 range) |
+| Black Cat Charm | Uncommon | 22 | Negative combo penalties are reduced by 50% (e.g. ×0.6 → ×0.8) |
+| Wheel of Fortune | Rare | 38 | The draw weight of Rare and Epic symbols increases by 50% |
+| The Headman's Favorite | Rare | 38 | Payment is ×1.5 on the Headman customer |
+| Key of Fate | Epic | 65 | The Crown symbol is guaranteed to appear in every hand |
 
-## Etki Hedefi Sınıflandırması (03-scoring.md Adım 5 için)
+## Effect Target Classification (for Step 5 of 03-scoring.md)
 
-Puanlama formülündeki 5. adımda ("Tılsım Etkileri Uygulanır"), her
-tılsımın hangi aşamaya müdahale ettiği net olmalı:
+In step 5 of the scoring formula ("Charm Effects Are Applied"), it must be
+clear which stage each charm intervenes in:
 
-| Etki Hedefi | Tılsımlar |
+| Effect Target | Charms |
 |---|---|
-| Sembol değeri (taban puana girer) | Kuş Tüyü |
-| Sabit bonus (taban puana eklenir) | Sadık Dost |
-| Kombo çarpanı (çarpan aşamasında) | İlk Kombo Çarpanı, Kara Kedi Tılsımı |
-| Negatif kombo bastırma | Şanslı Nazar |
-| Çekiliş / RNG (fincan çevirme aşamasında, puanlamadan önce) | Kahve Telvesi Yoğun, Şans Tekerleği, Kader Anahtarı |
-| Ekonomi (pazar/ödeme aşamasında, puanlamadan sonra) | Ekonomik Fal, Muhtarın Gözdesi |
+| Symbol value (enters the base score) | Bird Feather |
+| Flat bonus (added to the base score) | Loyal Friend |
+| Combo multiplier (at the multiplier stage) | First Combo Multiplier, Black Cat Charm |
+| Negative combo suppression | Lucky Evil Eye |
+| Draw / RNG (at the cup flip stage, before scoring) | Thick Coffee Grounds, Wheel of Fortune, Key of Fate |
+| Economy (at the market/payment stage, after scoring) | Thrifty Fortune, The Headman's Favorite |
 
-## Tasarım Notları
+## Design Notes
 
-- Her nadirlik sınıfından en az bir tılsım var; fiyatlar 04-economy.md
-  pazar fiyat tablosuyla birebir eşleşiyor.
-- "Kara Kedi Tılsımı" ve "Şanslı Nazar" doğrudan 02-combos.md'deki
-  kasıtlı negatif kombolara karşı bir denge/karşı-strateji sunuyor —
-  oyuncu negatif komboları tamamen dizilim disipliniyle mi yönetecek,
-  yoksa tılsım yatırımıyla mı telafi edecek, bu seçim deste kurma
-  kimliğinin bir parçası olsun diye tasarlandı.
-- Faz 1'de her tılsım bir `CharmData` ScriptableObject'i olacak:
+- There is at least one charm from every rarity class; the prices match the
+  market price table in 04-economy.md exactly.
+- "Black Cat Charm" and "Lucky Evil Eye" offer a direct balance/counter-strategy
+  against the deliberately negative combos in 02-combos.md — whether the player
+  manages negative combos purely through arrangement discipline or compensates
+  for them by investing in charms was designed to be a choice that is part of
+  their deck-building identity.
+- In Phase 1 each charm will be a `CharmData` ScriptableObject:
   `id, displayName, rarity, price, effectTarget (enum), effectValue`.
-- MVP hedefi ~10 tılsım karşılandı (ROADMAP.md Faz 1). Faz 2'de tılsım
-  sayısı arttırılmadan önce mevcut 10'un kağıt/dijital prototipte
-  gerçekten "şu tılsımla şu desteyi denesem" hissi yaratıp
-  yaratmadığı doğrulanmalı (ROADMAP.md Faz 1 çıkış kriteri).
+- The MVP target of ~10 charms has been met (ROADMAP.md Phase 1). Before the
+  charm count is increased in Phase 2, it must be verified that the existing 10
+  actually create the "what if I tried that deck with that charm" feeling in the
+  paper/digital prototype (ROADMAP.md Phase 1 exit criterion).

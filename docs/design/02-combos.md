@@ -1,115 +1,115 @@
-# Kombo Matrisi v1
+# Combo Matrix v1
 
-37 kombo (31 ikili + 6 üçlü). Komşuluk = okuma sırasında yan yana
-duran semboller (pozisyon i ve i+1). Üçlü kombolar 3 ardışık pozisyonu
-kapsar.
+37 combos (31 pairs + 6 triples). Adjacency = symbols standing side by side in
+the reading order (positions i and i+1). Triple combos cover 3 consecutive
+positions.
 
-**Çakışma kuralı:** Aynı sembol grubu hem ikili hem üçlü kombo
-tetikliyorsa (örn. Yol-Kuş-Mektup ardışıksa hem "Haber Geliyor" hem
-"Kesin Haber" tetiklenebilir gibi görünür), sadece **en yüksek çarpanlı
-kombo** sayılır — alt kombolar bastırılır. Çift sayım yok. Detay için
-bkz. 03-scoring.md.
+**Overlap rule:** If the same symbol group triggers both a pair and a triple
+combo (e.g. when Road-Bird-Letter are consecutive it looks like both "News Is
+Coming" and "Certain News" could trigger), only the **combo with the highest
+multiplier** counts — the lower combos are suppressed. No double counting. For
+details see 03-scoring.md.
 
-**Etki türleri:** `×N` (çarpan, sırayla çarpılır) veya `+N` (sabit,
-çarpanlardan önce taban puana eklenir).
+**Effect types:** `×N` (multiplier, applied in sequence) or `+N` (flat, added
+to the base score before multipliers).
 
-## Haber Grubu
+## News Group
 
-| Kombo | İsim | Etki |
+| Combo | Name | Effect |
 |---|---|---|
-| Yol + Kuş | Haber Geliyor | ×1.5 |
-| Kuş + Mektup | Beklenen Mektup | ×1.5 |
-| Mektup + Yol | Yolda Haber | +3 |
-| Kuş + Çan | Düğün Haberi | ×1.8 |
+| Road + Bird | News Is Coming | ×1.5 |
+| Bird + Letter | The Awaited Letter | ×1.5 |
+| Letter + Road | News on the Road | +3 |
+| Bird + Bell | Wedding News | ×1.8 |
 
-## Aşk Grubu
+## Love Group
 
-| Kombo | İsim | Etki |
+| Combo | Name | Effect |
 |---|---|---|
-| Kalp + Yıldız | Kader Aşkı | ×2.0 |
-| Kalp + Ay | Gizli Aşk | ×1.6 |
-| Kalp + Kalp | Aşk Üçgeni | ×1.7 |
-| Kalp + Kapı | Yeni Aşk | +4 |
-| Kalp + Yılan | İhanete Uğrayan Aşk | ×1.4 |
+| Heart + Star | Destined Love | ×2.0 |
+| Heart + Moon | Secret Love | ×1.6 |
+| Heart + Heart | Love Triangle | ×1.7 |
+| Heart + Door | New Love | +4 |
+| Heart + Snake | Betrayed Love | ×1.4 |
 
-## Uyarı Grubu (bazıları kasıtlı negatif — riskli dizilim dersi)
+## Warning Group (some are deliberately negative — a lesson in risky arrangement)
 
-| Kombo | İsim | Etki |
+| Combo | Name | Effect |
 |---|---|---|
-| Yılan + Kedi | İki Yüzlü Düşman | ×1.9 |
-| Dağ + Bulut | Zorlu Engel | ×0.8 |
-| Yılan + Göz | Nazar Kırılıyor | ×1.3 |
-| Kedi + Mektup | Dedikodu | ×0.9 |
+| Snake + Cat | Two-Faced Enemy | ×1.9 |
+| Mountain + Cloud | A Hard Obstacle | ×0.8 |
+| Snake + Eye | The Evil Eye Breaks | ×1.3 |
+| Cat + Letter | Gossip | ×0.9 |
 
-## Bereket / Başarı Grubu
+## Abundance / Success Group
 
-| Kombo | İsim | Etki |
+| Combo | Name | Effect |
 |---|---|---|
-| Balık + Güneş | Bol Kazanç | ×2.2 |
-| Balık + Anahtar | Yeni Fırsat Kapısı | +5 |
-| Güneş + Taç | Zaferin Zirvesi | ×3.0 |
-| Merdiven + Güneş | Yükselen Yıldız | ×1.8 |
+| Fish + Sun | Plentiful Earnings | ×2.2 |
+| Fish + Key | Door to a New Opportunity | +5 |
+| Sun + Crown | The Summit of Victory | ×3.0 |
+| Ladder + Sun | Rising Star | ×1.8 |
 
-## Yolculuk Grubu
+## Journey Group
 
-| Kombo | İsim | Etki |
+| Combo | Name | Effect |
 |---|---|---|
-| Yol + Gemi | Uzak Yolculuk | ×1.6 |
-| Gemi + Balık | Bereketli Deniz | +6 |
-| Köprü + Kapı | Geçiş Dönemi | ×1.5 |
-| Yol + Dağ | Zorlu Yolculuk | ×1.2, +2 |
-| Anahtar + Kapı | Kaderin Kapısı | ×2.0 |
+| Road + Ship | A Distant Journey | ×1.6 |
+| Ship + Fish | Bountiful Sea | +6 |
+| Bridge + Door | Transition Period | ×1.5 |
+| Road + Mountain | A Hard Journey | ×1.2, +2 |
+| Key + Door | The Door of Fate | ×2.0 |
 
-## Sır Grubu
+## Secret Group
 
-| Kombo | İsim | Etki |
+| Combo | Name | Effect |
 |---|---|---|
-| Kuyu + Ay | Derin Sır | ×1.7 |
-| Kuyu + Göz | Görülen Sır | ×1.4 |
-| Ay + Bulut | Belirsiz Gelecek | ×0.85 |
+| Well + Moon | Deep Secret | ×1.7 |
+| Well + Eye | A Secret Revealed | ×1.4 |
+| Moon + Cloud | An Uncertain Future | ×0.85 |
 
-## Aile / Büyüme Grubu
+## Family / Growth Group
 
-| Kombo | İsim | Etki |
+| Combo | Name | Effect |
 |---|---|---|
-| Ağaç + Kalp | Aile Mutluluğu | ×1.6 |
-| Ağaç + Çiçek | Yeni Nesil | +5 |
-| Çiçek + Kalp | Romantik Sürpriz | ×1.5 |
+| Tree + Heart | Family Happiness | ×1.6 |
+| Tree + Flower | A New Generation | +5 |
+| Flower + Heart | Romantic Surprise | ×1.5 |
 
-## Diğer İkili Kombolar
+## Other Pair Combos
 
-| Kombo | İsim | Etki |
+| Combo | Name | Effect |
 |---|---|---|
-| Göz + Yıldız | Korunan Dilek | ×1.4 |
-| Kapı + Yol | Yeni Yola Çıkış | +3 |
-| Çan + Çiçek | Mutlu Tören | ×1.5 |
+| Eye + Star | A Protected Wish | ×1.4 |
+| Door + Road | Setting Out on a New Road | +3 |
+| Bell + Flower | A Happy Ceremony | ×1.5 |
 
-## Üçlü Kombolar (yüksek risk / yüksek ödül)
+## Triple Combos (high risk / high reward)
 
-| Kombo (ardışık 3) | İsim | Etki |
+| Combo (3 consecutive) | Name | Effect |
 |---|---|---|
-| Yol + Kuş + Mektup | Kesin Haber | ×2.5 |
-| Kalp + Yıldız + Taç | Büyük Aşk Kaderi | ×3.5 |
-| Balık + Güneş + Taç | Efsanevi Bereket | ×4.0 |
-| Yılan + Dağ + Bulut | Kara Gün | ×0.6 |
-| Anahtar + Kapı + Köprü | Yeni Hayat Yolu | ×2.8 |
-| Göz + Yıldız + Ay | Gökyüzü Falı | ×2.2 |
+| Road + Bird + Letter | Certain News | ×2.5 |
+| Heart + Star + Crown | A Great Love Destiny | ×3.5 |
+| Fish + Sun + Crown | Legendary Abundance | ×4.0 |
+| Snake + Mountain + Cloud | Black Day | ×0.6 |
+| Key + Door + Bridge | A New Path in Life | ×2.8 |
+| Eye + Star + Moon | Sky Reading | ×2.2 |
 
-Toplam: 31 ikili + 6 üçlü = **37 kombo** (MVP hedefi 30-40 aralığında).
+Total: 31 pairs + 6 triples = **37 combos** (within the 30-40 MVP target range).
 
-## Tasarım Notları
+## Design Notes
 
-- Negatif kombolar (Dağ+Bulut, Kedi+Mektup, Ay+Bulut, Kara Gün)
-  kasıtlı: oyuncuyu "her sembolü en güçlü kombonun yanına koy" saf
-  optimizasyonundan çıkarıp *hangi sembolleri birbirinden uzak tutmalıyım*
-  kararına zorlar. Kağıt prototipte bu kararın gerçekten hissedilip
-  hissedilmediği test edilmeli (ROADMAP.md Faz 0 çıkış kriteri).
-- "Kara Gün" (×0.6) MVP'deki en sert ceza — üç negatif sembolün
-  bilerek yan yana getirilmesi gerektiği için nadiren tetiklenir, esas
-  işlevi deste kurarken negatif sembolleri "dağıtma" stratejisini
-  öğretmek.
-- Faz 1'de her kombo bir `ComboData` ScriptableObject'i olacak:
-  `id, requiredSymbolIds (sıralı liste), displayName, effectType
+- The negative combos (Mountain+Cloud, Cat+Letter, Moon+Cloud, Black Day) are
+  deliberate: they pull the player out of the naive optimization of "put every
+  symbol next to the strongest combo" and force the decision of *which symbols
+  do I need to keep apart*. Whether this decision is actually felt must be
+  tested in the paper prototype (ROADMAP.md Phase 0 exit criterion).
+- "Black Day" (×0.6) is the harshest penalty in the MVP — it rarely triggers
+  because three negative symbols have to be deliberately placed side by side;
+  its real function is to teach the strategy of "spreading out" negative
+  symbols while building the deck.
+- In Phase 1 each combo will be a `ComboData` ScriptableObject:
+  `id, requiredSymbolIds (ordered list), displayName, effectType
   (Multiplier/Flat), effectValue, isNegative`.
-- Kombo tespiti performans notu: pozisyon bazlı O(n) tarama yeterli
-  (n ≤ 8 sembol), erken optimizasyona gerek yok.
+- Combo detection performance note: a position-based O(n) scan is enough
+  (n ≤ 8 symbols), no need for early optimization.
