@@ -1,147 +1,148 @@
-# 🔮 Telve — Yol Haritası
+# 🔮 Telve — Roadmap
 
-> Türk kahvesi falı temalı, deste-kurma roguelike. Balatro'nun "tek deste, sonsuz kombo"
-> döngüsü + fal kültürünün anlatı gücü. Hedef platform: mobil (iOS/Android), motor: Unity.
-
----
-
-## Faz 0 — Tasarım Temeli (1-2 hafta)
-
-Kod yazmadan önce kağıt üzerinde kanıtlanması gerekenler:
-
-- [x] **Çekirdek döngü dokümanı**: Fincan çevir → 5-7 sembol → okuma sırasına diz → kombo → puan/ödeme. Tek sayfa, tartışmasız net. *(kod olarak CupDraw → ReadingOrder → ComboDetector → ScoreCalculator zincirinde uygulanmış durumda)*
-- [x] **Sembol seti v1 (~20-25 sembol)**: Her sembolün adı, temel değeri, nadirlik sınıfı, fal anlamı. *(24 sembol `Assets/Resources/Data/Symbols` altında ScriptableObject olarak var)*
-- [x] **Kombo matrisi v1**: Yan yana gelen ikili/üçlü kombinasyonlar ve etkileri. *(37 kombo `Assets/Resources/Data/Combos` altında)*
-- [x] **Puanlama formülü**: Balatro'daki "çip × çarpan" muadili. *(ScoreCalculator + testleri)*
-- [ ] **Kağıt prototip**: Kartlarla masada oyna. Kombo dizme kararı gerçekten ilginç mi? Değilse burada düzelt, kodda değil. *(gerçek insan playtest kanıtı repoda yok — bu satır sadece fiilen oynatıldığında işaretlenmeli)*
-- [x] **Ekonomi taslağı**: Müşteri ödemesi → pazar fiyatları → gün sonu hedefi (boss "muhtar" eşiği) dengesi. *(CustomerEconomy, MarketPricing, DaySession)*
-
-**Çıkış kriteri:** Kağıt prototipte 3 farklı kişi "bir el daha" dediyse geç.
+> A deck-building roguelike themed around Turkish coffee fortune-telling.
+> Balatro's "one deck, endless combos" loop + the narrative power of
+> fortune-telling culture. Target platform: mobile (iOS/Android), engine: Unity.
 
 ---
 
-## Faz 1 — Dijital Prototip / "Bulmaca Kanıtı" (3-4 hafta)
+## Phase 0 — Design Foundation (1-2 weeks)
 
-Amaç güzellik değil, **eğlencenin kodda da çalıştığını** kanıtlamak. Placeholder görseller (düz renkli daireler + sembol adı yazısı) yeterli.
+What has to be proven on paper before writing any code:
 
-- [x] Unity proje kurulumu (2D URP, portre mod, 1080×1920 referans çözünürlük)
-- [x] Veri mimarisi: Semboller ve kombolar **ScriptableObject** olarak (dengeleme kod değişikliği gerektirmesin)
-- [x] Fincan çevirme → rastgele sembol dağıtımı (seed destekli RNG baştan kur — haftalık seed buna dayanacak)
-- [x] Sürükle-bırak okuma sırası dizme (mobilde parmakla test et, masaüstü fare değil) *(ReadingOrderChip drag/drop; masaüstünde fare ile doğrulandı, cihazda parmak testi hâlâ gerekiyor)*
-- [x] Kombo tespiti + puan hesaplama + sonuç ekranı
-- [x] Tek müşteri döngüsü: gel → fal bak → öde → git
-- [x] 8-10 müşterilik gün döngüsü + basit muhtar (yüksek eşikli müşteri)
-- [x] Pazar ekranı v0: müşteriler arası 3 seçenekten sembol/tılsım satın alma
-- [x] ~10 tılsım (pasif etki: "kuşlar +2 değer", "ilk kombo ×2" vb.) *(10 tılsım `Assets/Resources/Data/Charms` altında)*
+- [x] **Core loop document**: Flip the cup → 5-7 symbols → arrange into a reading order → combos → score/payment. One page, unambiguously clear. *(implemented in code as the CupDraw → ReadingOrder → ComboDetector → ScoreCalculator chain)*
+- [x] **Symbol set v1 (~20-25 symbols)**: Each symbol's name, base value, rarity class, fortune-telling meaning. *(24 symbols exist as ScriptableObjects under `Assets/Resources/Data/Symbols`)*
+- [x] **Combo matrix v1**: Adjacent pair/triple combinations and their effects. *(37 combos under `Assets/Resources/Data/Combos`)*
+- [x] **Scoring formula**: The equivalent of Balatro's "chips × mult". *(ScoreCalculator + its tests)*
+- [ ] **Paper prototype**: Play it on a table with cards. Is the combo-arrangement decision genuinely interesting? If not, fix it here, not in code. *(no evidence of a real human playtest in the repo — this line should only be checked once it has actually been played)*
+- [x] **Economy draft**: Balance of customer payment → market prices → end-of-day target (boss "Headman" threshold). *(CustomerEconomy, MarketPricing, DaySession)*
 
-**Çıkış kriteri:** Kendi başına 30 dk kesintisiz oynayabiliyorsan ve "şu tılsımla şu desteyi denesem" diye düşünüyorsan geç. Düşünmüyorsan Faz 0'a dön.
+**Exit criterion:** Move on once 3 different people said "one more hand" during the paper prototype.
 
 ---
 
-## Faz 2 — Dikey Dilim / "Hissiyat" (4-6 hafta)
+## Phase 1 — Digital Prototype / "Proof of the Puzzle" (3-4 weeks)
 
-Amaç: MVP içeriğinin tamamı + oyunun **duygusunu** kuran sunum katmanı. Balatro'yu satan şey puan sayacının tıkırtısıydı; Telve'yi satacak şey fincanın atmosferi.
+The goal is not beauty, it is proving that **the fun works in code too**. Placeholder visuals (plain colored circles + the symbol name as text) are enough.
 
-### Sunum
-- [x] Sanat yönü kilidi: loş masa, buhar, mum ışığı, telve dokusu (2-3 konsept dene, birini seç) *(3 konsept üretildi — `Assets/Art/Concepts/`; "B - düz altın çizgi, gece mavisi/altın palet, vektörel folk-art" seçildi — ikon üretimi için en okunaklı seçenek)*
-- [x] Masa/buhar/mum arka planı + boş fincan illüstrasyonu final görselle sahneye eklendi *(`Assets/Art/Background/table_background.png` → `Canvas/Background` tam ekran; `cup_art.png` → `Canvas/CupPanel/CupArt` dekoratif üst görsel; Play Mode'da doğrulandı)*
-- [x] Fincan çevirme animasyonu (oyunun imza anı — buna zaman harca) *(GameView.PunchScale — placeholder kalitede coroutine tween; final "imza an" cilası sanat yönü kilidinden sonra)*
-- [x] Sembollerin telvede "belirme" efekti *(GameView.RevealSlot)*
-- [x] Kombo tetiklenme geri bildirimi: isim kartı ("Kıskançlık Fark Edildi"), ekran sarsıntısı, ses *(ComboBannerView + AudioManager.PlayComboHit; combo_hit.wav üretilip atandı)*
-- [x] Müşteri tepki sistemi: irkilme, sevinme, korkma (basit portre + 2-3 ifade) *(CustomerReactionView; irkilme/korkma "startled" sprite'ında birleşti — v1 kapsamı; 3 portre Concept B stilinde üretilip `Assets/Art/Portraits/` altına kaydedildi ve sahnedeki alanlara atandı)*
-- [x] Ses: fincan porselen tıkırtısı, kaşık, ortam uğultusu, kombo müzik vuruşları *(AudioManager; 6 klip `Assets/Audio/` altında üretilip sahnedeki alanlara atandı — cup_draw, combo_hit, purchase, positive/negative_result, ambient_loop)*
+- [x] Unity project setup (2D URP, portrait mode, 1080×1920 reference resolution)
+- [x] Data architecture: symbols and combos as **ScriptableObjects** (so balancing does not require code changes)
+- [x] Cup flip → random symbol distribution (set up seeded RNG from the start — the weekly seed will build on it)
+- [x] Drag-and-drop reading order arrangement (test with a finger on mobile, not a desktop mouse) *(ReadingOrderChip drag/drop; verified with a mouse on desktop, on-device finger testing still needed)*
+- [x] Combo detection + score calculation + result screen
+- [x] Single customer loop: arrive → read the fortune → pay → leave
+- [x] 8-10 customer day loop + simple Headman (high-threshold customer)
+- [x] Market screen v0: buy a symbol/charm from 3 options between customers
+- [x] ~10 charms (passive effects: "birds +2 value", "first combo ×2", etc.) *(10 charms under `Assets/Resources/Data/Charms`)*
 
-### İçerik tamamlama (MVP kapsamı)
-- [x] 20-25 sembolün tamamı final görselle *(24 sembol ikonu Concept B stilinde üretildi — `Assets/Art/Symbols/`, `SymbolData.sprite` alanlarına atandı; GameView'a `cupSlotIcons`/`marketOfferIcons` eklenip fincan ve pazar slotlarında fiilen gösteriliyor — Play Mode'da doğrulandı.)*
-- [x] ~10 tılsım final *(10 tılsım ikonu üretildi — `Assets/Art/Charms/`, `CharmData.icon` alanlarına atandı, pazar UI'ında görüntüleniyor.)*
-- [x] Muhtar boss'u özel mekanikle (örn. "kötü fala inanmaz" — negatif kombolar ceza)
-- [x] Müşteri çeşitliliği: 4-5 arketip (aceleci, kuşkucu, dertli...) hafif kural farklarıyla *(Regular + Aceleci/Kuşkucu/Dertli/Cömert = 5 arketip)*
-
-### Falcı defteri v1
-- [x] Keşfedilen komboların kaydı; ilk keşifte altın çerçeve anı (viral ekran görüntüsü anı — paylaş butonu buraya) *(ComboJournal + JournalView; altın çerçeve/paylaş butonu görsel cilası final sanata bağlı)*
-
-**Çıkış kriteri:** 10 dakikalık oynanış videosu çekilebilir ve yabancı biri izlediğinde ne olduğunu anlıyor.
+**Exit criterion:** Move on if you can play 30 minutes straight on your own and you catch yourself thinking "what if I tried that deck with that charm". If you don't, go back to Phase 0.
 
 ---
 
-## Faz 3 — Meta-İlerleme + Koşu Derinliği (4-5 hafta)
+## Phase 2 — Vertical Slice / "The Feel" (4-6 weeks)
 
-- [x] **Bilgelik puanı**: koşu sonu kazanım + kalıcı açılımlar ağacı (StS tarzı: yeni semboller, başlangıç tılsımı seçenekleri) *(kazanım: `WisdomReward`+`MetaProgressStore`; harcama: `GameController.UnlockCharacter` ile `FalciCharacter` (deste+tılsım paketleri) açılıyor — "yeni semboller/başlangıç tılsımı seçenekleri" karakter seçimiyle birleştirildi, ağaç yapısı değil düz liste v1. Play Mode'da uçtan uca doğrulandı.)*
-- [x] Açılabilir sembol desteleri (2. ve 3. deste — farklı oynanış eğilimi: "kuş ağırlıklı haber destesi" vb.) *(karakter seçimiyle birleştirildi — her `FalciCharacter` kendi deste eğilimini taşıyor, bkz. altta)*
-- [x] 2-3 falcı karakteri (farklı başlangıç koşulu/pasif — Balatro'daki deste seçimi muadili) *(3 `FalciCharacter`: Varsayılan (ücretsiz), Kuş Falcısı (15 bilgelik, kuş ağırlıklı+Kuş Tüyü), Kara Kedi Falcısı (25 bilgelik, kedi ağırlıklı+Kara Kedi Tılsımı). `CharacterSelectView` panel, "Falcılar" butonu. Görsel/portre yok — sadece isim/açıklama metni, final sanat ayrı iş.)*
-- [x] Koşu sonu özet ekranı: en iyi kombo, toplam kazanç, defter ilerlemesi *(`GameController.BestComboThisRun`/`TotalGoldEarnedThisRun`/`DiscoveredCombosCount`, GameView'da "Yeni Koşu Başlat" ile birlikte gösteriliyor, Play Mode'da doğrulandı)*
-- [ ] Zorluk eğrisi: gün ilerledikçe müşteri beklentisi artışı; kayıp koşusu ortalama 20-40 dk'da bitmeli *(artış kısmı zaten uygulanmış: `CustomerProfile.Regular` — Eşik(n)=12+n×4, docs/design/04-economy.md formülüyle birebir. `BalanceSimulator`'a saniye-bazlı pacing tahmini eklendi (00-core-loop.md adım sayısına dayalı kaba sabitler: fincan/dizilim/sonuç ~75sn, pazar uğrağı ~12sn) ve 20 koşu çalıştırıldı: gerçekçi üst sınır senaryosunda (optimal dizilim + pazar) ~12,9 dk/koşu — ROADMAP'in 20-40 dk hedefinin ALTINDA. Bu SİMÜLASYON TAHMİNİ, insan playtestiyle doğrulanmadı, ama sinyal net: mevcut 8-10 müşteri/gün kapsamı hedeflenen oturum uzunluğu için muhtemelen kısa. Kesin karar (müşteri sayısını artırma/etkileşimi derinleştirme) gerçek playtestten sonra verilmeli — kod tarafı bu simülasyonla tavan yaptı.)*
-- [x] Denge turu: 20+ tam koşu verisiyle sembol/tılsım/ekonomi ayarı (ScriptableObject'ler sayesinde hızlı) *(`BalanceSimulator`: 20 koşu × 3 strateji simülasyonu; muhtar eşik çarpanı 1.5×→1.2× düşürüldü, veri commit mesajında. Gerçek insan playtest verisi değil — otomatik simülasyon; sembol/tılsım tekil değerleri henüz ayrıca ayarlanmadı, sadece muhtar eşiği.)*
-- [x] Kayıt sistemi: koşu ortası kayıt/devam (mobilde şart), meta ilerleme kalıcılığı *(meta ilerleme kalıcılığı: `MetaProgressStore` — bilgelik puanı, falcı defteri, açılan/seçili karakter, hepsi PlayerPrefs ile kalıcı. Koşu ortası kayıt/devam: `RunSaveData`/`RunSaveService` + `DaySession.Restore` + `GameController.SaveRunState`/`RestoreRunState` — gerçek Stop/Play (uygulama kapat-aç eşdeğeri) ile uçtan uca doğrulandı: açık fincan, gönderilmemiş sembol seçimi, gün-bitti özet ekranı, hepsi birebir geri geliyor.)*
+Goal: all of the MVP content + the presentation layer that establishes the game's **emotion**. What sold Balatro was the click of the score counter; what will sell Telve is the atmosphere of the cup.
 
-**Çıkış kriteri:** Bir koşu kaybedince "bir daha" isteği doğuyor ve meta açılım bir sonraki koşuyu somut değiştiriyor.
+### Presentation
+- [x] Lock the art direction: dim table, steam, candlelight, coffee-grounds texture (try 2-3 concepts, pick one) *(3 concepts produced — `Assets/Art/Concepts/`; "B - flat gold linework, midnight blue/gold palette, vector folk-art" was chosen — the most legible option for icon production)*
+- [x] Table/steam/candle background + empty cup illustration added to the scene with final art *(`Assets/Art/Background/table_background.png` → `Canvas/Background` fullscreen; `cup_art.png` → `Canvas/CupPanel/CupArt` decorative top visual; verified in Play Mode)*
+- [x] Cup flip animation (the game's signature moment — spend time on this) *(GameView.PunchScale — placeholder-quality coroutine tween; the final "signature moment" polish comes after the art direction lock)*
+- [x] The "emerging" effect of symbols in the coffee grounds *(GameView.RevealSlot)*
+- [x] Combo trigger feedback: name card ("Jealousy Noticed"), screen shake, sound *(ComboBannerView + AudioManager.PlayComboHit; combo_hit.wav produced and assigned)*
+- [x] Customer reaction system: flinching, delight, fear (simple portrait + 2-3 expressions) *(CustomerReactionView; flinching/fear merged into the "startled" sprite — v1 scope; 3 portraits produced in the Concept B style, saved under `Assets/Art/Portraits/` and assigned to the scene fields)*
+- [x] Audio: porcelain cup clink, spoon, ambient murmur, combo musical hits *(AudioManager; 6 clips produced under `Assets/Audio/` and assigned to the scene fields — cup_draw, combo_hit, purchase, positive/negative_result, ambient_loop)*
 
----
+### Content completion (MVP scope)
+- [x] All 20-25 symbols with final art *(24 symbol icons produced in the Concept B style — `Assets/Art/Symbols/`, assigned to the `SymbolData.sprite` fields; `cupSlotIcons`/`marketOfferIcons` added to GameView so they are actually displayed in the cup and market slots — verified in Play Mode.)*
+- [x] ~10 charms final *(10 charm icons produced — `Assets/Art/Charms/`, assigned to the `CharmData.icon` fields, displayed in the market UI.)*
+- [x] Headman boss with a special mechanic (e.g. "doesn't believe in bad fortunes" — negative combos are penalized)
+- [x] Customer variety: 4-5 archetypes (hasty, skeptical, troubled...) with slight rule differences *(Regular + Hasty/Skeptical/Troubled/Generous = 5 archetypes)*
 
-## Faz 4 — Mobil Cila + Monetizasyon (3-4 hafta)
+### Fortune-teller's Journal v1
+- [x] A record of discovered combos; the golden-frame moment on first discovery (the viral screenshot moment — the share button goes here) *(ComboJournal + JournalView; the visual polish of the golden frame/share button depends on the final art)*
 
-- [ ] Performans: düşük seviye Android cihazda 60 fps, pil dostu *(kod tarafında elden gelenler yapıldı: 42 texture'ın tamamına Android/iOS için ASTC 6x6 sıkıştırma override'ı verildi (önceden `overridden: 0` varsayılan haldeydi), Quality Settings'te tüm seviyelerde anisotropic filtering kapatıldı (2D sprite'lar için gereksiz), `GameController.Awake()`'e `vSyncCount=0` + `targetFrameRate=60` eklendi. Kod tarafında Update()/FindObjectOfType gibi performans kokusu taranıp bulunamadı. GERÇEK fiziksel düşük seviye Android cihazda fps/pil ölçümü yapılmadı — bu madde ancak cihaz testiyle işaretlenebilir.)*
-- [x] **İlk gerçek Android build (AAB) + imzalama anahtarı (keystore) kurulumu** *(2026-07-31: Android Build Support modülü ve bundled SDK/NDK/JDK zaten kuruluydu (Unity 6000.1.17f1), paket adı `com.yilkgames.telve` zaten doğruydu. Yeni bir upload keystore üretildi (`android-keystore/telve-upload.jks`, PKCS12, alias `telve-upload`) — proje içinde gitignore'lu, şifresi ve dosyası hem masaüstünde hem private `Eren-Ozcan/pictures` reposunda (`pictures/Telv/android-keystore/`) yedeklendi. Unity Player Settings'e bağlandı (`useCustomKeystore`), ProjectSettings.asset'e sadece dosya yolu/alias adı yazılıyor, şifre asla repoya girmiyor. İlk uçtan uca test build'i (`BuildPipeline.BuildPlayer`, Android hedefi, App Bundle) **BAŞARILI**: 0 hata, 2 uyarı, 55.7 MB imzalı `.aab` üretildi (`android-keystore/build-output/telve-test.aab`, gitignore'lu). Build sırasında "Active Input Handling = Both" uyarı diyaloğu build'i durdurdu (proje'de Input System paketi kurulu değil, bu yüzden "Both" anlamsız/riskliydi) — `ProjectSettings.asset`'te `activeInputHandler: 2 → 0` ("Input Manager (Old)") olarak düzeltildi, gelecekteki build'ler bu diyalogla durmayacak. Kalan: bu AAB'nin gerçek cihazda çalıştığının doğrulanması ve Play Console dahili test kanalına fiilen yüklenmesi — ikisi de bu oturumda yapılmadı.)*
-- [x] **Store ekran görüntüleri için gerçek portre (1080×1920) Play Mode testi + kritik görsel hata düzeltmesi** *(2026-07-31: Unity Game View ilk kez gerçek portre çözünürlükte (önceden hep landscape/free aspect'te test edilmişti) çalıştırılınca `Game.unity` sahnesinde 25 adet RectTransform'da (fincanın 8 sembol slotu + pazarın 3 teklif satırı + arka plan + fincan görseli + KVKK onay paneli) `anchorMin`/`pivot` değerlerinde "0." öneki düşmüş sistemik bir veri hatası bulundu — örn. pivot `5` yerine `0.5`, anchorMin.x `391` yerine `0.391` olmalıydı. Bu hata daha önce sadece `ConsentText`/`AcceptButton`'da fark edilip düzeltilmişti (bkz. Faz 4 GDPR/KVKK maddesi); aynı hata fincan sembolleri ve pazar ikonlarında da varmış ve gerçek portre aspect oranında test edilmediği için hiç fark edilmemiş — sembol ikonları ekranın çok dışına/üstüne taşıyordu. Unity Editor'da script ile tüm sahne taranıp (`anchorMin`/`anchorMax`/`pivot` için 0-1 dışı her değer "0." ekleyerek" düzeltildi) sahne kaydedildi; Play Mode'da coplay-mcp ile uçtan uca doğrulandı (fincan sembolleri artık doğru görünüyor). Bu arada 4 gerçek Play Mode ekran görüntüsü alındı — bkz. `docs/store-listing.md`.)*
-- [ ] IAP altyapısı (Unity IAP): fincan/masa örtüsü kozmetikleri — güç satmıyoruz, sadece görünüm *(`CosmeticItem` veri modeli + `IPurchaseService`/`MockPurchaseService` (varsayılan, dev/QA için) yanında artık gerçek `UnityIAPPurchaseService` de var — com.unity.purchasing 4.12.2 paketi kuruldu, `IStoreListener` tam implemente edildi, derleme doğrulandı. Play Console tarafında da ilerleme var: Telv için app listing açıldı (`com.yilkgames.telve`, App ID 4975250454079860772, Unity `applicationIdentifier` eşleştirildi), mağaza metni/kategori/etiket/reklam/içerik derecelendirmesi/hedef kitle beyanları girildi. GERÇEK MAĞAZA BAĞLANTISI HÂLÂ YOK: `cosmeticId`lerle eşleşen ürün kataloğu Play Console'da henüz oluşturulmadı, bu yüzden `UnityPurchasing.Initialize` uçtan uca test edilemez ve `GameController.Awake()`'te varsayılan olarak atanmadı. Ayrıca gizlilik politikası URL'si yayınlanmadan mağaza girişi/Data Safety formu tam gönderilemiyor (taslak durumda) — bkz. `docs/store-listing.md`.)*
-- [x] Rewarded ad entegrasyonu: koşu sonu "ikinci şans" + bilgelik puanı ×2 (2 nokta, fazlası deneyimi yer) *(`IRewardedAdService`/`MockRewardedAdService` (varsayılan, dev/QA için) yanında artık gerçek `LevelPlayRewardedAdService` de var — com.unity.services.levelplay 9.2.0 paketi kuruldu (Unity Ads legacy SDK 2026-01-31'de sunset edildiği için LevelPlay mediation kullanıldı), derleme doğrulandı. Oynanış akışı tam bağlı: `DaySession.TryGrantSecondChance` + `GameController.RequestSecondChance`/`RequestDoubleWisdom`, koşu başına birer kez, Play Mode'da uçtan uca doğrulandı. GERÇEK LevelPlay hesabı/app key/ad unit ID HÂLÂ YOK — hesap kurulana kadar varsayılan olarak atanmadı.)*
-- [x] Tutorial / ilk 5 dakika akışı (ilk müşteri = öğretici fal) *(`TutorialView` — ilk hiç görülmemiş karşılaşmada bağlamsal ipuçları (sırala → oku → sonuç), bir daha görünmez. Play Mode'da doğrulandı.)*
-- [x] Yerelleştirme altyapısı: TR + EN baştan (fal terminolojisinin İngilizce karşılıkları ayrı iş — erken başla) *(`Localization`/`LocalizedText`/`LanguageToggleView` + `LocalizationTable` veri modeli; statik UI metinleri TR/EN'e bağlı. Faz 4'ün kendi notundaki "ayrı iş" olan fal terminolojisi de tamamlandı: yeni `ContentLocalizationTable`/`ContentLocalization` (`Assets/Scripts/Meta/ContentLocalization.cs`) 24 sembol + 37 kombo + 10 tılsım + 3 karakterin EN adı/açıklamasını id üzerinden eşliyor (kaynak TR asset'leri değişmedi). GameView.Refresh() içindeki dinamik/interpolasyonlu durum metinleri (altın/skor/müşteri sırası, pazar etiketleri, koşu özeti, kombo banner'ı, karakter seçim durumu) artık `UiStrings` tablosundaki template key'lerle TR/EN'e bağlı. Unity açılıp derleme hatasız olduğu ve Play Mode'da dil değişiminin (durum metni, pazar, koşu özeti, kombo banner'ı, karakter seçimi) TR↔EN doğru geçtiği coplay-mcp üzerinden doğrulandı.)*
-- [ ] Analitik: koşu tamamlama, ölüm noktaları, kombo keşif oranları, D1/D7 retention *(event altyapısı hazır — `AnalyticsEvents`/`IAnalyticsSink`, varsayılan yerel dosya sink'i; run_started/run_ended/death_point/combo_discovered loglanıyor, Play Mode'da doğrulandı. D1/D7 retention gerçek backend + çoklu oturum verisi gerektirir, henüz yok — gerçek sink bağlandığında otomatik çalışır.)*
-- [ ] GDPR/KVKK/ATT izin akışları, çevrimdışı oynanabilirlik *(çevrimdışı oynanabilirlik zaten sağlanıyor — kod tabanında hiçbir ağ çağrısı yok, tüm kalıcılık PlayerPrefs. `PrivacyConsentView` ile onay kapısı iskeleti kuruldu. Yer tutucu metin, gerçekçi bir KVKK/GDPR aydınlatma taslağıyla değiştirildi (`Game.unity` → `ConsentText`: veri sorumlusu, LevelPlay/ironSource reklam ağı üzerinden işlenen veriler, KVKK md. 11 haklar, iletişim adresi, iOS ATT sistem izninin ayrıca sorulacağı notu). Play Mode doğrulaması sırasında KRİTİK bir sahne hatası bulunup düzeltildi: `ConsentText` ve `AcceptButton`'ın `anchorMin`/`anchorMax`/`pivot` değerleri (muhtemelen eski bir veri girişi hatasıyla) `0.5` yerine `5` girilmişti — bu yüzden onay metni de kabul butonu da ekranın çok dışına düşüyor, kapı görünüyor ama içeriği ve butonu asla görünmüyordu (oyun fiilen hiç başlatılamazdı). Düzeltme sonrası coplay-mcp ile uçtan uca doğrulandı: metin okunuyor, "Kabul Ediyorum" tıklanıyor, kapı kapanıp oyuna geçiliyor. Madde yine de işaretlenmedi, çünkü (1) bu taslak bağımsız hukuki incelemeden geçmedi, (2) iOS ATT sistem izni entegrasyonu (kod tarafı) henüz yapılmadı.)*
-
-**Çıkış kriteri:** Tanımadık 10 kişi telefonda tutorial'sız yardım almadan bir gün döngüsünü bitirebiliyor.
+**Exit criterion:** A 10-minute gameplay video can be recorded and a stranger watching it understands what is going on.
 
 ---
 
-## Faz 5 — Soft Launch (4-6 hafta)
+## Phase 3 — Meta-Progression + Run Depth (4-5 weeks)
 
-- [ ] Kapalı beta (TestFlight / Play Internal): 50-100 oyuncu, geri bildirim formu
-- [ ] Tek pazar soft launch (öneri: Türkiye — tema yerli, geri bildirim kalitesi yüksek)
-- [ ] Metrik hedefleri: D1 ≥ %35, D7 ≥ %12, ort. seans ≥ 15 dk (roguelike için makul eşikler)
-- [ ] Denge ve ekonomi yaması turları (haftalık)
-- [ ] Store sayfası: ekran görüntüleri, 30 sn fragman (fincan çevirme + altın çerçeve keşif anı)
-- [ ] İçerik üreticisi tohumlama: fal/kahve temalı TikTok-Instagram mikro-influencer'ları, "falına ne çıktı" formatı
+- [x] **Wisdom points**: end-of-run earnings + a permanent unlock tree (StS style: new symbols, starting charm options) *(earning: `WisdomReward`+`MetaProgressStore`; spending: `GameController.UnlockCharacter` unlocks `FalciCharacter` (deck+charm packages) — "new symbols/starting charm options" were merged into character selection, a flat list in v1 rather than a tree structure. Verified end to end in Play Mode.)*
+- [x] Unlockable symbol decks (2nd and 3rd decks — different play tendencies: "bird-heavy news deck" etc.) *(merged into character selection — each `FalciCharacter` carries its own deck tendency, see below)*
+- [x] 2-3 fortune-teller characters (different starting condition/passive — the equivalent of Balatro's deck selection) *(3 `FalciCharacter`s: Default (free), Bird Fortune-teller (15 wisdom, bird-heavy+Bird Feather), Black Cat Fortune-teller (25 wisdom, cat-heavy+Black Cat Charm). `CharacterSelectView` panel, "Fortune-tellers" button. No art/portraits — name/description text only, final art is separate work.)*
+- [x] End-of-run summary screen: best combo, total earnings, journal progress *(`GameController.BestComboThisRun`/`TotalGoldEarnedThisRun`/`DiscoveredCombosCount`, shown in GameView together with "Start New Run", verified in Play Mode)*
+- [ ] Difficulty curve: customer expectations rise as the day progresses; a losing run should end in an average of 20-40 min *(the escalation part is already implemented: `CustomerProfile.Regular` — Threshold(n)=12+n×4, exactly matching the formula in docs/design/04-economy.md. A second-based pacing estimate was added to `BalanceSimulator` (rough constants based on the step count in 00-core-loop.md: cup/arrangement/result ~75s, market visit ~12s) and 20 runs were executed: in a realistic upper-bound scenario (optimal arrangement + market) ~12.9 min/run — BELOW the ROADMAP's 20-40 min target. This is a SIMULATION ESTIMATE, not validated by human playtesting, but the signal is clear: the current 8-10 customers/day scope is probably short for the intended session length. The final decision (increasing the customer count / deepening the interaction) should be made after a real playtest — the code side has hit its ceiling with this simulation.)*
+- [x] Balance pass: symbol/charm/economy tuning with data from 20+ full runs (fast thanks to ScriptableObjects) *(`BalanceSimulator`: simulation of 20 runs × 3 strategies; the Headman threshold multiplier was lowered 1.5×→1.2×, data in the commit message. Not real human playtest data — automated simulation; individual symbol/charm values have not been tuned separately yet, only the Headman threshold.)*
+- [x] Save system: mid-run save/resume (mandatory on mobile), meta-progression persistence *(meta-progression persistence: `MetaProgressStore` — wisdom points, fortune-teller's journal, unlocked/selected character, all persisted with PlayerPrefs. Mid-run save/resume: `RunSaveData`/`RunSaveService` + `DaySession.Restore` + `GameController.SaveRunState`/`RestoreRunState` — verified end to end with a real Stop/Play (equivalent to closing and reopening the app): an open cup, an unsubmitted symbol selection, the day-over summary screen, all come back exactly.)*
 
-**Çıkış kriteri:** Retention hedefleri tutuyor VEYA tutmama nedeni teşhis edilip düzeltildi.
-
----
-
-## Faz 6 — Global Lansman + Canlı Servis (sürekli)
-
-- [ ] Global çıkış (iOS + Android eşzamanlı)
-- [ ] **Haftalık tohum (seed) + lider tablosu** (lansman haftasında hazır — topluluk ritüeli bu)
-- [ ] Sezonluk deste paketleri (çeşitlilik satar, güç satmaz): sezon 1 teması hazır
-- [ ] Aylık denge + içerik yaması ritmi: yeni semboller, yeni tılsımlar, yeni müşteri arketipleri
-- [ ] Yol haritası v2: yeni boss'lar (kaynana? kahveci çırağı?), günlük meydan okuma, PC/Steam portu değerlendirmesi
+**Exit criterion:** Losing a run creates the urge to go "one more", and a meta unlock concretely changes the next run.
 
 ---
 
-## Riskler ve Erken Cevaplar
+## Phase 4 — Mobile Polish + Monetization (3-4 weeks)
 
-| Risk | Azaltma |
+- [ ] Performance: 60 fps on a low-end Android device, battery friendly *(everything possible on the code side has been done: all 42 textures were given an ASTC 6x6 compression override for Android/iOS (previously they were in the default `overridden: 0` state), anisotropic filtering was disabled at every level in Quality Settings (unnecessary for 2D sprites), `vSyncCount=0` + `targetFrameRate=60` were added to `GameController.Awake()`. The code was scanned for performance smells such as Update()/FindObjectOfType and none were found. No fps/battery measurement was done on a REAL physical low-end Android device — this item can only be checked with a device test.)*
+- [x] **First real Android build (AAB) + signing key (keystore) setup** *(2026-07-31: the Android Build Support module and the bundled SDK/NDK/JDK were already installed (Unity 6000.1.17f1), the package name `com.yilkgames.telve` was already correct. A new upload keystore was generated (`android-keystore/telve-upload.jks`, PKCS12, alias `telve-upload`) — gitignored inside the project, with its password and file backed up both on the desktop and in the private `Eren-Ozcan/pictures` repo (`pictures/Telv/android-keystore/`). It was wired into Unity Player Settings (`useCustomKeystore`); only the file path/alias name is written into ProjectSettings.asset, the password never enters the repo. The first end-to-end test build (`BuildPipeline.BuildPlayer`, Android target, App Bundle) **SUCCEEDED**: 0 errors, 2 warnings, a signed 55.7 MB `.aab` was produced (`android-keystore/build-output/telve-test.aab`, gitignored). During the build the "Active Input Handling = Both" warning dialog halted it (the Input System package is not installed in the project, so "Both" was meaningless/risky) — `activeInputHandler: 2 → 0` ("Input Manager (Old)") was fixed in `ProjectSettings.asset`, so future builds will not stop on this dialog. Remaining: verifying that this AAB actually runs on a real device and actually uploading it to the Play Console internal test track — neither was done in this session.)*
+- [x] **Real portrait (1080×1920) Play Mode test for store screenshots + critical visual bug fix** *(2026-07-31: when the Unity Game View was run at a real portrait resolution for the first time (previously it had always been tested in landscape/free aspect), a systemic data error was found in 25 RectTransforms in the `Game.unity` scene (the cup's 8 symbol slots + the market's 3 offer rows + the background + the cup art + the KVKK consent panel) where the "0." prefix had been dropped from the `anchorMin`/`pivot` values — e.g. the pivot should have been `0.5` instead of `5`, anchorMin.x should have been `0.391` instead of `391`. This bug had previously been noticed and fixed only on `ConsentText`/`AcceptButton` (see the Phase 4 GDPR/KVKK item); the same bug also existed on the cup symbols and market icons and had never been noticed because it was not tested at a real portrait aspect ratio — the symbol icons were spilling far outside/above the screen. The whole scene was scanned with a script in the Unity Editor (every `anchorMin`/`anchorMax`/`pivot` value outside 0-1 was fixed by prefixing "0.") and the scene was saved; verified end to end in Play Mode with coplay-mcp (the cup symbols now display correctly). Along the way, 4 real Play Mode screenshots were captured — see `docs/store-listing.md`.)*
+- [ ] IAP infrastructure (Unity IAP): cup/tablecloth cosmetics — we are not selling power, only looks *(alongside the `CosmeticItem` data model + `IPurchaseService`/`MockPurchaseService` (the default, for dev/QA), there is now a real `UnityIAPPurchaseService` too — the com.unity.purchasing 4.12.2 package was installed, `IStoreListener` was fully implemented, compilation verified. There is progress on the Play Console side as well: an app listing was created for Telv (`com.yilkgames.telve`, App ID 4975250454079860772, Unity `applicationIdentifier` matched), and the store text/category/tags/ads/content rating/target audience declarations were entered. THERE IS STILL NO REAL STORE CONNECTION: the product catalog matching the `cosmeticId`s has not been created in the Play Console yet, so `UnityPurchasing.Initialize` cannot be tested end to end and it was not assigned as the default in `GameController.Awake()`. Also, the store listing/Data Safety form cannot be fully submitted until the privacy policy URL is published (it is in draft state) — see `docs/store-listing.md`.)*
+- [x] Rewarded ad integration: end-of-run "second chance" + wisdom points ×2 (2 spots, more than that eats the experience) *(alongside `IRewardedAdService`/`MockRewardedAdService` (the default, for dev/QA), there is now a real `LevelPlayRewardedAdService` too — the com.unity.services.levelplay 9.2.0 package was installed (LevelPlay mediation was used because the legacy Unity Ads SDK was sunset on 2026-01-31), compilation verified. The gameplay flow is fully wired: `DaySession.TryGrantSecondChance` + `GameController.RequestSecondChance`/`RequestDoubleWisdom`, once each per run, verified end to end in Play Mode. THERE IS STILL NO REAL LevelPlay account/app key/ad unit ID — it was not assigned as the default until an account is set up.)*
+- [x] Tutorial / first 5 minutes flow (first customer = tutorial fortune) *(`TutorialView` — contextual hints on the first never-seen encounter (arrange → read → result), never shown again. Verified in Play Mode.)*
+- [x] Localization infrastructure: TR + EN from the start (the English equivalents of fortune-telling terminology are separate work — start early) *(`Localization`/`LocalizedText`/`LanguageToggleView` + the `LocalizationTable` data model; static UI texts are wired to TR/EN. The fortune-telling terminology that Phase 4's own note called "separate work" is also done: the new `ContentLocalizationTable`/`ContentLocalization` (`Assets/Scripts/Meta/ContentLocalization.cs`) maps the EN name/description of 24 symbols + 37 combos + 10 charms + 3 characters by id (the source TR assets were not changed). The dynamic/interpolated status texts inside GameView.Refresh() (gold/score/customer order, market labels, run summary, combo banner, character selection status) are now wired to TR/EN via template keys in the `UiStrings` table. Verified through coplay-mcp that Unity opens with no compile errors and that the language switch (status text, market, run summary, combo banner, character selection) correctly toggles TR↔EN in Play Mode.)*
+- [ ] Analytics: run completion, death points, combo discovery rates, D1/D7 retention *(the event infrastructure is ready — `AnalyticsEvents`/`IAnalyticsSink`, with a local file sink as the default; run_started/run_ended/death_point/combo_discovered are being logged, verified in Play Mode. D1/D7 retention requires a real backend + multi-session data, which does not exist yet — it will work automatically once a real sink is connected.)*
+- [ ] GDPR/KVKK/ATT consent flows, offline playability *(offline playability is already guaranteed — there is not a single network call in the codebase, all persistence is PlayerPrefs. A consent gate skeleton was set up with `PrivacyConsentView`. The placeholder text was replaced with a realistic KVKK/GDPR disclosure draft (`Game.unity` → `ConsentText`: data controller, data processed through the LevelPlay/ironSource ad network, KVKK art. 11 rights, contact address, a note that the iOS ATT system permission will be requested separately). During Play Mode verification a CRITICAL scene bug was found and fixed: the `anchorMin`/`anchorMax`/`pivot` values of `ConsentText` and `AcceptButton` had been entered as `5` instead of `0.5` (probably due to an old data entry error) — because of this, both the consent text and the accept button fell far outside the screen, so the gate was visible but its content and button never were (the game could effectively never be started). After the fix it was verified end to end with coplay-mcp: the text is readable, "I Accept" can be clicked, the gate closes and the game starts. The item is still not checked, because (1) this draft has not gone through an independent legal review, and (2) the iOS ATT system permission integration (code side) has not been done yet.)*
+
+**Exit criterion:** 10 strangers can finish one day loop on a phone without a tutorial and without help.
+
+---
+
+## Phase 5 — Soft Launch (4-6 weeks)
+
+- [ ] Closed beta (TestFlight / Play Internal): 50-100 players, feedback form
+- [ ] Single-market soft launch (suggestion: Turkey — the theme is local, feedback quality is high)
+- [ ] Metric targets: D1 ≥ 35%, D7 ≥ 12%, avg. session ≥ 15 min (reasonable thresholds for a roguelike)
+- [ ] Balance and economy patch rounds (weekly)
+- [ ] Store page: screenshots, 30 sec trailer (cup flip + the golden-frame discovery moment)
+- [ ] Content creator seeding: fortune/coffee themed TikTok-Instagram micro-influencers, "what did your fortune say" format
+
+**Exit criterion:** The retention targets are met OR the reason they are not has been diagnosed and fixed.
+
+---
+
+## Phase 6 — Global Launch + Live Service (ongoing)
+
+- [ ] Global release (iOS + Android simultaneously)
+- [ ] **Weekly seed + leaderboard** (ready in launch week — this is the community ritual)
+- [ ] Seasonal deck packs (they sell variety, not power): season 1 theme ready
+- [ ] Monthly balance + content patch rhythm: new symbols, new charms, new customer archetypes
+- [ ] Roadmap v2: new bosses (mother-in-law? the coffeehouse apprentice?), daily challenge, PC/Steam port evaluation
+
+---
+
+## Risks and Early Answers
+
+| Risk | Mitigation |
 |---|---|
-| Kombo dizme kararı sığ kalır ("her zaman aynı sıra en iyi") | Faz 0 kağıt prototipte yakala; sıra bağımlılığını derinleştir (komşuluk + pozisyon bonusları) |
-| Fal teması yurtdışında anlaşılmaz | EN yerelleştirmede "tasseography" bilinirliğine yaslan; tutorial temayı 30 sn'de öğretsin |
-| Balatro dalgası söner | Tema özgünlüğü asıl sigorta; hız için MVP kapsamını büyütme |
-| Tek geliştirici tükenmişliği | Fazların çıkış kriterlerine sadık kal; kapsam sürünmesine karşı "v2 listesi" tut |
-| Denge cehennemi | Tüm sayılar ScriptableObject'te; analitikle kombo kullanım oranlarını izle |
+| The combo arrangement decision stays shallow ("the same order is always best") | Catch it in the Phase 0 paper prototype; deepen order dependency (adjacency + position bonuses) |
+| The fortune-telling theme is not understood abroad | Lean on the recognizability of "tasseography" in the EN localization; let the tutorial teach the theme in 30 sec |
+| The Balatro wave dies down | Theme originality is the real insurance; do not grow the MVP scope for speed |
+| Solo developer burnout | Stay faithful to the phases' exit criteria; keep a "v2 list" against scope creep |
+| Balance hell | All numbers live in ScriptableObjects; track combo usage rates with analytics |
 
 ---
 
-## Kaba Zaman Çizelgesi
+## Rough Timeline
 
-Tek geliştirici, yarı zamanlı-üstü tempo varsayımıyla:
+Assuming a solo developer at a more-than-part-time pace:
 
-| Faz | Süre | Kümülatif |
+| Phase | Duration | Cumulative |
 |---|---|---|
-| 0 — Tasarım temeli | 1-2 hafta | ~2 hafta |
-| 1 — Dijital prototip | 3-4 hafta | ~6 hafta |
-| 2 — Dikey dilim | 4-6 hafta | ~3 ay |
-| 3 — Meta-ilerleme | 4-5 hafta | ~4 ay |
-| 4 — Mobil cila + para | 3-4 hafta | ~5 ay |
-| 5 — Soft launch | 4-6 hafta | ~6-6.5 ay |
-| 6 — Global lansman | — | ~7. ay |
+| 0 — Design foundation | 1-2 weeks | ~2 weeks |
+| 1 — Digital prototype | 3-4 weeks | ~6 weeks |
+| 2 — Vertical slice | 4-6 weeks | ~3 months |
+| 3 — Meta-progression | 4-5 weeks | ~4 months |
+| 4 — Mobile polish + money | 3-4 weeks | ~5 months |
+| 5 — Soft launch | 4-6 weeks | ~6-6.5 months |
+| 6 — Global launch | — | ~month 7 |
 
-> En kritik kural: **Faz 1 bitmeden Faz 2 sanatına para/zaman harcama.**
-> Bulmaca eğlenceli değilse atmosfer onu kurtarmaz; eğlenceliyse atmosfer onu efsaneleştirir.
+> The most critical rule: **do not spend money/time on Phase 2 art before Phase 1 is finished.**
+> If the puzzle is not fun, atmosphere will not save it; if it is fun, atmosphere will make it legendary.

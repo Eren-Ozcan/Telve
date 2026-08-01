@@ -1,16 +1,18 @@
 # Telv
 
-## Store / Pazarlama Görselleri
+## Store / Marketing Visuals
 
-Store listing, feature graphic, ikon, ekran görüntüsü gibi pazarlama görselleri
-**asla bu public repo'ya commit edilmez**. İki yere kaydedilir:
+Marketing visuals such as the store listing, feature graphic, icon and
+screenshots are **never committed to this public repo**. They are saved in two
+places:
 
-1. Yerel, gitignore'lu kopya: `docs/store-assets-originals/`.
-2. Private yedek repo: `C:\Projects\pictures\Telv\` (private `Eren-Ozcan/pictures`
-   reposunun yerel clone'u) — oraya kopyalanıp o repoda commit+push edilir.
+1. Local, gitignored copy: `docs/store-assets-originals/`.
+2. Private backup repo: `C:\Projects\pictures\Telv\` (local clone of the private
+   `Eren-Ozcan/pictures` repo) — copy them there and commit+push in that repo.
 
-## Stüdyo geneli bilgiler
+## Studio-wide information
 
-Google hesabı, Play Console geliştirici hesabı, yilkgames.com/yilkgames_web durumu
-gibi stüdyo geneli (bu oyuna özel olmayan) sorular için `C:\Projects\pictures\STUDIO.md`
-tek kaynak — burada tekrarlanmaz.
+For studio-wide questions that are not specific to this game — Google account,
+Play Console developer account, the status of yilkgames.com/yilkgames_web —
+`C:\Projects\pictures\STUDIO.md` is the single source of truth; it is not
+repeated here.
